@@ -1,13 +1,13 @@
 ﻿"use strict";
-/* global $, jQuery, DATA, OUTPUT, SETTINGS */
+/* global $ */
 
 var NOT_RESET = 0;
-var nNumber, btnChoose, btnReset, btnHide, btnRedo;
+var btnChoose, btnReset, btnHide, btnRedo;
 
 /////////////////////////////////////////////
 //          Manage Alien Lists             //
 /////////////////////////////////////////////
-var DATA = (function(global) {
+var DATA = (function() {
   //Lists of names for generator
   var pool = [], excluded = [], current = [], given = [], restricted = [];
 
@@ -79,7 +79,7 @@ var DATA = (function(global) {
     reset: function(opts) {
       pool = names.filter(function(name) {
         var e = byName[name];
-        return opts.isComplexity(e.level) && opts.isGame(e.game) && !(excluded.indexOf(e.name) > -1) && (opts.getSetupAllowed() === 0 || e.setup === undefined || (opts.getSetupAllowed() === 1 && e.setup !== "color"));
+        return opts.isComplexity(e.level) && opts.isGame(e.game) && excluded.indexOf(e.name) <= 0 && (opts.getSetupAllowed() === 0 || e.setup === undefined || (opts.getSetupAllowed() === 1 && e.setup !== "color"));
       });
 
       given = [];
@@ -87,13 +87,15 @@ var DATA = (function(global) {
       restricted = [];
     }
   };
-})(window);
+})();
 
 /////////////////////////////////////////////
 //               Settings                  //
 /////////////////////////////////////////////
-var SETTINGS = (function(global, manager) {
+var SETTINGS = (function(manager) {
+  var getEl = document.getElementById;
   var STORAGE = window.localStorage;
+  var nNumber = getEl("choose");
 
   var complexities = [true, true, true], levels = ["Green", "Yellow", "Red"];
   var games = { E: true };
@@ -116,25 +118,25 @@ var SETTINGS = (function(global, manager) {
           var load = JSON.parse(STORAGE.games);
           if(load) {
             games = load;
-            Object.keys(games).forEach(function(e) { document.getElementById("game" + e).checked = games[e]; });
+            Object.keys(games).forEach(function(e) { getEl("game" + e).checked = games[e]; });
           }
 
           load = JSON.parse(STORAGE.levels);
           if(load) {
             complexities = load;
-            for(var i = 0; i < levels.length; i++) { document.getElementById(levels[i]).checked = complexities[i]; }
+            levels.forEach(function(level, i) { getEl(level).checked = complexities[i]; });
           }
 
           load = STORAGE.choose;
           if(load) {
             numToGive = load;
-            document.getElementById("choose").value = numToGive;
+            getEl("choose").value = numToGive;
           }
 
           load = STORAGE.preventConflict;
           if(load !== undefined && load !== null) {
             conflicts = load == "true";
-            document.getElementById("preventConflict").checked = conflicts;
+            getEl("preventConflict").checked = conflicts;
           }
 
           load = JSON.parse(STORAGE.exclude);
@@ -193,14 +195,15 @@ var SETTINGS = (function(global, manager) {
     }
 
   };
-})(window, DATA);
+})(DATA);
 
 function setState(showOrHide, disablePick, disableShowHide, disableRedo, disableReset) {
-  if(showOrHide !== undefined) btnHide.textContent = showOrHide ? "Show" : "Hide";
-  if(disableShowHide !== undefined) btnHide.disabled = disableShowHide;
-  if(disablePick !== undefined) btnChoose.disabled = disablePick;
-  if(disableRedo !== undefined) btnRedo.disabled = disableRedo;
-  if(disableReset !== undefined) btnReset.disabled = disableReset;
+  var undef;
+  if(showOrHide !== undef) btnHide.textContent = showOrHide ? "Show" : "Hide";
+  if(disableShowHide !== undef) btnHide.disabled = disableShowHide;
+  if(disablePick !== undef) btnChoose.disabled = disablePick;
+  if(disableRedo !== undef) btnRedo.disabled = disableRedo;
+  if(disableReset !== undef) btnReset.disabled = disableReset;
 }
 
 //Determine list of possible choices based on selected options
@@ -220,7 +223,7 @@ function resetGenerator() {
 /////////////////////////////////////////////
 //            Manage Output                //
 /////////////////////////////////////////////
-var OUTPUT = (function(global, manager) {
+var OUTPUT = (function(manager) {
   var nOutput = document.getElementById("output");
   var nStats = document.getElementById("numbers");
 
@@ -267,18 +270,19 @@ var OUTPUT = (function(global, manager) {
       return $(createLabels(manager.getByName(name)) + '<span class="alien-name">' + name + '</span>');
     }
   };
-})(window, DATA);
+})(DATA);
 
 //onload
 $(function() {
 
   //Keep number to choose within amount of aliens left
-  nNumber = $("#choose").on("change", function() { SETTINGS.resetHowManyToSelect(this.value); })[0];
+  $("#choose").on("change", function() { SETTINGS.resetHowManyToSelect(this.value); })[0];
 
   //Changing check box resets alien list
   $("#Complexities").on("click", "input", function() { SETTINGS.setComplexity(this.id, this.checked); resetGenerator(); });
   $("#Games").on("click", "input", function() { SETTINGS.setGame(this.id[4], this.checked); resetGenerator(); });
   $("input[type=radio][name=excludeSetup]").on("change", function() { SETTINGS.setSetupAllowed(parseInt(this.value, 10)); resetGenerator(); });
+
   //Changing conflict option saves state, but does not reset
   $("#preventConflict").on("click", function() { SETTINGS.restrictConflicts(this.checked); });
 
@@ -300,7 +304,7 @@ $(function() {
     //Hide choices
     if(btnHide.textContent === "Hide") {
       //Only offer Show if hiding current pick, not hiding full list. Disable redo while hidden
-      setState(current.length > 0, undefined, !(current.length > 0), true, undefined);
+      setState(current.length, undefined, !current.length, true, undefined);
       OUTPUT.message("Choices hidden.");
       return;
     }
@@ -316,6 +320,7 @@ $(function() {
     OUTPUT.aliens(current);
     setState(false, undefined, undefined, false, undefined);//Let user hide, and enable redo
   })[0];
+
   btnChoose = $("#newAliens").on("click", function() {
     DATA.next();
 
@@ -344,6 +349,7 @@ $(function() {
 
     return;
   })[0];
+
   btnRedo = $("#redo").on("click", function() {
     if(confirm("Redo?")) {
       DATA.undo();
