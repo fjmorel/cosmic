@@ -93,9 +93,8 @@ var DATA = (function() {
 //               Settings                  //
 /////////////////////////////////////////////
 var SETTINGS = (function(manager) {
-  var getEl = document.getElementById;
   var STORAGE = window.localStorage;
-  var nNumber = getEl("choose");
+  var nNumber = document.getElementById("choose");
 
   var complexities = [true, true, true], levels = ["Green", "Yellow", "Red"];
   var games = { E: true };
@@ -118,25 +117,25 @@ var SETTINGS = (function(manager) {
           var load = JSON.parse(STORAGE.games);
           if(load) {
             games = load;
-            Object.keys(games).forEach(function(e) { getEl("game" + e).checked = games[e]; });
+            Object.keys(games).forEach(function(e) { document.getElementById("game" + e).checked = games[e]; });
           }
 
           load = JSON.parse(STORAGE.levels);
           if(load) {
             complexities = load;
-            levels.forEach(function(level, i) { getEl(level).checked = complexities[i]; });
+            levels.forEach(function(level, i) { document.getElementById(level).checked = complexities[i]; });
           }
 
           load = STORAGE.choose;
           if(load) {
             numToGive = load;
-            getEl("choose").value = numToGive;
+            document.getElementById("choose").value = numToGive;
           }
 
           load = STORAGE.preventConflict;
           if(load !== undefined && load !== null) {
             conflicts = load == "true";
-            getEl("preventConflict").checked = conflicts;
+            document.getElementById("preventConflict").checked = conflicts;
           }
 
           load = JSON.parse(STORAGE.exclude);
