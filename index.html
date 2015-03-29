@@ -73,7 +73,7 @@
 					<div class="panel-heading">Exclude</div>
 					<div class="panel-body">
 						<h4>By name</h4>
-						<select class="form-control" ng-change="onSettingChange('namesToExclude')" ng-model="namesToExclude" multiple><option ng-repeat="name in all_names | orderBy">{{name}}</option></select>
+						<select class="form-control" ng-change="onSettingChange('namesExcluded')" ng-model="namesExcluded" multiple><option ng-repeat="name in namesAll | orderBy">{{name}}</option></select>
 					</div>
 					<div class="panel-body">
 						<h4>Game setup</h4>
@@ -128,7 +128,8 @@
 		</div>
 	</div>
 	<script src="js/angular-1.3.15.min.js"></script>
-	<script src="js/ngStorage.js"></script>
-	<script src="js/generator-app.js"></script>
+	<script src="js/ngStorage.min.js"></script>
+	<script src="js/cosmicData.min.js"></script>
+	<script src="js/generator-app.min.js"></script>
 </body>
 </html>

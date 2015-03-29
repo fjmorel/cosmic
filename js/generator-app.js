@@ -1,30 +1,9 @@
-﻿//TODO: testing
+﻿//TODO: testing, good multiselect w/o jQuery
+//TODO: use sessionstorage for current state (current, given, pool, etc)
 
-var generatorApp = angular.module('cosmicApp', ['ngStorage']);
+var generatorApp = angular.module('cosmicApp', ['CosmicData', 'ngStorage']);
 
-//Data backend
-generatorApp.factory('CosmicData', ['$http',function($http) {
-  var all = {}, names = [], init = false;
-
-  var promise = $http.get("data/aliens.json").success(function(data) {
-    data.forEach(function(alien) {
-      all[alien.name] = alien;
-      names.push(alien.name);
-    });
-    init = true;
-  });
-
-  return {
-    ready: function(func) {
-      if(!init) promise.success(func);
-      else func();
-    },
-    getAllAlienNames: function(){ return names.slice(0); },
-    getAlien: function(name) { return all[name] || {} }
-  };
-
-}]);
-
+//Use by alienPanel to display HMTL in power description text
 generatorApp.filter('unsafe', ['$sce', function($sce) {
   return function(val) { return $sce.trustAs($sce.HTML, val); };
 }]);
@@ -32,14 +11,17 @@ generatorApp.filter('unsafe', ['$sce', function($sce) {
 //Turn alien level into Bootstrap class name for colors
 generatorApp.filter('levelClass', function() {
   var levelToClassMapping = ["success", "warning", "danger"];
-  return function(input) { return levelToClassMapping[input]; };
+  return function(lvl) { return levelToClassMapping[lvl]; };
 });
 
 //Turn alien level into a string of stars to show level
 generatorApp.filter('levelStars', function() {
-  return function(input) {
+  //var starred = {};
+  return function(lvl) {
+    //if(starred[lvl]) return starred[lvl];
     var stars = '';
-    for(var i = 0; i <= input; i++) { stars += '★'; }
+    for(var i = 0; i <= lvl; i++) { stars += '★'; }
+    //starred[lvl] = stars;
     return stars;
   };
 });
@@ -54,11 +36,11 @@ generatorApp.directive("alienPanel", function() {
 });
 
 //Based on settings, allow user to pick aliens randomly
-generatorApp.controller('GeneratorCtrl', ["$scope", "CosmicData", '$localStorage','$sessionStorage', function($scope, $data, $localStorage, $sessionStorage) {
+generatorApp.controller('GeneratorCtrl', ["$scope", "alienData", '$localStorage', '$sessionStorage', function($scope, Aliens, $localStorage, $sessionStorage) {
   $localStorage.$default({
     complexities : [true, true, true],
     games: { E: true },
-    namesToExclude : [],
+    namesExcluded: [],
     setupLevel: "0",
     numToChoose: 2,
     preventConflicts : true
@@ -69,7 +51,7 @@ generatorApp.controller('GeneratorCtrl', ["$scope", "CosmicData", '$localStorage
   $scope.games = $localStorage.games;
 
   //Exclude
-  $scope.namesToExclude = $localStorage.namesToExclude;
+  $scope.namesExcluded = $localStorage.namesExcluded;
   $scope.setupLevel = $localStorage.setupLevel;
 
   //Choose
@@ -83,11 +65,11 @@ generatorApp.controller('GeneratorCtrl', ["$scope", "CosmicData", '$localStorage
 
   //Status
   var current = [], given = [], restricted = [], pool = [];
-  $scope.all_names = [];
+  $scope.namesAll = [];
   $scope.numCurrent = function() { return current.length; };
   $scope.numGiven = function() { return given.length; };
   $scope.numRestricted = function() { return restricted.length; };
-  $scope.numExcluded = function() { return $scope.namesToExclude.length; };
+  $scope.numExcluded = function() { return $scope.namesExcluded.length; };
   $scope.numLeft = function() { return pool.length; };
 
   //Keep choose # within 1 and max. Run when resetting alien list (# might have changed) and changing # to pick
@@ -104,11 +86,10 @@ generatorApp.controller('GeneratorCtrl', ["$scope", "CosmicData", '$localStorage
   //Determine list of possible choices based on selected options
   function resetGenerator() {
     //Create POOL from aliens that match level and game and are not excluded, and clear other lists
-    pool = $scope.all_names.filter(function(name) {
-      var e = $data.getAlien(name);
-      return $scope.complexities[e.level] && $scope.games[e.game] && $scope.namesToExclude.indexOf(name) < 0 && ($scope.setupLevel === "0" || e.setup === undefined || ($scope.setupLevel === "1" && e.setup !== "color"));
+    pool = $scope.namesAll.filter(function(name) {
+      var e = Aliens.get(name);
+      return $scope.complexities[e.level] && $scope.games[e.game] && $scope.namesExcluded.indexOf(name) < 0 && ($scope.setupLevel === "0" || e.setup === undefined || ($scope.setupLevel === "1" && e.setup !== "color"));
     });
-    console.log($scope.namesToExclude);
     given = [];
     current = [];
     restricted = [];
@@ -133,7 +114,7 @@ generatorApp.controller('GeneratorCtrl', ["$scope", "CosmicData", '$localStorage
     if(NOT_RESET > 2) {
       makePickFinal();
       $scope.message = "Aliens given out so far:"
-      $scope.aliensToShow = given.map($data.getAlien);
+      $scope.aliensToShow = given.map(Aliens.get);
     }
   };
 
@@ -158,7 +139,7 @@ generatorApp.controller('GeneratorCtrl', ["$scope", "CosmicData", '$localStorage
     current.sort();
 
     //If current choice has any restrictions, remove them from pool as well
-    var alien = $data.getAlien(name);
+    var alien = Aliens.get(name);
     if($scope.preventConflicts && alien.restriction) {
       var restrictions = alien.restriction.split(',');
       for(var j = 0; j < restrictions.length; j++) {
@@ -190,7 +171,7 @@ generatorApp.controller('GeneratorCtrl', ["$scope", "CosmicData", '$localStorage
 
     //Display
     $scope.message = "Choices:";
-    $scope.aliensToShow = current.map($data.getAlien);
+    $scope.aliensToShow = current.map(Aliens.get);
     $scope.restrictNumToChoose();
     return;
   };
@@ -210,7 +191,7 @@ generatorApp.controller('GeneratorCtrl', ["$scope", "CosmicData", '$localStorage
 
     //If passed, then show aliens
     $scope.message = "Choices:"
-    $scope.aliensToShow = current.map($data.getAlien);
+    $scope.aliensToShow = current.map(Aliens.get);
   };
 
   $scope.redo = function() {
@@ -221,8 +202,8 @@ generatorApp.controller('GeneratorCtrl', ["$scope", "CosmicData", '$localStorage
   };
   
   //Init generator
-  $data.ready(function() {
-    $scope.all_names = $data.getAllAlienNames();
+  Aliens.onLoaded(function() {
+    $scope.namesAll = Aliens.getNames();
     resetGenerator();
   });
 }]);
