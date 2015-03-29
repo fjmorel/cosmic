@@ -45,7 +45,6 @@ generatorApp.filter('levelStars', function() {
 });
 
 //Turn alien object into a panel with its information
-//TODO: game setup or alien conflict
 generatorApp.directive("alienPanel", function() {
   return {
     restrict: "E",
@@ -76,7 +75,7 @@ generatorApp.controller('GeneratorCtrl', ["$scope", "CosmicData", '$localStorage
   //Choose
   $scope.numToChoose = $localStorage.numToChoose;
   $scope.preventConflicts = $localStorage.preventConflicts;
-  
+  console.log($scope.numToChoose);
   //Output
   $scope.message = "Loading aliens...";
   $scope.aliensToShow = [];
@@ -99,6 +98,7 @@ generatorApp.controller('GeneratorCtrl', ["$scope", "CosmicData", '$localStorage
     if(numToGive < 1) numToGive = 1;
     //save("choose", numToGive);
     $scope.numToChoose = numToGive;
+    $localStorage.numToChoose = numToGive;
   };
 
   //Determine list of possible choices based on selected options
