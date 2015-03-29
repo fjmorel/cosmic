@@ -1,6 +1,6 @@
 ﻿//TODO: testing
 
-var generatorApp = angular.module('cosmicApp', ['isteven-multi-select']);
+var generatorApp = angular.module('cosmicApp', ['ngStorage']);
 
 //Data backend
 generatorApp.factory('CosmicData', ['$http',function($http) {
@@ -55,28 +55,36 @@ generatorApp.directive("alienPanel", function() {
 });
 
 //Based on settings, allow user to pick aliens randomly
-generatorApp.controller('GgeneratorCtrl', ["$scope", "CosmicData", function($scope, $data) {
+generatorApp.controller('GeneratorCtrl', ["$scope", "CosmicData", '$localStorage','$sessionStorage', function($scope, $data, $localStorage, $sessionStorage) {
+  $localStorage.$default({
+    complexities : [true, true, true],
+    games: { E: true },
+    namesToExclude : [],
+    setupLevel: "0",
+    numToChoose: 2,
+    preventConflicts : true
+  });
+  
   //Include
-  $scope.complexities = [true, true, true];
-  $scope.games = { E: true, A: false, C: false, D: false, I: false, S: false };
+  $scope.complexities = $localStorage.complexities;
+  $scope.games = $localStorage.games;
 
   //Exclude
-  $scope.namesToExclude = [];
-  $scope.setupLevel = "0";
+  $scope.namesToExclude = $localStorage.namesToExclude;
+  $scope.setupLevel = $localStorage.setupLevel;
 
   //Choose
-  $scope.numToChoose = 2;
-  $scope.preventConflicts = true;
-
+  $scope.numToChoose = $localStorage.numToChoose;
+  $scope.preventConflicts = $localStorage.preventConflicts;
+  
   //Output
   $scope.message = "Loading aliens...";
   $scope.aliensToShow = [];
-  $scope.all_names = [];
-  $scope.all_aliens = [];
+  
 
   //Status
   var current = [], given = [], restricted = [], pool = [];
-  $scope.isHidden = false;
+  $scope.all_names = [];
   $scope.numCurrent = function() { return current.length; };
   $scope.numGiven = function() { return given.length; };
   $scope.numRestricted = function() { return restricted.length; };
@@ -112,7 +120,8 @@ generatorApp.controller('GgeneratorCtrl', ["$scope", "CosmicData", function($sco
     $scope.aliensToShow = [];
   }
 
-  $scope.onSettingChange = function() {
+  $scope.onSettingChange = function(setting) {
+    $localStorage[setting] = $scope[setting];
     resetGenerator();
   };
 
