@@ -1,0 +1,144 @@
+﻿<!DOCTYPE html>
+<html lang="en" ng-app="cosmicApp">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<title>Alien Generator - Companion for Cosmic Encounter</title>
+	<meta name="description" content="Randomly assign aliens in Cosmic Encounter">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<!-- icon in the highest resolution we need it for -->
+	<link rel="shortcut icon" type="image/png" href="favicon.png" />
+	<!-- reuse same icon for Safari -->
+	<link rel="apple-touch-icon" href="icons/icon.png" />
+	<!-- multiple icons for IE -->
+
+	<meta name="msapplication-TileColor" content="#37387F" />
+	<meta name="msapplication-TileImage" content="icons/144.png" />
+
+	<meta name="application-name" content="Cosmic Generator" />
+	<meta name="apple-mobile-web-app-title" content="Cosmic" />
+
+	<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+	<link rel="stylesheet" type="text/css" href="css/bootstrap-theme.min.css">
+	<link rel="stylesheet" type="text/css" href="css/select.min.css">
+	<style>
+		.page-footer {
+			margin-top: 1em;
+			padding-top: 1em;
+			border-top: 2px solid #381791;
+		}
+
+		.label {
+			margin: 0 2px;
+			/*font-size: 90%;*/
+		}
+
+		em {
+			font-weight: bold;
+		}
+
+		.ui-select-bootstrap .ui-select-choices-row.active>a {
+			background-color: #381791;
+		}
+	</style>
+</head>
+<body>
+	<div ng-controller="GeneratorCtrl" class="container-fluid">
+		<div class="row" id="page-header">
+			<div class="col-sm-offset-1 col-sm-10 col-md-offset-2 col-md-8">
+				<h2>Alien Generator<a style="float:right;" href="https://play.google.com/store/apps/details?id=net.fmorel.cosmicgenerator"><img alt="Android app on Google Play" src="icons/playstore_badge.png" /></a></h2>
+				<p>Randomly assign aliens for game setup</p>
+			</div>
+		</div>
+		<div class="row">
+			<div id="settings-include" class="col-sm-offset-1 col-sm-5 col-md-offset-2 col-md-4">
+				<div class="panel panel-primary">
+					<div class="panel-heading">Include</div>
+					<div class="panel-body btn-group" id="Complexities">
+						<h4>Levels</h4>
+						<label for="Green" class="btn btn-success"><input type="checkbox" id="Green" name="Green" ng-change="onSettingChange('complexities')" ng-model="complexities[0]" /> Green</label>
+						<label for="Yellow" class="btn btn-warning"><input type="checkbox" id="Yellow" name="Yellow" ng-change="onSettingChange('complexities')" ng-model="complexities[1]" /> Yellow</label>
+						<label for="Red" class="btn btn-danger"><input type="checkbox" id="Red" name="Red" ng-change="onSettingChange('complexities')" ng-model="complexities[2]" /> Red</label>
+					</div>
+					<div class="panel-body form-horizontal" id="Games">
+						<h4>Games</h4>
+						<div class="checkbox"><label for="gameE" id="CE"><input type="checkbox" id="gameE" name="gameE" ng-change="onSettingChange('game')" ng-model="games['E']" /> Cosmic Encounter</label></div>
+						<div class="checkbox"><label for="gameA"><input type="checkbox" id="gameA" name="gameA" ng-change="onSettingChange('game')" ng-model="games['A']" /> Cosmic Alliance</label></div>
+						<div class="checkbox"><label for="gameC"><input type="checkbox" id="gameC" name="gameC" ng-change="onSettingChange('game')" ng-model="games['C']" /> Cosmic Conflict</label></div>
+						<div class="checkbox"><label for="gameD"><input type="checkbox" id="gameD" name="gameD" ng-change="onSettingChange('game')" ng-model="games['D']" /> Cosmic Dominion</label></div>
+						<div class="checkbox"><label for="gameI"><input type="checkbox" id="gameI" name="gameI" ng-change="onSettingChange('game')" ng-model="games['I']" /> Cosmic Incursion</label></div>
+						<div class="checkbox"><label for="gameS"><input type="checkbox" id="gameS" name="gameS" ng-change="onSettingChange('game')" ng-model="games['S']" /> Cosmic Storm</label></div>
+					</div>
+				</div>
+			</div>
+
+			<div id="settings-exclude" class="col-sm-5 col-md-4">
+				<div class="panel panel-primary">
+					<div class="panel-heading">Exclude</div>
+					<div class="panel-body">
+						<h4>By name</h4>
+						<ui-select on-select="onExcludeSelect($item, $model)" on-remove="	onExcludeRemove($item, $model)" multiple ng-model="namesExcluded" placeholder="None selected">
+							<ui-select-match placeholder="None selected">{{$item}}</ui-select-match>
+							<ui-select-choices repeat="name in namesAll | orderBy"><alien-title alien="name | alienFromName"></alien-title></ui-select-choices>
+						</ui-select>
+					</div>
+					<div class="panel-body">
+						<h4>Game setup</h4>
+						<div class="radio"><label for="setup0"><input type="radio" name="excludeSetup" value="0" id="setup0" ng-change="onSettingChange('setupLevel')" ng-model="setupLevel" /> Remove none</label></div>
+						<div class="radio"><label for="setup1"><input type="radio" name="excludeSetup" value="1" id="setup1" ng-change="onSettingChange('setupLevel')" ng-model="setupLevel" /> Remove those requiring extra color</label></div>
+						<div class="radio"><label for="setup2"><input type="radio" name="excludeSetup" value="2" id="setup2" ng-change="onSettingChange('setupLevel')" ng-model="setupLevel" /> Remove all</label></div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div id="settings-choose" class="row">
+			<div class="col-sm-offset-1 col-sm-10 col-md-offset-2 col-md-8">
+				<div class="panel panel-primary">
+					<div class="panel-heading">Choose</div>
+					<div class="panel-body container-fluid">
+						<div class="row">
+							<div class="col-sm-6">
+								<label for="choose">Choices per player <input type="number" class="form-control" id="choose" name="choose" ng-change="restrictNumToChoose()" ng-model="numToChoose" min=1 step=1 /></label>
+								<div class="checkbox"><label for="preventConflict"><input type="checkbox" name="preventConflict" id="preventConflict" ng-model="preventConflicts" /> Prevent conflicts (like Oracle vs. Magician)</</label></div>
+							</div>
+							<div class="col-sm-6">
+								<p id="numbers">{{numCurrent()+numGiven()+numRestricted()}} of {{numCurrent()+numGiven()+numRestricted()+numLeft()}} picked.</p>
+								<div class="btn-group btn-group-lg btn-group-justified">
+									<div class="btn-group">
+										<button class="btn btn-danger" id="reset" ng-click="reset()" ng-disabled="numCurrent() <= 0 && numGiven() <= 0">Reset</button>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="btn-group btn-group-lg btn-group-justified">
+					<div class="btn-group">
+						<button class="btn btn-primary" ng-click="pickAliens()" ng-disabled="numLeft() < numToChoose">Pick</button>
+					</div>
+					<div class="btn-group">
+						<button class="btn btn-success" ng-click="hide()" ng-hide="numCurrent() > 0 && aliensToShow.length <= 0" ng-disabled="aliensToShow.length <= 0">Hide</button>
+						<button class="btn btn-success" ng-click="show()" ng-show="numCurrent() > 0 && aliensToShow.length <= 0" ng-disabled="numCurrent() <= 0">Show</button>
+					</div>
+					<div class="btn-group">
+						<button class="btn btn-danger" ng-click="redo();" ng-disabled="numCurrent() <= 0 || aliensToShow.length <= 0">Redo</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- <div class="col-sm-offset-2 col-sm-8"> -->
+		<div class="row page-footer"><div class="col-sm-offset-1 col-md-offset-2 col-sm-10 col-md-8"><p>{{message}}</p></div></div>
+		<div class="row">
+			<div class="col-sm-offset-1 col-md-offset-2 col-sm-10 col-md-8">
+				<div class="row"><alien-panel ng-repeat="alien in aliensToShow | orderBy:'name'" alien="alien"></alien-panel></div>
+			</div>
+		</div>
+	</div>
+	<script src="js/angular-1.3.15.min.js"></script>
+	<script src="js/ngStorage.min.js"></script>
+	<script src="js/select.min.js"></script>
+	<script src="js/cosmicAliens.min.js"></script>
+	<script src="js/cosmicGeneratorApp.min.js"></script>
+</body>
+</html>

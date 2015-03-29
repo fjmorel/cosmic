@@ -6,7 +6,7 @@
   //Fetch alien data and provide methods to retrieve names and aliens
   mod.factory('alienData', ['$http', function($http) {
     var aliens = {}, alien_names = [];
-    console.log("data service");
+    
     return {
       onLoaded: function(func) {
         $http.get("data/aliens.json").success(function(data) {
@@ -17,7 +17,7 @@
         }).success(func);
       },
       getNames: function() { return alien_names.slice(0); },
-      get: function(name) { return aliens[name] || {} }
+      get: function(name) { return angular.copy(aliens[name] || {}); }
     };
   }]);
 

@@ -26,7 +26,7 @@
     //Choose
     $scope.numToChoose = $localStorage.numToChoose;
     $scope.preventConflicts = $localStorage.preventConflicts;
-    console.log($scope.numToChoose);
+    
     //Output
     $scope.message = "Loading aliens...";
     $scope.aliensToShow = [];

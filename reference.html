@@ -1,0 +1,97 @@
+﻿<!DOCTYPE html>
+<html lang="en" ng-app="cosmicApp">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<title>Alien Reference - Companion for Cosmic Encounter</title>
+	<meta name="description" content="Reference page for aliens in Cosmic Encounter">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<!-- icon in the highest resolution we need it for -->
+	<link rel="shortcut icon" type="image/png" href="favicon.png" />
+	<!-- reuse same icon for Safari -->
+	<link rel="apple-touch-icon" href="icons/icon.png" />
+	<!-- multiple icons for IE -->
+
+	<meta name="msapplication-TileColor" content="#37387F" />
+	<meta name="msapplication-TileImage" content="icons/144.png" />
+
+	<meta name="application-name" content="Cosmic Generator" />
+	<meta name="apple-mobile-web-app-title" content="Cosmic" />
+
+	<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+	<link rel="stylesheet" type="text/css" href="css/bootstrap-theme.min.css">
+	<link rel="stylesheet" type="text/css" href="css/select.min.css">
+	<style>
+		.page-footer {
+			margin-top: 1em;
+			padding-top: 1em;
+			border-top: 2px solid #381791;
+		}
+
+		.label {
+			margin: 0 2px;
+			/*font-size: 90%;*/
+		}
+
+		em {
+			font-weight: bold;
+		}
+
+		.ui-select-bootstrap .ui-select-choices-row.active>a {
+			background-color: #381791;
+		}
+	</style>
+</head>
+<body>
+	<div ng-controller="GeneratorCtrl" class="container-fluid">
+		<div class="row" id="page-header">
+			<div class="col-sm-offset-1 col-sm-10 col-md-offset-2 col-md-8">
+				<h2>Alien Reference<a style="float:right;" href="https://play.google.com/store/apps/details?id=net.fmorel.cosmicgenerator"><img alt="Android app on Google Play" src="icons/playstore_badge.png" /></a></h2>
+				<p>View information about any alien</p>
+			</div>
+		</div>
+		<div class="row">
+			<div id="settings-include" class="col-sm-offset-1 col-sm-5 col-md-offset-2 col-md-4">
+				<div class="panel panel-primary">
+					<div class="panel-heading">Include</div>
+					<div class="panel-body btn-group" id="Complexities">
+						<h4>Levels</h4>
+						<label for="Green" class="btn btn-success"><input type="checkbox" id="Green" name="Green" ng-change="onSettingChange('complexities')" ng-model="complexities[0]" /> Green</label>
+						<label for="Yellow" class="btn btn-warning"><input type="checkbox" id="Yellow" name="Yellow" ng-change="onSettingChange('complexities')" ng-model="complexities[1]" /> Yellow</label>
+						<label for="Red" class="btn btn-danger"><input type="checkbox" id="Red" name="Red" ng-change="onSettingChange('complexities')" ng-model="complexities[2]" /> Red</label>
+					</div>
+					<div class="panel-body form-horizontal" id="Games">
+						<h4>Games</h4>
+						<div class="checkbox"><label for="gameE" id="CE"><input type="checkbox" id="gameE" name="gameE" ng-change="onSettingChange('game')" ng-model="games['E']" /> Cosmic Encounter</label></div>
+						<div class="checkbox"><label for="gameA"><input type="checkbox" id="gameA" name="gameA" ng-change="onSettingChange('game')" ng-model="games['A']" /> Cosmic Alliance</label></div>
+						<div class="checkbox"><label for="gameC"><input type="checkbox" id="gameC" name="gameC" ng-change="onSettingChange('game')" ng-model="games['C']" /> Cosmic Conflict</label></div>
+						<div class="checkbox"><label for="gameD"><input type="checkbox" id="gameD" name="gameD" ng-change="onSettingChange('game')" ng-model="games['D']" /> Cosmic Dominion</label></div>
+						<div class="checkbox"><label for="gameI"><input type="checkbox" id="gameI" name="gameI" ng-change="onSettingChange('game')" ng-model="games['I']" /> Cosmic Incursion</label></div>
+						<div class="checkbox"><label for="gameS"><input type="checkbox" id="gameS" name="gameS" ng-change="onSettingChange('game')" ng-model="games['S']" /> Cosmic Storm</label></div>
+					</div>
+				</div>
+			</div>
+
+			<div id="settings-listing" class="col-sm-5 col-md-4">
+				<div class="panel panel-primary">
+					<div class="panel-heading">List</div>
+					<div class="panel-body">
+						<h4>Order By:</h4>
+
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="row page-footer">
+			<div class="col-sm-offset-1 col-md-offset-2 col-sm-10 col-md-8">
+				<div class="row"><alien-panel ng-repeat="alien in aliensToShow | orderBy:'name'" alien="alien"></alien-panel></div>
+			</div>
+		</div>
+	</div>
+	<script src="js/angular-1.3.15.min.js"></script>
+	<script src="js/ngStorage.min.js"></script>
+	<script src="js/cosmicAliens.min.js"></script>
+	<script src="js/cosmicReferenceApp.min.js"></script>
+</body>
+</html>
