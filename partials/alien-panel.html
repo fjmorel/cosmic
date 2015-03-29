@@ -1,16 +1,13 @@
 ﻿<div class="col-sm-6">
 	<div class="panel panel-{{alien.level | levelClass}}">
 		<div class="panel-heading">
-			<span>{{alien.name}}</span>
-			<span class="pull-right label label-{{alien.level | levelClass}}">C{{alien.game}}</span>
-			<span class="pull-right label label-{{alien.level | levelClass}}">{{alien.level | levelStars}}</span>
-			<span ng-show="alien.setup || alien.restriction" class="pull-right label label-{{alien.level | levelClass}}">!</span>
+			<alien-title alien="alien"></alien-title>
 			<span class="clearfix"></span>
 		</div>
 		<div class="panel-body">
 			<a ng-click="toggle = !toggle" class="pull-right btn btn-sm btn-{{alien.level | levelClass}}">+</a>
 			{{alien.power}}
 		</div>
-		<div class="panel-footer" ng-show="toggle" ng-bind-html="alien.description | unsafe"></div>
+		<div class="panel-footer" ng-show="toggle" ng-bind-html="alien.description"></div>
 	</div>
 </div>
