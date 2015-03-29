@@ -47,7 +47,7 @@
 	<div ng-controller="GeneratorCtrl" class="container-fluid">
 		<div class="row" id="page-header">
 			<div class="col-sm-offset-1 col-sm-10 col-md-offset-2 col-md-8">
-				<h2>Alien Generator<a style="float:right;" href="https://play.google.com/store/apps/details?id=net.fmorel.cosmicgenerator"><img alt="Android app on Google Play" src="icons/playstore_badge.png" /></a></h2>
+				<h2><a href="index.html" class="btn btn-primary">〈 Home</a> Alien Generator<a style="float:right;" href="https://play.google.com/store/apps/details?id=net.fmorel.cosmicgenerator"><img alt="Android app on Google Play" src="icons/playstore_badge.png" /></a></h2>
 				<p>Randomly assign aliens for game setup</p>
 			</div>
 		</div>
@@ -57,18 +57,18 @@
 					<div class="panel-heading">Include</div>
 					<div class="panel-body btn-group" id="Complexities">
 						<h4>Levels</h4>
-						<label for="Green" class="btn btn-success"><input type="checkbox" id="Green" name="Green" ng-change="onSettingChange('complexities')" ng-model="complexities[0]" /> Green</label>
-						<label for="Yellow" class="btn btn-warning"><input type="checkbox" id="Yellow" name="Yellow" ng-change="onSettingChange('complexities')" ng-model="complexities[1]" /> Yellow</label>
-						<label for="Red" class="btn btn-danger"><input type="checkbox" id="Red" name="Red" ng-change="onSettingChange('complexities')" ng-model="complexities[2]" /> Red</label>
+						<label for="Green" class="btn btn-success"><input type="checkbox" id="Green" ng-change="onSettingChange('complexities')" ng-model="complexities[0]" /> Green</label>
+						<label for="Yellow" class="btn btn-warning"><input type="checkbox" id="Yellow" ng-change="onSettingChange('complexities')" ng-model="complexities[1]" /> Yellow</label>
+						<label for="Red" class="btn btn-danger"><input type="checkbox" id="Red" ng-change="onSettingChange('complexities')" ng-model="complexities[2]" /> Red</label>
 					</div>
 					<div class="panel-body form-horizontal" id="Games">
 						<h4>Games</h4>
-						<div class="checkbox"><label for="gameE" id="CE"><input type="checkbox" id="gameE" name="gameE" ng-change="onSettingChange('game')" ng-model="games['E']" /> Cosmic Encounter</label></div>
-						<div class="checkbox"><label for="gameA"><input type="checkbox" id="gameA" name="gameA" ng-change="onSettingChange('game')" ng-model="games['A']" /> Cosmic Alliance</label></div>
-						<div class="checkbox"><label for="gameC"><input type="checkbox" id="gameC" name="gameC" ng-change="onSettingChange('game')" ng-model="games['C']" /> Cosmic Conflict</label></div>
-						<div class="checkbox"><label for="gameD"><input type="checkbox" id="gameD" name="gameD" ng-change="onSettingChange('game')" ng-model="games['D']" /> Cosmic Dominion</label></div>
-						<div class="checkbox"><label for="gameI"><input type="checkbox" id="gameI" name="gameI" ng-change="onSettingChange('game')" ng-model="games['I']" /> Cosmic Incursion</label></div>
-						<div class="checkbox"><label for="gameS"><input type="checkbox" id="gameS" name="gameS" ng-change="onSettingChange('game')" ng-model="games['S']" /> Cosmic Storm</label></div>
+						<div class="checkbox"><label for="gameE"><input type="checkbox" id="gameE" ng-change="onSettingChange('game')" ng-model="games['E']" /> {{'E' | gameName}}</label></div>
+						<div class="checkbox"><label for="gameA"><input type="checkbox" id="gameA" ng-change="onSettingChange('game')" ng-model="games['A']" /> {{'A' | gameName}}</label></div>
+						<div class="checkbox"><label for="gameC"><input type="checkbox" id="gameC" ng-change="onSettingChange('game')" ng-model="games['C']" /> {{'C' | gameName}}</label></div>
+						<div class="checkbox"><label for="gameD"><input type="checkbox" id="gameD" ng-change="onSettingChange('game')" ng-model="games['D']" /> {{'D' | gameName}}</label></div>
+						<div class="checkbox"><label for="gameI"><input type="checkbox" id="gameI" ng-change="onSettingChange('game')" ng-model="games['I']" /> {{'I' | gameName}}</label></div>
+						<div class="checkbox"><label for="gameS"><input type="checkbox" id="gameS" ng-change="onSettingChange('game')" ng-model="games['S']" /> {{'S' | gameName}}</label></div>
 					</div>
 				</div>
 			</div>
