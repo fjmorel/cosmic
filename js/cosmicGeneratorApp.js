@@ -1,4 +1,4 @@
-﻿//TODO: testing, good multiselect w/o jQuery
+﻿//TODO: testing
 //TODO: use sessionstorage for current state (current, given, pool, etc)
 (function() {
   "use strict";
@@ -15,9 +15,8 @@
       preventConflicts: true
     });
 
-    //Include
+    $scope.settings = $localStorage;
     $scope.complexities = $localStorage.complexities;
-    $scope.games = $localStorage.games;
 
     //Exclude
     $scope.namesExcluded = $localStorage.namesExcluded;
@@ -25,7 +24,6 @@
 
     //Choose
     $scope.numToChoose = $localStorage.numToChoose;
-    $scope.preventConflicts = $localStorage.preventConflicts;
     
     //Output
     $scope.message = "Loading aliens...";
@@ -38,7 +36,6 @@
     $scope.numCurrent = function() { return current.length; };
     $scope.numGiven = function() { return given.length; };
     $scope.numRestricted = function() { return restricted.length; };
-    $scope.numExcluded = function() { return $scope.namesExcluded.length; };
     $scope.numLeft = function() { return pool.length; };
 
     //Keep choose # within 1 and max. Run when resetting alien list (# might have changed) and changing # to pick
@@ -47,7 +44,7 @@
       var max = $scope.numLeft();
       if(max > 0 && numToGive > max) numToGive = max;
       if(numToGive < 1) numToGive = 1;
-      //save("choose", numToGive);
+
       $scope.numToChoose = numToGive;
       $localStorage.numToChoose = numToGive;
     };
@@ -55,9 +52,10 @@
     //Determine list of possible choices based on selected options
     function resetGenerator() {
       //Create POOL from aliens that match level and game and are not excluded, and clear other lists
+      var opts = $scope.settings;
       pool = $scope.namesAll.filter(function(name) {
         var e = Aliens.get(name);
-        return $scope.complexities[e.level] && $scope.games[e.game] && $scope.namesExcluded.indexOf(name) < 0 && ($scope.setupLevel === "0" || e.setup === undefined || ($scope.setupLevel === "1" && e.setup !== "color"));
+        return opts.complexities[e.level] && opts.games[e.game] && $scope.namesExcluded.indexOf(name) < 0 && ($scope.setupLevel === "0" || e.setup === undefined || ($scope.setupLevel === "1" && e.setup !== "color"));
       });
       given = [];
       current = [];
@@ -71,11 +69,11 @@
     }
 
     $scope.onExcludeSelect = function($item, $model) {
-      $scope.namesExcluded.push($item);
+      $scope.namesExcluded.push($item.name);
       $scope.onSettingChange('namesExcluded');
     }
     $scope.onExcludeRemove = function($item, $model) {
-      var index = $scope.namesExcluded.indexOf($item);
+      var index = $scope.namesExcluded.indexOf($item.name);
       if(index > -1) $scope.namesExcluded.splice(index, 1);
       $scope.onSettingChange('namesExcluded');
     }
@@ -119,7 +117,7 @@
 
       //If current choice has any restrictions, remove them from pool as well
       var alien = Aliens.get(name);
-      if($scope.preventConflicts && alien.restriction) {
+      if($scope.settings.preventConflicts && alien.restriction) {
         var restrictions = alien.restriction.split(',');
         for(var j = 0; j < restrictions.length; j++) {
           var index = pool.indexOf(restrictions[j]);
@@ -144,7 +142,7 @@
       if(current.length < howManyToChoose) {
         undo();
         $scope.aliensToShow = [];
-        $scope.message = "Not enough potential aliens left." + ($scope.preventConflicts ? " It's possible that the \"Prevent conflicts\" option is preventing me from displaying remaining aliens." : "");
+        $scope.message = "Not enough potential aliens left." + ($scope.settings.preventConflicts ? " It's possible that the \"Prevent conflicts\" option is preventing me from displaying remaining aliens." : "");
         return;
       }
 
@@ -182,7 +180,8 @@
 
     //Init generator
     Aliens.onLoaded(function() {
-      $scope.namesAll = Aliens.getNames();
+      $scope.namesAll = Aliens.getNames().sort();
+      $scope.aliensAll = $scope.namesAll.map(function(e) { return Aliens.get(e); });
       resetGenerator();
     });
   }]);

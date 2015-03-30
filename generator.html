@@ -63,12 +63,12 @@
 					</div>
 					<div class="panel-body form-horizontal" id="Games">
 						<h4>Games</h4>
-						<div class="checkbox"><label for="gameE"><input type="checkbox" id="gameE" ng-change="onSettingChange('game')" ng-model="games['E']" /> {{'E' | gameName}}</label></div>
-						<div class="checkbox"><label for="gameA"><input type="checkbox" id="gameA" ng-change="onSettingChange('game')" ng-model="games['A']" /> {{'A' | gameName}}</label></div>
-						<div class="checkbox"><label for="gameC"><input type="checkbox" id="gameC" ng-change="onSettingChange('game')" ng-model="games['C']" /> {{'C' | gameName}}</label></div>
-						<div class="checkbox"><label for="gameD"><input type="checkbox" id="gameD" ng-change="onSettingChange('game')" ng-model="games['D']" /> {{'D' | gameName}}</label></div>
-						<div class="checkbox"><label for="gameI"><input type="checkbox" id="gameI" ng-change="onSettingChange('game')" ng-model="games['I']" /> {{'I' | gameName}}</label></div>
-						<div class="checkbox"><label for="gameS"><input type="checkbox" id="gameS" ng-change="onSettingChange('game')" ng-model="games['S']" /> {{'S' | gameName}}</label></div>
+						<div class="checkbox"><label for="gameE"><input type="checkbox" id="gameE" ng-change="onSettingChange('game')" ng-model="settings.games['E']" /> {{'E' | gameName}}</label></div>
+						<div class="checkbox"><label for="gameA"><input type="checkbox" id="gameA" ng-change="onSettingChange('game')" ng-model="settings.games['A']" /> {{'A' | gameName}}</label></div>
+						<div class="checkbox"><label for="gameC"><input type="checkbox" id="gameC" ng-change="onSettingChange('game')" ng-model="settings.games['C']" /> {{'C' | gameName}}</label></div>
+						<div class="checkbox"><label for="gameD"><input type="checkbox" id="gameD" ng-change="onSettingChange('game')" ng-model="settings.games['D']" /> {{'D' | gameName}}</label></div>
+						<div class="checkbox"><label for="gameI"><input type="checkbox" id="gameI" ng-change="onSettingChange('game')" ng-model="settings.games['I']" /> {{'I' | gameName}}</label></div>
+						<div class="checkbox"><label for="gameS"><input type="checkbox" id="gameS" ng-change="onSettingChange('game')" ng-model="settings.games['S']" /> {{'S' | gameName}}</label></div>
 					</div>
 				</div>
 			</div>
@@ -79,8 +79,8 @@
 					<div class="panel-body">
 						<h4>By name</h4>
 						<ui-select on-select="onExcludeSelect($item, $model)" on-remove="	onExcludeRemove($item, $model)" multiple ng-model="namesExcluded" placeholder="None selected">
-							<ui-select-match placeholder="None selected">{{$item}}</ui-select-match>
-							<ui-select-choices repeat="name in namesAll | orderBy"><alien-title alien="name | alienFromName"></alien-title></ui-select-choices>
+							<ui-select-match placeholder="None selected">{{$item.name}}</ui-select-match>
+							<ui-select-choices repeat="alien in aliensAll"><alien-title alien="alien"></alien-title></ui-select-choices>
 						</ui-select>
 					</div>
 					<div class="panel-body">
@@ -100,7 +100,7 @@
 						<div class="row">
 							<div class="col-sm-6">
 								<label for="choose">Choices per player <input type="number" class="form-control" id="choose" name="choose" ng-change="restrictNumToChoose()" ng-model="numToChoose" min=1 step=1 /></label>
-								<div class="checkbox"><label for="preventConflict"><input type="checkbox" name="preventConflict" id="preventConflict" ng-model="preventConflicts" /> Prevent conflicts (like Oracle vs. Magician)</</label></div>
+								<div class="checkbox"><label for="preventConflict"><input type="checkbox" name="preventConflict" id="preventConflict" ng-model="settings.preventConflicts" /> Prevent conflicts (like Oracle vs. Magician)</</label></div>
 							</div>
 							<div class="col-sm-6">
 								<p id="numbers">{{numCurrent()+numGiven()+numRestricted()}} of {{numCurrent()+numGiven()+numRestricted()+numLeft()}} picked.</p>

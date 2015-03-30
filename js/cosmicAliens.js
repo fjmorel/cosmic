@@ -80,7 +80,7 @@
         alien: '='
       },
       restrict: "AE",
-      template: '<div><span class="pull-right label label-{{alien.level | levelClass}}">C{{alien.game}}</span><span class="pull-right label label-{{alien.level | levelClass}}">{{alien.level | levelStars}}</span><span ng-show="alien.setup || alien.restriction" class="pull-right label label-{{alien.level | levelClass}}">!</span><span>{{alien.name}}</span></div>'
+      templateUrl: 'partials/alien-title.html'
     }
   });
 

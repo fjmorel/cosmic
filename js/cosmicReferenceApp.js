@@ -1,5 +1,4 @@
-﻿//TODO: testing, good multiselect w/o jQuery
-//TODO: use sessionstorage for current state (current, given, pool, etc)
+﻿//TODO: testing
 (function() {
   "use strict";
   var app = angular.module('cosmicApp', ['cosmicAliens', 'ngStorage']);
@@ -19,7 +18,6 @@
     $scope.orderPref = $localStorage.orderPref;
     $scope.groupPref = $localStorage.groupPref;
     $scope.alienGroups = [];
-    var aliensToShow = [];
     var namesAll = [];
 
     function groupAliens(list, level) {
