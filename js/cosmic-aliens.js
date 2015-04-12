@@ -4,13 +4,15 @@
   var mod = angular.module('cosmicAliens', []);
 
   //Fetch alien data and provide methods to retrieve names and aliens
-  mod.factory('alienData', ['$http', function($http) {
+  mod.factory('alienData', ['$http', '$filter', function($http, $filter) {
     var aliens = {}, alien_names = [];
 
     return {
       onLoaded: function(func) {
         $http.get("data/aliens.json").success(function(data) {
+          var getClass = $filter('levelClass');
           data.forEach(function(alien) {
+            alien.class = getClass(alien.level);//save class immediately
             aliens[alien.name] = alien;
             alien_names.push(alien.name);
           });
@@ -39,29 +41,7 @@
   mod.filter('alienFromName', ['alienData', function(alienData) {
     return function(name) { return alienData.get(name); };
   }]);
-
-  mod.filter('groupBy', ['$parse', function($parse) {
-    return function(list, fields) {
-      var grouped = {};
-
-      //force fields into Array
-      fields = angular.isArray(fields) ? fields : [fields];
-      if(fields.length < 1) return { value: '', items: list };
-
-      var field = fields[0];
-      list.forEach(function(item) {
-        var group = item[field];//var group = $parse(field)(item);
-        grouped[group] = grouped[group] || [];
-        grouped[group].push(angular.copy(item));
-      });
-      var groups = Object.keys(grouped);
-      
-      return groups.map(function(group) {
-        return { value : group, items : grouped[group] };
-      });
-    };
-  }]);
-  
+    
   //Turn alien level into a string of stars to show level
   mod.filter('levelStars', function() {
     //var starred = {};
@@ -89,10 +69,10 @@
     return {
       restrict: "AE",
       templateUrl: "partials/alien-panel.html",
-      link: function($scope, element, attrs, controllers) {
+      link: function(scope) {
         //Mark description as safe HTML
-        if(typeof $scope.alien.description =='string')
-          $scope.alien.description = $sce.trustAsHtml($scope.alien.description);
+        if(typeof scope.alien.description == 'string')
+          scope.alien.description = $sce.trustAsHtml(scope.alien.description);
       }
     };
   }]);

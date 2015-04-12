@@ -1,6 +1,4 @@
-﻿<div>
-	<span class="pull-right label label-{{alien.level | levelClass}}">C{{alien.game}}</span>
-	<span class="pull-right label label-{{alien.level | levelClass}}">{{alien.level | levelStars}}</span>
-	<span ng-show="alien.setup || alien.restriction" class="pull-right label label-{{alien.level | levelClass}}">!</span>
-	<span>{{alien.name}}</span>
-</div>
+﻿<span class="pull-right label label-{{::alien.class}}">C{{::alien.game}}</span>
+<span class="pull-right label label-{{::alien.class}}">{{::alien.level | levelStars}}</span>
+<span ng-if="::(alien.setup || alien.restriction)" class="pull-right label label-{{::alien.class}}">!</span>
+<span>{{::alien.name}}</span>

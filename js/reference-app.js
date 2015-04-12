@@ -2,24 +2,10 @@
 (function() {
   "use strict";
 
-  /*
-  https://github.com/tymondesigns/angular-locker
-   *   var app = angular.module('cosmicApp', ['cosmicAliens', 'angular-locker', 'ui.select']);
-
-  app.config(['lockerProvider', function config(lockerProvider) {
-    lockerProvider.setDefaultDriver('local').setDefaultNamespace('genAlien');
-  }]);
+  var app = angular.module('ReferenceApp', ['cosmicAliens', 'ngStorage']);
 
   //Based on settings, allow user to pick aliens randomly
-  app.controller('GeneratorCtrl', ["$scope", "alienData", 'locker', function($scope, Aliens, locker) {
-
-   * 
-   */
-
-  var app = angular.module('cosmicApp', ['cosmicAliens', 'ngStorage']);
-
-  //Based on settings, allow user to pick aliens randomly
-  app.controller('GeneratorCtrl', ["$scope", "alienData", '$localStorage', '$sessionStorage', function($scope, Aliens, $localStorage, $sessionStorage) {
+  app.controller('AlienReferenceController', ["$scope", "alienData", '$localStorage', '$sessionStorage', function($scope, Aliens, $localStorage, $sessionStorage) {
     $localStorage.$default({
       complexities: [true, true, true],
       games: { E: true },
@@ -33,7 +19,7 @@
     $scope.orderPref = $localStorage.orderPref;
     $scope.groupPref = $localStorage.groupPref;
     $scope.alienGroups = [];
-    var namesAll = [];
+    var namesAll = [], aliensAll = [];
 
     function groupAliens(list, level) {
       if($scope.groupPref.length < 1) return { value: '', items: list };
@@ -59,17 +45,17 @@
 
     //Show filtered, grouped list of aliens
     function showAliens() {
-      console.time('show');
+      console.time('filter');
       //Filter
-      var aliens = namesAll.map(function(e) { return Aliens.get(e); }).filter(function(e) {
+      var aliens = aliensAll.filter(function(e) {
         return $scope.complexities[e.level] && $scope.games[e.game];
       });
-
+      console.timeEnd('filter');
       //Group
       console.time('group');
       $scope.alienGroups = groupAliens(aliens, 0);
       console.timeEnd('group');
-      console.timeEnd('show');
+      
     }
 
     $scope.onSettingChange = function(setting) {
@@ -80,6 +66,7 @@
     //Init generator
     Aliens.onLoaded(function() {
       namesAll = Aliens.getNames();
+      aliensAll = namesAll.map(Aliens.get);
       showAliens();
     });
   }]);

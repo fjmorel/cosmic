@@ -1,5 +1,5 @@
 ﻿<!DOCTYPE html>
-<html lang="en" ng-app="cosmicApp">
+<html lang="en" ng-app="ReferenceApp" ng-strict-di>
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
@@ -38,13 +38,13 @@
 			font-weight: bold;
 		}
 
-		.ui-select-bootstrap .ui-select-choices-row.active>a {
+		.ui-select-bootstrap .ui-select-choices-row.active > a {
 			background-color: #381791;
 		}
 	</style>
 </head>
 <body>
-	<div ng-controller="GeneratorCtrl" class="container-fluid">
+	<div ng-controller="AlienReferenceController" class="container-fluid">
 		<div class="row" id="page-header">
 			<div class="col-sm-offset-1 col-sm-10 col-md-offset-2 col-md-8">
 				<h2><a href="index.html" class="btn btn-primary">〈 Home</a> Alien Reference<a style="float:right;" href="https://play.google.com/store/apps/details?id=net.fmorel.cosmicgenerator"><img alt="Android app on Google Play" src="icons/playstore_badge.png" /></a></h2>
@@ -94,8 +94,8 @@
 		</div>
 	</div>
 	<script src="js/angular-1.3.15.min.js"></script>
-	<script src="js/ngStorage.min.js"></script>
-	<script src="js/cosmicAliens.js"></script>
-	<script src="js/cosmicReferenceApp.js"></script>
+	<script src="js/ng-storage.min.js"></script>
+	<script src="js/cosmic-aliens.min.js"></script>
+	<script src="js/reference-app.min.js"></script>
 </body>
 </html>

@@ -1,5 +1,5 @@
 ﻿<!DOCTYPE html>
-<html lang="en" ng-app="cosmicApp">
+<html lang="en" ng-app="GameGeneratorApp" ng-strict-di>
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
@@ -38,13 +38,18 @@
 			font-weight: bold;
 		}
 
-		.ui-select-bootstrap .ui-select-choices-row.active>a {
+		.ui-select-bootstrap .ui-select-choices-row.active > a {
 			background-color: #381791;
+			color: white;
+		}
+
+		.hidden {
+			display: none;
 		}
 	</style>
 </head>
 <body>
-	<div ng-controller="GeneratorCtrl" class="container-fluid">
+	<div ng-controller="GeneratorCtrl as ctrl" class="container-fluid">
 		<div class="row" id="page-header">
 			<div class="col-sm-offset-1 col-sm-10 col-md-offset-2 col-md-8">
 				<h2><a href="index.html" class="btn btn-primary">〈 Home</a> Alien Generator<a style="float:right;" href="https://play.google.com/store/apps/details?id=net.fmorel.cosmicgenerator"><img alt="Android app on Google Play" src="icons/playstore_badge.png" /></a></h2>
@@ -57,12 +62,12 @@
 					<div class="panel-heading">Include</div>
 					<div class="panel-body btn-group" id="Complexities">
 						<h4>Levels</h4>
-						<label ng-repeat="(level, name) in ['Green','Yellow','Red']" ng-class="'btn-'+(level|levelClass)" class="btn"><input type="checkbox" ng-change="onSettingChange('complexities')" ng-model="complexities[level]" /> {{name}}</label>
+						<label ng-repeat="(level, name) in ::['Green','Yellow','Red']" ng-class="'btn-'+(level|levelClass)" class="btn"><input type="checkbox" ng-change="ctrl.saveSetting('complexities')" ng-model="complexities[level]" /> {{::name}}</label>
 					</div>
 					<div class="panel-body form-horizontal" id="Games">
 						<h4>Games</h4>
-						<div class="checkbox" ng-repeat="game in ['E', 'A', 'C', 'D', 'I', 'S']">
-							<label><input type="checkbox" ng-change="onSettingChange('game')" ng-model="settings.games[game]" /> {{game | gameName}}</label>
+						<div class="checkbox" ng-repeat="game in ::['E', 'A', 'C', 'D', 'I', 'S']">
+							<label><input type="checkbox" ng-change="ctrl.saveSetting('game')" ng-model="settings.games[game]" /> {{::game | gameName}}</label>
 						</div>
 					</div>
 				</div>
@@ -73,16 +78,16 @@
 					<div class="panel-heading">Exclude</div>
 					<div class="panel-body">
 						<h4>By name</h4>
-						<ui-select on-select="onExcludeSelect($item, $model)" on-remove="	onExcludeRemove($item, $model)" multiple ng-model="namesExcluded" placeholder="None selected">
-							<ui-select-match placeholder="None selected">{{$item.name}}</ui-select-match>
-							<ui-select-choices repeat="alien in aliensAll"><alien-title alien="alien"></alien-title></ui-select-choices>
+						<ui-select on-select="ctrl.onExcludeSelect($model)" on-remove="	ctrl.onExcludeRemove($model)" multiple ng-model="namesExcluded" placeholder="None selected" theme="bootstrap">
+							<ui-select-match placeholder="None selected">{{::$item.name}}</ui-select-match>
+							<ui-select-choices repeat="alien.name as alien in aliensAll"><div alien-title alien="::alien"></div></ui-select-choices>
 						</ui-select>
 					</div>
 					<div class="panel-body">
 						<h4>Game setup</h4>
-						<div class="radio"><label for="setup0"><input type="radio" name="excludeSetup" value="0" id="setup0" ng-change="onSettingChange('setupLevel')" ng-model="setupLevel" /> Remove none</label></div>
-						<div class="radio"><label for="setup1"><input type="radio" name="excludeSetup" value="1" id="setup1" ng-change="onSettingChange('setupLevel')" ng-model="setupLevel" /> Remove those requiring extra color</label></div>
-						<div class="radio"><label for="setup2"><input type="radio" name="excludeSetup" value="2" id="setup2" ng-change="onSettingChange('setupLevel')" ng-model="setupLevel" /> Remove all</label></div>
+						<div class="radio"><label><input type="radio" name="excludeSetup" value="none" ng-change="ctrl.saveSetting('setupLevel')" ng-model="setupLevel" /> Remove none</label></div>
+						<div class="radio"><label><input type="radio" name="excludeSetup" value="color" ng-change="ctrl.saveSetting('setupLevel')" ng-model="setupLevel" /> Remove those requiring extra color</label></div>
+						<div class="radio"><label><input type="radio" name="excludeSetup" value="all" ng-change="ctrl.saveSetting('setupLevel')" ng-model="setupLevel" /> Remove all</label></div>
 					</div>
 				</div>
 			</div>
@@ -94,14 +99,14 @@
 					<div class="panel-body container-fluid">
 						<div class="row">
 							<div class="col-sm-6">
-								<label for="choose">Choices per player <input type="number" class="form-control" id="choose" name="choose" ng-change="restrictNumToChoose()" ng-model="numToChoose" min=1 step=1 /></label>
+								<label for="choose">Choices per player <input type="number" class="form-control" id="choose" name="choose" ng-change="ctrl.restrictNumToChoose()" ng-model="numToChoose" min=1 step=1 /></label>
 								<div class="checkbox"><label for="preventConflict"><input type="checkbox" name="preventConflict" id="preventConflict" ng-model="settings.preventConflicts" /> Prevent conflicts (like Oracle vs. Magician)</</label></div>
 							</div>
 							<div class="col-sm-6">
-								<p id="numbers">{{numCurrent()+numGiven()+numRestricted()}} of {{numCurrent()+numGiven()+numRestricted()+numLeft()}} picked.</p>
+								<p id="numbers">{{numOut()}} of {{numOut()+numLeft()}} picked.</p>
 								<div class="btn-group btn-group-lg btn-group-justified">
 									<div class="btn-group">
-										<button class="btn btn-danger" id="reset" ng-click="reset()" ng-disabled="numCurrent() <= 0 && numGiven() <= 0">Reset</button>
+										<button class="btn btn-danger" id="reset" ng-click="ctrl.reset()" ng-disabled="numCurrent() <= 0 && numGiven() <= 0">Reset</button>
 									</div>
 								</div>
 							</div>
@@ -110,14 +115,14 @@
 				</div>
 				<div class="btn-group btn-group-lg btn-group-justified">
 					<div class="btn-group">
-						<button class="btn btn-primary" ng-click="pickAliens()" ng-disabled="numLeft() < numToChoose">Pick</button>
+						<button class="btn btn-primary" ng-click="ctrl.pickAliens()" ng-disabled="numLeft() < numToChoose">Pick</button>
 					</div>
 					<div class="btn-group">
-						<button class="btn btn-success" ng-click="hide()" ng-hide="numCurrent() > 0 && aliensToShow.length <= 0" ng-disabled="aliensToShow.length <= 0">Hide</button>
-						<button class="btn btn-success" ng-click="show()" ng-show="numCurrent() > 0 && aliensToShow.length <= 0" ng-disabled="numCurrent() <= 0">Show</button>
+						<button class="btn btn-success" ng-click="ctrl.hide()" ng-class="{hidden:numCurrent() > 0 && aliensToShow.length <= 0}" ng-disabled="aliensToShow.length <= 0">Hide</button>
+						<button class="btn btn-success" ng-click="ctrl.show()" ng-class="{hidden:!(numCurrent() > 0 && aliensToShow.length <= 0)}" ng-disabled="numCurrent() <= 0">Show</button>
 					</div>
 					<div class="btn-group">
-						<button class="btn btn-danger" ng-click="redo();" ng-disabled="numCurrent() <= 0 || aliensToShow.length <= 0">Redo</button>
+						<button class="btn btn-danger" ng-click="ctrl.redo();" ng-disabled="numCurrent() <= 0 || aliensToShow.length <= 0">Redo</button>
 					</div>
 				</div>
 			</div>
@@ -131,9 +136,9 @@
 		</div>
 	</div>
 	<script src="js/angular-1.3.15.min.js"></script>
-	<script src="js/ngStorage.min.js"></script>
-	<script src="js/select.min.js"></script>
-	<script src="js/cosmicAliens.min.js"></script>
-	<script src="js/cosmicGeneratorApp.min.js"></script>
+	<script src="js/ng-storage.min.js"></script>
+	<script src="js/ui-select.min.js"></script>
+	<script src="js/cosmic-aliens.min.js"></script>
+	<script src="js/generator-app.min.js"></script>
 </body>
 </html>
