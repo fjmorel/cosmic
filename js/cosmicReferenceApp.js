@@ -1,6 +1,21 @@
 ﻿//TODO: testing
 (function() {
   "use strict";
+
+  /*
+  https://github.com/tymondesigns/angular-locker
+   *   var app = angular.module('cosmicApp', ['cosmicAliens', 'angular-locker', 'ui.select']);
+
+  app.config(['lockerProvider', function config(lockerProvider) {
+    lockerProvider.setDefaultDriver('local').setDefaultNamespace('genAlien');
+  }]);
+
+  //Based on settings, allow user to pick aliens randomly
+  app.controller('GeneratorCtrl', ["$scope", "alienData", 'locker', function($scope, Aliens, locker) {
+
+   * 
+   */
+
   var app = angular.module('cosmicApp', ['cosmicAliens', 'ngStorage']);
 
   //Based on settings, allow user to pick aliens randomly

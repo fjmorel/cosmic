@@ -2,8 +2,8 @@
 //TODO: use sessionstorage for current state (current, given, pool, etc)
 (function() {
   "use strict";
-  var app = angular.module('cosmicApp', ['cosmicAliens', 'ngStorage','ui.select']);
-
+  var app = angular.module('cosmicApp', ['cosmicAliens', 'ngStorage', 'ui.select']);
+  
   //Based on settings, allow user to pick aliens randomly
   app.controller('GeneratorCtrl', ["$scope", "alienData", '$localStorage', '$sessionStorage', function($scope, Aliens, $localStorage, $sessionStorage) {
     $localStorage.$default({
