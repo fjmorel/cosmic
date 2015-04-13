@@ -78,9 +78,9 @@
 					<div class="panel-heading">Exclude</div>
 					<div class="panel-body">
 						<h4>By name</h4>
-						<ui-select on-select="ctrl.onExcludeSelect($model)" on-remove="	ctrl.onExcludeRemove($model)" multiple ng-model="namesExcluded" placeholder="None selected" theme="bootstrap">
+						<ui-select on-select="ctrl.onExcludeSelect($model)" on-remove="	ctrl.onExcludeRemove($model)" multiple ng-model="excluded" placeholder="None selected" theme="bootstrap">
 							<ui-select-match placeholder="None selected">{{::$item.name}}</ui-select-match>
-							<ui-select-choices repeat="alien.name as alien in aliensAll"><div alien-title alien="::alien"></div></ui-select-choices>
+							<ui-select-choices repeat="alien in aliensAll"><div alien-title alien="::alien"></div></ui-select-choices>
 						</ui-select>
 					</div>
 					<div class="panel-body">

@@ -42,6 +42,7 @@
 
     //Exclude
     $scope.namesExcluded = $localStorage.namesExcluded;
+    //$scope.excluded = $scope.namesExcluded.map(Aliens.get);//Have to load from aliensAll for ui-select
     $scope.setupLevel = $localStorage.setupLevel;
 
     //Choose
@@ -81,13 +82,19 @@
       $scope.aliensToShow = [];
     };
 
-    ctrl.onExcludeSelect = function(name) {
-      if($scope.namesExcluded.indexOf(name) < 0) $scope.namesExcluded.push(name);
+    ctrl.onExcludeSelect = function(model) {
+      if($scope.namesExcluded.indexOf(model.name) < 0) {
+        $scope.namesExcluded.push(model.name);
+        $scope.excluded.push(model);
+      }
       ctrl.saveSetting('namesExcluded');
     }
-    ctrl.onExcludeRemove = function(name) {
-      var index = $scope.namesExcluded.indexOf(name);
-      if(index > -1) $scope.namesExcluded.splice(index, 1);
+    ctrl.onExcludeRemove = function(model) {
+      var index = $scope.namesExcluded.indexOf(model.name);
+      if(index > -1) {
+        $scope.namesExcluded.splice(index, 1);
+        $scope.excluded.splice(index, 1);
+      }
       ctrl.saveSetting('namesExcluded');
     }
     ctrl.saveSetting = function(setting) {
@@ -206,6 +213,7 @@
     Aliens.onLoaded(function() {
       $scope.namesAll = $scope.namesAll.concat(Aliens.getNames().sort());
       $scope.aliensAll = $scope.namesAll.map(function(e) { return Aliens.get(e); });
+      $scope.excluded = $scope.aliensAll.filter(function(e) { return $scope.namesExcluded.indexOf(e.name) > -1; });
       resetGenerator();
     });
   }]);
