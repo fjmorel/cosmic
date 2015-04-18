@@ -1,21 +1,12 @@
 ﻿(function() {
   "use strict";
-  var app = angular.module('GameGeneratorApp', ['cc.aliens', 'ngStorage', 'ui.select']);
+  var app = angular.module('GameGeneratorApp', ['ngAria','cc.base','cc.aliens', 'ngStorage', 'ngMaterial']);
   app.constant('generatorVersion', 2);
+
   //TODO: testing
   //TODO: use sessionstorage for current state (current, given, pool, etc)
   //app.config(['$compileProvider', function(provider) { provider.debugInfoEnabled(false); }]);
-
-  //Theme for ui-select
-  /*
-  app.value('selectTheme', 'select/cosmic');
-  app.run(["$templateCache", 'selectTheme', function($templateCache, theme) {
-    $templateCache.put(theme + "/choices.tpl.html", '<ul class="ui-select-choices ui-select-choices-content dropdown-menu" role="listbox" ng-show="$select.items.length > 0"><li class="ui-select-choices-group"><div class="ui-select-choices-row" role="option"><a href="javascript:void(0)" class="ui-select-choices-row-inner"></a></div></li></ul>');
-    $templateCache.put(theme + "/match-multiple.tpl.html", '<div class="ui-select-container ui-select-multiple ui-select-bootstrap dropdown form-control" ng-class="{open: $select.open}"><div><div class="ui-select-match"></div><input type="text" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" class="ui-select-search input-xs" placeholder="{{::$selectMultiple.getPlaceholder()}}" ng-click="$select.activate()" ng-model="$select.search" role="combobox" aria-label="{{ ::$select.baseTitle }}" ondrop="return false;" /></div><div class="ui-select-choices"></div></div>');
-    $templateCache.put(theme + "/select-multiple.tpl.html", '<span class="ui-select-match"><span ng-repeat="$item in $select.selected"><span class="ui-select-match-item btn btn-primary btn-xs" tabindex="-1" type="button" ng-click="$selectMultiple.removeChoice($index)"><span class="close ui-select-match-close">&nbsp;&times;</span><span uis-transclude-append=""></span></span></span></span>');
-  }]);
-  */
-
+  
   //Based on settings, allow user to pick aliens randomly
   app.controller('GeneratorCtrl', ["$scope", "alienData", '$localStorage', '$sessionStorage', 'generatorVersion', function($scope, Aliens, $localStorage, $sessionStorage, VERSION) {
 
@@ -48,7 +39,7 @@
     $scope.numToChoose = $localStorage.numToChoose;
 
     //Output
-    $scope.message = "Loading aliens...";
+    ctrl.state = "Loading aliens...";
     $scope.aliensToShow = [];
     $scope.aliensAll = [];
 
@@ -77,23 +68,12 @@
       //SETTINGS.resetHowManyToSelect();//Make sure it's within new limit
       ctrl.restrictNumToChoose();
       //Write status
-      $scope.message = "List reset.";
+      ctrl.state = "List reset.";
       $scope.aliensToShow = [];
     };
 
-    ctrl.onExcludeSelect = function(model) {
-      if($scope.namesExcluded.indexOf(model.name) < 0) {
-        $scope.namesExcluded.push(model.name);
-        $scope.excluded.push(model);
-      }
-      ctrl.saveSetting('namesExcluded');
-    };
-    ctrl.onExcludeRemove = function(model) {
-      var index = $scope.namesExcluded.indexOf(model.name);
-      if(index > -1) {
-        $scope.namesExcluded.splice(index, 1);
-        $scope.excluded.splice(index, 1);
-      }
+    ctrl.onExcludeChange = function() {
+      $scope.namesExcluded = $scope.excluded.map(function(e) { return e.name; });
       ctrl.saveSetting('namesExcluded');
     };
     ctrl.saveSetting = function(setting) {
@@ -141,7 +121,7 @@
 
       if(NOT_RESET > 2) {
         makePickFinal();
-        $scope.message = "Aliens given out so far:";
+        ctrl.state = "Aliens given out so far:";
         $scope.aliensToShow = given.map(Aliens.get);
         NOT_RESET = 0;
       }
@@ -172,12 +152,12 @@
       if(current.length < howManyToChoose) {
         undo();
         $scope.aliensToShow = [];
-        $scope.message = "Not enough potential aliens left." + ($scope.settings.preventConflicts ? " It's possible that the \"Prevent conflicts\" option is preventing me from displaying remaining aliens." : "");
+        ctrl.state = "Not enough potential aliens left." + ($scope.settings.preventConflicts ? " It's possible that the \"Prevent conflicts\" option is preventing me from displaying remaining aliens." : "");
         return;
       }
 
       //Display
-      $scope.message = "Choices:";
+      ctrl.state = "Choices:";
       $scope.aliensToShow = current.map(Aliens.get);
       ctrl.restrictNumToChoose();
       return;
@@ -185,19 +165,19 @@
 
     ctrl.hide = function() {
       $scope.aliensToShow = [];
-      $scope.message = "Choices hidden.";
+      ctrl.state = "Choices hidden.";
     };
 
     ctrl.show = function() {
       //Ask for initial of one of the aliens before reshowing them
       var initials = current.map(function(e) { return e[0].toLowerCase(); });
       if(initials.indexOf((prompt("Enter the first initial of one of the aliens you were given, then click OK.") || "").toLowerCase()) < 0) {
-        $scope.message = "Wrong letter.";
+        ctrl.state = "Wrong letter.";
         return;
       }
 
       //If passed, then show aliens
-      $scope.message = "Choices:";
+      ctrl.state = "Choices:";
       $scope.aliensToShow = current.map(Aliens.get);
     };
 
@@ -209,11 +189,13 @@
     };
 
     //Init generator
-    Aliens.onLoaded(function() {
-      $scope.namesAll = $scope.namesAll.concat(Aliens.getNames().sort());
-      $scope.aliensAll = $scope.namesAll.map(function(e) { return Aliens.get(e); });
+    Aliens.init().then(function(names) {
+      $scope.namesAll = $scope.namesAll.concat(names);
+      $scope.aliensAll = $scope.namesAll.map(Aliens.get);
       $scope.excluded = $scope.aliensAll.filter(function(e) { return $scope.namesExcluded.indexOf(e.name) > -1; });
       resetGenerator();
+    }).catch(function(error) {
+      //TODO: something about being unable to load aliens
     });
   }]);
 })();

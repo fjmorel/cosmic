@@ -19,125 +19,102 @@
 	<meta name="application-name" content="Cosmic Generator" />
 	<meta name="apple-mobile-web-app-title" content="Cosmic" />
 
-	<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
-	<link rel="stylesheet" type="text/css" href="css/bootstrap-theme.min.css">
-	<link rel="stylesheet" type="text/css" href="css/select.min.css">
+	<link rel="stylesheet" type="text/css" href="css/angular-material.min.css" />
+	<link rel="stylesheet" type="text/css" href="css/cosmic-aliens.min.css" />
 	<style>
-		.page-footer {
-			margin-top: 1em;
-			padding-top: 1em;
-			border-top: 2px solid #381791;
-		}
-
-		.label {
-			margin: 0 2px;
-			/*font-size: 90%;*/
-		}
-
-		em {
-			font-weight: bold;
-		}
-
-		.ui-select-bootstrap .ui-select-choices-row.active > a {
-			background-color: #381791;
-			color: white;
-		}
-
 		.hidden {
 			display: none;
 		}
 	</style>
 </head>
-<body>
-	<div ng-controller="GeneratorCtrl as ctrl" class="container-fluid">
-		<div class="row" id="page-header">
-			<div class="col-sm-offset-1 col-sm-10 col-md-offset-2 col-md-8">
-				<h2><a href="index.html" class="btn btn-primary">〈 Home</a> Alien Generator<a style="float:right;" href="https://play.google.com/store/apps/details?id=net.fmorel.cosmicgenerator"><img alt="Android app on Google Play" src="icons/playstore_badge.png" /></a></h2>
-				<p>Randomly assign aliens for game setup</p>
-			</div>
+<body ng-controller="GeneratorCtrl as ctrl">
+	<md-toolbar class="md-hue-2">
+		<div class="md-toolbar-tools">
+			<md-button href="index.html">Companion for Cosmic Encounter</md-button>
 		</div>
-		<div class="row">
-			<div id="settings-include" class="col-sm-offset-1 col-sm-5 col-md-offset-2 col-md-4">
-				<div class="panel panel-primary">
-					<div class="panel-heading">Include</div>
-					<div class="panel-body btn-group" id="Complexities">
-						<h4>Levels</h4>
-						<label ng-repeat="(level, name) in ::['Green','Yellow','Red']" ng-class="'btn-'+(level|levelClass)" class="btn"><input type="checkbox" ng-change="ctrl.saveSetting('complexities')" ng-model="complexities[level]" /> {{::name}}</label>
-					</div>
-					<div class="panel-body form-horizontal" id="Games">
-						<h4>Games</h4>
-						<div class="checkbox" ng-repeat="game in ::['E', 'A', 'C', 'D', 'I', 'S']">
-							<label><input type="checkbox" ng-change="ctrl.saveSetting('game')" ng-model="settings.games[game]" /> {{::game | gameName}}</label>
-						</div>
-					</div>
-				</div>
-			</div>
+	</md-toolbar>
+	<md-toolbar class="md-hue-1">
+		<div class="md-toolbar-tools">
+			<h2>Alien Generator</h2>
+		</div>
+	</md-toolbar>
+	<h2 layout-padding>Settings</h2>
+	<md-content layout="row" layout-sm="column" layout-wrap>
+		<div flex-sm="100" flex-md="50" flex-lg="25" flex-gt-lg="20">
+			<md-card md-theme="levels">
+				<md-card-content>
+					<h4>Levels to include</h4>
+					<md-checkbox ng-change="ctrl.saveSetting('complexities')" ng-model="complexities[level]" ng-repeat="(level, name) in ::['Green','Yellow','Red']" ng-class="'md-primary md-hue-'+(level+1)">{{::name}}</md-checkbox>
+				</md-card-content>
+			</md-card>
+		</div>
+		<div flex-sm="100" flex-md="50" flex-lg="25" flex-gt-lg="20">
+			<md-card>
+				<md-card-content>
+					<h4>Games to include</h4>
+					<md-checkbox ng-change="ctrl.saveSetting('game')" ng-model="settings.games[game]" ng-repeat="game in ::['E', 'A', 'C', 'D', 'I', 'S']" class="md-primary">{{::game | gameName}}</md-checkbox>
+				</md-card-content>
+			</md-card>
+		</div>
+		<div flex-sm="100" flex-md="50" flex-lg="25" flex-gt-lg="20">
+			<md-card>
+				<md-card-content>
+					<h4>Game setup</h4>
+					<md-radio-group ng-model="setupLevel" ng-change="ctrl.saveSetting('setupLevel')">
+						<md-radio-button value="none" class="md-primary">Remove none</md-radio-button>
+						<md-radio-button value="color" class="md-primary">Remove those requiring extra color</md-radio-button>
+						<md-radio-button value="all" class="md-primary">Remove all</md-radio-button>
+					</md-radio-group>
+				</md-card-content>
+			</md-card>
+		</div>
+		<div flex-sm="100" flex-md="50" flex-lg="25" flex-gt-lg="20">
+			<md-card>
+				<md-card-content>
+					<h4>Exclude by name</h4>
+					<md-select multiple ng-model="excluded" ng-change="ctrl.onExcludeChange()">
+						<md-select-label>{{namesExcluded.length? namesExcluded.length + ' removed' : 'Select names'}}</md-select-label>
+						<md-option ng-value="::alien" ng-repeat="alien in aliensAll">
+							{{::alien.name}}
+						</md-option>
+					</md-select>
+				</md-card-content>
+			</md-card>
+		</div>
+		<div flex>
+			<md-card>
+				<md-card-content>
+					<h4>How to choose</h4>
+					<md-input-container>
+						<label>Choices per player</label>
+						<input type="number" step="1" ng-model="numToChoose" min="1" ng-change="ctrl.restrictNumToChoose()">
+					</md-input-container>
+					<md-checkbox class="md-primary" ng-model="settings.preventConflicts">Prevent conflicts (like Oracle vs. Magician)</md-checkbox>
+				</md-card-content>
+			</md-card>
+		</div>
+	</md-content>
+	<md-content layout-padding layout="column">
+		<h2>Generator</h2>
+		<div>
+			<md-button class="md-primary md-raised" ng-click="ctrl.pickAliens()" ng-disabled="numLeft() < numToChoose">Draw</md-button>
+			<md-button class="md-accent md-raised" ng-click="ctrl.hide()" ng-class="{hidden:numCurrent() > 0 && aliensToShow.length <= 0}" ng-disabled="aliensToShow.length <= 0">Hide</md-button>
+			<md-button class="md-accent md-raised" ng-click="ctrl.show()" ng-class="{hidden:!(numCurrent() > 0 && aliensToShow.length <= 0)}" ng-disabled="numCurrent() <= 0">Show</md-button>
+			<md-button class="md-accent md-raised" ng-click="ctrl.redo();" ng-disabled="numCurrent() <= 0 || aliensToShow.length <= 0">Redo</md-button>
+			<md-button layout-align="end center" class="md-warn md-raised" id="reset" ng-click="ctrl.reset()" ng-disabled="numCurrent() <= 0 && numGiven() <= 0">Reset</md-button>
+		</div>
+		<p>{{numOut()}} of {{numOut()+numLeft()}} drawn. {{ctrl.state}}</p>
+	</md-content>
 
-			<div id="settings-exclude" class="col-sm-5 col-md-4">
-				<div class="panel panel-primary">
-					<div class="panel-heading">Exclude</div>
-					<div class="panel-body">
-						<h4>By name</h4>
-						<ui-select on-select="ctrl.onExcludeSelect($model)" on-remove="	ctrl.onExcludeRemove($model)" multiple ng-model="excluded" placeholder="None selected" theme="bootstrap">
-							<ui-select-match placeholder="None selected">{{::$item.name}}</ui-select-match>
-							<ui-select-choices repeat="alien in aliensAll"><div alien-title alien="::alien"></div></ui-select-choices>
-						</ui-select>
-					</div>
-					<div class="panel-body">
-						<h4>Game setup</h4>
-						<div class="radio"><label><input type="radio" name="excludeSetup" value="none" ng-change="ctrl.saveSetting('setupLevel')" ng-model="setupLevel" /> Remove none</label></div>
-						<div class="radio"><label><input type="radio" name="excludeSetup" value="color" ng-change="ctrl.saveSetting('setupLevel')" ng-model="setupLevel" /> Remove those requiring extra color</label></div>
-						<div class="radio"><label><input type="radio" name="excludeSetup" value="all" ng-change="ctrl.saveSetting('setupLevel')" ng-model="setupLevel" /> Remove all</label></div>
-					</div>
-				</div>
-			</div>
-		</div>
-		<div id="settings-choose" class="row">
-			<div class="col-sm-offset-1 col-sm-10 col-md-offset-2 col-md-8">
-				<div class="panel panel-primary">
-					<div class="panel-heading">Choose</div>
-					<div class="panel-body container-fluid">
-						<div class="row">
-							<div class="col-sm-6">
-								<label for="choose">Choices per player <input type="number" class="form-control" id="choose" name="choose" ng-change="ctrl.restrictNumToChoose()" ng-model="numToChoose" min=1 step=1 /></label>
-								<div class="checkbox"><label for="preventConflict"><input type="checkbox" name="preventConflict" id="preventConflict" ng-model="settings.preventConflicts" /> Prevent conflicts (like Oracle vs. Magician)</</label></div>
-							</div>
-							<div class="col-sm-6">
-								<p id="numbers">{{numOut()}} of {{numOut()+numLeft()}} picked.</p>
-								<div class="btn-group btn-group-lg btn-group-justified">
-									<div class="btn-group">
-										<button class="btn btn-danger" id="reset" ng-click="ctrl.reset()" ng-disabled="numCurrent() <= 0 && numGiven() <= 0">Reset</button>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-				<div class="btn-group btn-group-lg btn-group-justified">
-					<div class="btn-group">
-						<button class="btn btn-primary" ng-click="ctrl.pickAliens()" ng-disabled="numLeft() < numToChoose">Pick</button>
-					</div>
-					<div class="btn-group">
-						<button class="btn btn-success" ng-click="ctrl.hide()" ng-class="{hidden:numCurrent() > 0 && aliensToShow.length <= 0}" ng-disabled="aliensToShow.length <= 0">Hide</button>
-						<button class="btn btn-success" ng-click="ctrl.show()" ng-class="{hidden:!(numCurrent() > 0 && aliensToShow.length <= 0)}" ng-disabled="numCurrent() <= 0">Show</button>
-					</div>
-					<div class="btn-group">
-						<button class="btn btn-danger" ng-click="ctrl.redo();" ng-disabled="numCurrent() <= 0 || aliensToShow.length <= 0">Redo</button>
-					</div>
-				</div>
-			</div>
-		</div>
-		<!-- <div class="col-sm-offset-2 col-sm-8"> -->
-		<div class="row page-footer"><div class="col-sm-offset-1 col-md-offset-2 col-sm-10 col-md-8"><p>{{message}}</p></div></div>
-		<div class="row">
-			<div class="col-sm-offset-1 col-md-offset-2 col-sm-10 col-md-8">
-				<div class="row"><alien-panel ng-repeat="alien in aliensToShow | orderBy:'name'" alien="alien"></alien-panel></div>
-			</div>
-		</div>
-	</div>
-	<script src="js/angular-1.3.15.min.js"></script>
+	<md-content layout="row" layout-sm="column" layout-wrap>
+		<alien-panel ng-repeat="alien in aliensToShow | orderBy:'name'" alien="alien" flex flex-md="50" flex-lg="33" flex-gt-lg="25"></alien-panel>
+	</md-content>
+	<script src="js/angular.min.js"></script>
+	<script src="js/angular-aria.min.js"></script>
+	<script src="js/angular-animate.min.js"></script>
+	<script src="js/angular-material.min.js"></script>
 	<script src="js/ng-storage.min.js"></script>
-	<script src="js/ui-select.min.js"></script>
+	<script src="js/cosmic.min.js"></script>
 	<script src="js/cosmic-aliens.min.js"></script>
 	<script src="js/generator-app.min.js"></script>
 </body>
