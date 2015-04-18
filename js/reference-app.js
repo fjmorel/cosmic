@@ -1,7 +1,12 @@
 ﻿(function() {
   "use strict";
   //TODO: testing
-  var app = angular.module('cc.reference', ['cc.base','cc.aliens', 'ngStorage', 'ngAria', 'ngMaterial']);
+  var app = angular.module('cc.reference', ['cc.base', 'cc.aliens', 'ngStorage', 'ngAria', 'ngMaterial', 'ngMdIcons']);
+
+  app.controller('NavDrawer', ['$scope', '$mdSidenav', function($scope, $mdSidenav) {
+    $scope.close = function() { $mdSidenav('left').close() };
+    $scope.open = function() { $mdSidenav('left').open() };
+  }]);
 
   //Based on settings, allow user to pick aliens randomly
   app.controller('AlienReferenceController', ["$scope", "alienData", '$localStorage', '$sessionStorage', function($scope, Aliens, $localStorage, $sessionStorage) {

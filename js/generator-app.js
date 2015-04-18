@@ -1,12 +1,17 @@
 ﻿(function() {
   "use strict";
-  var app = angular.module('GameGeneratorApp', ['ngAria','cc.base','cc.aliens', 'ngStorage', 'ngMaterial']);
+  var app = angular.module('GameGeneratorApp', ['ngAria','cc.base','cc.aliens', 'ngStorage', 'ngMaterial','ngMdIcons']);
   app.constant('generatorVersion', 2);
 
   //TODO: testing
   //TODO: use sessionstorage for current state (current, given, pool, etc)
   //app.config(['$compileProvider', function(provider) { provider.debugInfoEnabled(false); }]);
   
+  app.controller('NavDrawer', ['$scope', '$mdSidenav', function($scope, $mdSidenav) {
+    $scope.close = function() { $mdSidenav('left').close() };
+    $scope.open = function() { $mdSidenav('left').open() };
+  }]);
+
   //Based on settings, allow user to pick aliens randomly
   app.controller('GeneratorCtrl', ["$scope", "alienData", '$localStorage', '$sessionStorage', 'generatorVersion', function($scope, Aliens, $localStorage, $sessionStorage, VERSION) {
 
