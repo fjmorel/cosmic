@@ -1,10 +1,9 @@
-﻿//TODO: testing
-//TODO: use sessionstorage for current state (current, given, pool, etc)
-(function() {
+﻿(function() {
   "use strict";
-  var app = angular.module('GameGeneratorApp', ['cosmicAliens', 'ngStorage', 'ui.select']);
+  var app = angular.module('GameGeneratorApp', ['cc.aliens', 'ngStorage', 'ui.select']);
   app.constant('generatorVersion', 2);
-
+  //TODO: testing
+  //TODO: use sessionstorage for current state (current, given, pool, etc)
   //app.config(['$compileProvider', function(provider) { provider.debugInfoEnabled(false); }]);
 
   //Theme for ui-select
@@ -88,7 +87,7 @@
         $scope.excluded.push(model);
       }
       ctrl.saveSetting('namesExcluded');
-    }
+    };
     ctrl.onExcludeRemove = function(model) {
       var index = $scope.namesExcluded.indexOf(model.name);
       if(index > -1) {
@@ -96,7 +95,7 @@
         $scope.excluded.splice(index, 1);
       }
       ctrl.saveSetting('namesExcluded');
-    }
+    };
     ctrl.saveSetting = function(setting) {
       $localStorage[setting] = $scope[setting];
       resetGenerator();
@@ -142,7 +141,7 @@
 
       if(NOT_RESET > 2) {
         makePickFinal();
-        $scope.message = "Aliens given out so far:"
+        $scope.message = "Aliens given out so far:";
         $scope.aliensToShow = given.map(Aliens.get);
         NOT_RESET = 0;
       }
@@ -198,7 +197,7 @@
       }
 
       //If passed, then show aliens
-      $scope.message = "Choices:"
+      $scope.message = "Choices:";
       $scope.aliensToShow = current.map(Aliens.get);
     };
 

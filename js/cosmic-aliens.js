@@ -1,7 +1,6 @@
-﻿//Functionality relating to aliens
-(function() {
+﻿(function() {
   "use strict";
-  var mod = angular.module('cosmicAliens', []);
+  var mod = angular.module('cc.aliens', []);
 
   //Fetch alien data and provide methods to retrieve names and aliens
   mod.factory('alienData', ['$http', '$filter', function($http, $filter) {
@@ -32,7 +31,7 @@
   //Turn game initial into game name
   mod.filter('gameName', function() {
     var games = {
-      E : "Encounter", A : "Alliance", C : "Conflict", D : "Dominion", I : "Incursion", S : "Storm"
+      E: "Encounter", A: "Alliance", C: "Conflict", D: "Dominion", I: "Incursion", S: "Storm"
     };
     return function(initial) { return 'Cosmic ' + games[initial]; };
   });
@@ -41,7 +40,7 @@
   mod.filter('alienFromName', ['alienData', function(alienData) {
     return function(name) { return alienData.get(name); };
   }]);
-    
+
   //Turn alien level into a string of stars to show level
   mod.filter('levelStars', function() {
     //var starred = {};
@@ -54,24 +53,25 @@
     };
   });
 
-  mod.directive('alienTitle', function(alienData) {
+  mod.directive('alienTitle', function() {
     return {
       scope: {
         alien: '='
       },
       restrict: "AE",
       templateUrl: 'partials/alien-title.html'
-    }
+    };
   });
 
   //Turn alien object into a panel with its information
   mod.directive("alienPanel", ['$sce', function($sce) {
     return {
       restrict: "AE",
+      replace:true,
       templateUrl: "partials/alien-panel.html",
       link: function(scope) {
         //Mark description as safe HTML
-        if(typeof scope.alien.description == 'string')
+        if(typeof scope.alien.description === 'string')
           scope.alien.description = $sce.trustAsHtml(scope.alien.description);
       }
     };
