@@ -11,6 +11,6 @@
 		<span ng-if="::(alien.setup || alien.restriction)">⚠</span>
 		<span style="clear:both"></span>
 	</md-card-content>
-	<md-card-content ng-class="{hidden:!opened}" class="alien-desc md-body-1" ng-bind-html="::alien.description">
+	<md-card-content ng-show="opened" class="animate-show alien-desc md-body-1" ng-bind-html="::alien.description">
 	</md-card-content>
 </md-card>

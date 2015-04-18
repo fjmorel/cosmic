@@ -21,23 +21,19 @@
 
 	<link rel="stylesheet" type="text/css" href="css/angular-material.min.css">
 	<style>
-		.hidden {
-			display: none;
-		}
-
 		.alien-head {
 			display: block;
-			
 		}
+
 		.alien-title {
-			font-weight:bold;
+			font-weight: bold;
 		}
 
 		.alien-bar {
 			color: #fff;
 			padding: 8px 16px;
 			font-size: smaller;
-			text-align:center; /*So warnings show up centered (non-float)*/
+			text-align: center; /*So warnings show up centered (non-float)*/
 		}
 
 			.alien-bar span {
@@ -45,9 +41,13 @@
 			}
 
 		.alien-desc {
-			background:#ddd;
+			background: #ddd;
+			transition:all linear 0.5s;
 		}
-		
+			.alien-desc.ng-hide {
+				opacity: 0;
+			}
+
 		.alien-bg-0 {
 			background: #189247;
 		}
@@ -59,6 +59,7 @@
 		.alien-bg-2 {
 			background: #c31b09;
 		}
+
 		.alien-fg-0 {
 			color: #189247;
 		}
@@ -73,46 +74,42 @@
 	</style>
 </head>
 <body ng-controller="AlienReferenceController">
-	<div layout="column" layout-fill>
-		<md-toolbar class="md-hue-2" md-scroll-shrink>
-			<div class="md-toolbar-tools">
-				<md-button href="index.html" class="md-raised md-primary">〈 Home</md-button>
-				<h2>Alien Reference for Cosmic Encounter</h2>
-			</div>
-		</md-toolbar>
-		<md-content layout-padding>
-			<h2>Settings</h2>
-			<md-content layout="row" layout-sm="column">
-				<md-card flex-gt-sm="50%" flex-gt-md="33%">
-					<md-card-content md-theme="levels">
-						<h4>Levels to include</h4>
-						<md-checkbox ng-change="onSettingChange('complexities')" ng-model="complexities[level]" ng-repeat="(level, name) in ['Green','Yellow','Red']" ng-class="'md-primary md-hue-'+(level+1)">{{::name}}</md-checkbox>
-					</md-card-content>
-				</md-card>
-				<md-card flex-gt-sm="50%" flex-gt-md="33%">
-					<md-card-content>
-						<h4>Games to include</h4>
-						<md-checkbox ng-change="onSettingChange('game')" ng-model="games[game]" ng-repeat="game in ['E', 'A', 'C', 'D', 'I', 'S']" class="md-primary">{{::game | gameName}}</md-checkbox>
-					</md-card-content>
-				</md-card>
-				<md-card flex-gt-sm="50%" flex-gt-md="33%">
-					<md-card-content>
-						<h4>Sort by</h4>
+	<md-toolbar class="md-hue-2">
+		<div class="md-toolbar-tools">
+			<md-button href="index.html" class="md-raised md-primary">〈 Home</md-button>
+			<h2>Alien Reference for Cosmic Encounter</h2>
+		</div>
+	</md-toolbar>
+	<h2 layout-padding>Settings</h2>
+	<md-content layout="row" layout-sm="column" layout-wrap>
+		<md-card md-theme="levels" flex>
+			<md-card-content>
+				<h4>Levels to include</h4>
+				<md-checkbox ng-change="onSettingChange('complexities')" ng-model="complexities[level]" ng-repeat="(level, name) in ['Green','Yellow','Red']" ng-class="'md-primary md-hue-'+(level+1)">{{::name}}</md-checkbox>
+			</md-card-content>
+		</md-card>
+		<md-card flex>
+			<md-card-content>
+				<h4>Games to include</h4>
+				<md-checkbox ng-change="onSettingChange('game')" ng-model="games[game]" ng-repeat="game in ['E', 'A', 'C', 'D', 'I', 'S']" class="md-primary">{{::game | gameName}}</md-checkbox>
+			</md-card-content>
+		</md-card>
+		<md-card flex>
+			<md-card-content>
+				<h4>Sort by</h4>
 
-					</md-card-content>
-				</md-card>
+			</md-card-content>
+		</md-card>
+	</md-content>
+
+	<div ng-repeat="gameGroup in alienGroups">
+		<h3 layout-padding>{{gameGroup.value | gameName}}</h3>
+		<div ng-repeat="levelGroup in gameGroup.items">
+			<h4 layout-padding>{{levelGroup.value | levelStars}}</h4>
+			<md-content layout="row" layout-sm="column" layout-wrap>
+				<alien-panel ng-repeat="alien in levelGroup.items | orderBy:orderPref" alien="alien" flex flex-md="50" flex-lg="33" flex-gt-lg="25"></alien-panel>
 			</md-content>
-
-			<div ng-repeat="gameGroup in alienGroups">
-				<h3>{{gameGroup.value | gameName}}</h3>
-				<div md-content ng-repeat="levelGroup in gameGroup.items">
-					<h4>{{levelGroup.value | levelStars}}</h4>
-					<div layout="row" layout-sm="column" layout-wrap>
-						<alien-panel flex="33%" flex-gt-md="50%" ng-repeat="alien in levelGroup.items | orderBy:orderPref" alien="alien"></alien-panel>
-					</div>
-				</div>
-			</div>
-		</md-content>
+		</div>
 	</div>
 	<script src="js/angular.min.js"></script>
 	<script src="js/angular-aria.min.js"></script>

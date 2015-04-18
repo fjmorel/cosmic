@@ -67,7 +67,6 @@
   mod.directive("alienPanel", ['$sce', function($sce) {
     return {
       restrict: "AE",
-      replace:true,
       templateUrl: "partials/alien-panel.html",
       link: function(scope) {
         //Mark description as safe HTML
