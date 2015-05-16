@@ -98,7 +98,7 @@
 							<h4>How to choose</h4>
 							<md-input-container>
 								<label>Choices per player</label>
-								<input type="number" step="1" ng-model="numToChoose" min="1" ng-change="ctrl.restrictNumToChoose()">
+								<input type="number" step="1" ng-model="settings.numToChoose" min="1" ng-change="ctrl.restrictNumToChoose()">
 							</md-input-container>
 							<md-checkbox class="md-primary" ng-model="settings.preventConflicts">Prevent conflicts (like Oracle vs. Magician)</md-checkbox>
 						</md-card-content>
@@ -108,7 +108,7 @@
 			<md-content layout-padding layout="column">
 				<h2>Generator</h2>
 				<div>
-					<md-button class="md-primary md-raised" ng-click="ctrl.pickAliens()" ng-disabled="numLeft() < numToChoose">Draw</md-button>
+					<md-button class="md-primary md-raised" ng-click="ctrl.pickAliens()" ng-disabled="numLeft() < settings.numToChoose">Draw</md-button>
 					<md-button class="md-accent md-raised" ng-click="ctrl.hide()" ng-class="{hidden:numCurrent() > 0 && aliensToShow.length <= 0}" ng-disabled="aliensToShow.length <= 0">Hide</md-button>
 					<md-button class="md-accent md-raised" ng-click="ctrl.show()" ng-class="{hidden:!(numCurrent() > 0 && aliensToShow.length <= 0)}" ng-disabled="numCurrent() <= 0">Show</md-button>
 					<md-button class="md-accent md-raised" ng-click="ctrl.redo();" ng-disabled="numCurrent() <= 0 || aliensToShow.length <= 0">Redo</md-button>

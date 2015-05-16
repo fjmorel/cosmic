@@ -134,12 +134,12 @@
 
     //Keep choose # within 1 and max. Run when resetting alien list (# might have changed) and changing # to pick
     ctrl.restrictNumToChoose = function() {
-      var numToGive = $scope.numToChoose;
+      var numToGive = $scope.settings.numToChoose;
       var max = $scope.numLeft();
       if(max > 0 && numToGive > max) numToGive = max;
       if(numToGive < 1) numToGive = 1;
 
-      $scope.numToChoose = numToGive;
+      $scope.settings.numToChoose = numToGive;
       $localStorage.numToChoose = numToGive;
     };
 
@@ -147,7 +147,7 @@
       makePickFinal();
 
       //Pick aliens randomly
-      var howManyToChoose = $scope.numToChoose;
+      var howManyToChoose = $scope.settings.numToChoose;
       for(var i = 0; i < howManyToChoose; i++) {
         var name = pickAlien();
         if(!name) break;

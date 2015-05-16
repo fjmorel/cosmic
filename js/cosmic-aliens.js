@@ -54,7 +54,7 @@
         if(loaded) return $q.defer(this.getNames()).resolve().promise;
         return $http.get("data/aliens.json").then(function(result) {
           var getClass = $filter('levelClass');
-          result.data.forEach(function(alien) {
+          result.data.list.forEach(function(alien) {
             alien.class = getClass(alien.level);//save class immediately
             aliens[alien.name] = alien;
             alien_names.push(alien.name);
