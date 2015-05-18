@@ -1,6 +1,6 @@
 ﻿(function() {
   "use strict";
-  var app = angular.module('GameGeneratorApp', ['ngAria','cc.base','cc.aliens', 'ngStorage', 'ngMaterial','ngMdIcons']);
+  var app = angular.module('cc.aliens.generator', ['ngAria','cc.base','cc.aliens', 'ngStorage', 'ngMaterial','ngMdIcons']);
   app.constant('generatorVersion', 2);
 
   //TODO: testing

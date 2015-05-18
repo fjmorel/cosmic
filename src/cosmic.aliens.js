@@ -1,7 +1,7 @@
 ﻿(function() {
   "use strict";
   var mod = angular.module('cc.aliens', ['ngMaterial']);
-
+  
   //Cosmic Theme
   mod.config(['$mdThemingProvider', function($mdThemingProvider) {
     $mdThemingProvider.definePalette('aliens', {

@@ -1,7 +1,7 @@
 ﻿(function() {
   "use strict";
   //TODO: testing
-  var app = angular.module('cc.reference', ['cc.base', 'cc.aliens', 'ngStorage', 'ngAria', 'ngMaterial', 'ngMdIcons']);
+  var app = angular.module('cc.aliens.reference', ['cc.base', 'cc.aliens', 'ngStorage', 'ngAria', 'ngMaterial', 'ngMdIcons']);
 
   app.controller('NavDrawer', ['$scope', '$mdSidenav', function($scope, $mdSidenav) {
     $scope.close = function() { $mdSidenav('left').close() };
