@@ -3,8 +3,22 @@
   var mod = angular.module('cc.base', ['ngMaterial']);
 
   //Cosmic Theme
-  mod.config(['$mdThemingProvider', function ($mdThemingProvider) {
-    $mdThemingProvider.definePalette('aliens', {
+  mod.config(['$mdThemingProvider', function (ThemeProvider) {
+    ThemeProvider.definePalette('alien-green', ThemeProvider.extendPalette('green', {
+      '500': '189247'
+    }));
+    ThemeProvider.definePalette('alien-yellow', ThemeProvider.extendPalette('orange', {
+      '500': 'c39c07'
+    }));
+    ThemeProvider.definePalette('alien-red', ThemeProvider.extendPalette('red', {
+      '500': 'c31b09'
+    }));
+
+    ThemeProvider.theme('alien1').primaryPalette('alien-green').accentPalette('deep-purple');
+    ThemeProvider.theme('alien2').primaryPalette('alien-yellow').accentPalette('deep-purple');
+    ThemeProvider.theme('alien3').primaryPalette('alien-red').accentPalette('deep-purple');
+
+    ThemeProvider.definePalette('aliens', {
       '50': '491ebd',//purple
       '100': '189247',//green
       '200': 'c39c07',//yellow
@@ -25,7 +39,7 @@
       'contrastLightColors': undefined    // could
     });
 
-    $mdThemingProvider.theme('default')
+    ThemeProvider.theme('default')
       .primaryPalette('deep-purple', {
         //Default: 500, 300 800 and A100
         'default': '700', 'hue-1': '200', 'hue-2': '900', 'hue-3': 'A100'
@@ -36,12 +50,13 @@
         //'default': '200' // use shade 200 for default, and keep all other shades the same
       });
 
-    $mdThemingProvider.theme('levels').primaryPalette('aliens', {
+    ThemeProvider.theme('levels').primaryPalette('aliens', {
       'default': '50',
       'hue-1': '100', // use shade 100 for the <code>md-hue-1</code> class
       'hue-2': '200', // use shade 600 for the <code>md-hue-2</code> class
       'hue-3': '300' // use shade A100 for the <code>md-hue-3</code> class
     });
+
   }]);
 
   //Turn game initial into game name

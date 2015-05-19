@@ -20,7 +20,7 @@
 	<meta name="apple-mobile-web-app-title" content="Cosmic" />
 
 	<link rel="stylesheet" type="text/css" href="bower_components/angular-material/angular-material.min.css" />
-	<link rel="stylesheet" type="text/css" href="dist/css/cosmic.min.js" />
+	<link rel="stylesheet" type="text/css" href="dist/css/cosmic.min.css" />
 	<style>
 		.hidden {
 			display: none;
@@ -30,8 +30,8 @@
 <body ng-controller="GeneratorCtrl as ctrl">
 	<section layout="row" flex ng-controller="NavDrawer">
 		<md-sidenav class="md-sidenav-left md-whiteframe-z2" md-component-id="left">
-			<md-toolbar class="md-tall">
-			</md-toolbar>
+			<md-toolbar class="md-tall"><div class="md-toolbar-tools"><h2>Companion for Cosmic Encounter</h2></div>
+</md-toolbar>
 			<md-content layout-padding layout="column" layout-align="start start">
 				<md-button href="index.html" md-list-item>Home</md-button>
 				<md-divider></md-divider>
@@ -52,10 +52,10 @@
 			<h2 layout-padding>Settings</h2>
 			<md-content layout="row" layout-sm="column" layout-wrap>
 				<div flex-sm="100" flex-md="50" flex-lg="25" flex-gt-lg="20">
-					<md-card md-theme="levels">
+					<md-card>
 						<md-card-content>
 							<h4>Levels to include</h4>
-							<md-checkbox ng-change="ctrl.saveSetting('complexities')" ng-model="complexities[level]" ng-repeat="(level, name) in ::['Green','Yellow','Red']" ng-class="'md-primary md-hue-'+(level+1)">{{::name}}</md-checkbox>
+							<md-checkbox ng-change="ctrl.saveSetting('complexities')" ng-model="complexities[level]" ng-repeat="(level, name) in ::['Green','Yellow','Red']" ng-class="::'md-primary md-alien'+(level+1)+'-theme'">{{::name}}</md-checkbox>
 						</md-card-content>
 					</md-card>
 				</div>
@@ -126,11 +126,11 @@
   <script src="bower_components/angular-aria/angular-aria.min.js"></script>
   <script src="bower_components/angular-animate/angular-animate.min.js"></script>
   <script src="bower_components/angular-material/angular-material.min.js"></script>
-
-  <script src="js/libraries/ng-storage.min.js"></script>
-  <script src="js/libraries/material-icons.min.js"></script>
-	<script src="js/cosmic.base.min.js"></script>
-	<script src="js/cosmic.aliens.min.js"></script>
-	<script src="js/aliens.generator.min.js"></script>
+  <script src="bower_components/ngstorage/ngStorage.min.js"></script>
+  <script src="bower_components/angular-material-icons/angular-material-icons.min.js"></script>
+  
+	<script src="dist/js/cosmic.base.min.js"></script>
+	<script src="dist/js/cosmic.aliens.min.js"></script>
+	<script src="dist/js/aliens.generator.min.js"></script>
 </body>
 </html>

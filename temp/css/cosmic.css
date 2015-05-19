@@ -21,8 +21,12 @@
 .alien-head {
   display: block;
 }
-.alien-head button,
-.alien-head input[type=button] {
+.md-button {
+  min-width: 0 !important;
+  padding: 0 16px !important;
+  margin: 0 4px !important;
+}
+.alien-head .md-button {
   font-size: large;
 }
 .alien-title {

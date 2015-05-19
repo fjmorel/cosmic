@@ -20,7 +20,7 @@
 	<meta name="apple-mobile-web-app-title" content="Cosmic Aliens" />
 
   <link rel="stylesheet" type="text/css" href="bower_components/angular-material/angular-material.min.css" />
-	<link rel="stylesheet" type="text/css" href="css/cosmic.css" />
+	<link rel="stylesheet" type="text/css" href="dist/css/cosmic.min.css" />
 	<style>
 		.hidden {
 			display: none;
@@ -29,17 +29,18 @@
 </head>
 <body ng-controller="AlienReferenceController as Reference">
 	<section layout="row" flex ng-controller="NavDrawer">
-		<md-sidenav class="md-sidenav-left md-whiteframe-z2" md-component-id="left">
-			<md-toolbar class="md-tall">
-			</md-toolbar>
-			<md-content layout-padding layout="column" layout-align="start start">
-				<md-button href="index.html" md-list-item>Home</md-button>
-				<md-divider></md-divider>
-				<md-button href="generator.html">Alien Generator</md-button>
-				<md-button href="reference.html" ng-disabled="true">Alien Reference</md-button>
-				<md-button href="https://play.google.com/store/apps/details?id=net.fmorel.cosmicgenerator"><img src="icons/playstore_badge.png" /></md-button>
-			</md-content>
-		</md-sidenav>
+    <md-sidenav class="md-sidenav-left md-whiteframe-z2" md-component-id="left">
+      <md-toolbar class="md-tall">
+        <div class="md-toolbar-tools"><h2>Companion for Cosmic Encounter</h2></div>
+      </md-toolbar>
+      <md-content layout-padding layout="column" layout-align="start start">
+        <md-button href="index.html" md-list-item>Home</md-button>
+        <md-divider></md-divider>
+        <md-button href="generator.html">Alien Generator</md-button>
+        <md-button href="reference.html" ng-disabled="true">Alien Reference</md-button>
+        <md-button href="https://play.google.com/store/apps/details?id=net.fmorel.cosmicgenerator"><img src="icons/playstore_badge.png" /></md-button>
+      </md-content>
+    </md-sidenav>
 		<md-content>
 			<md-toolbar class="md-hue-2">
 				<div class="md-toolbar-tools">
@@ -47,14 +48,15 @@
 						<ng-md-icon icon="menu" style="fill:#fff;"></ng-md-icon>
 					</md-button>
 					<h2>Alien Reference</h2>
+          <span flex></span>
 				</div>
 			</md-toolbar>
 			<h2 layout-padding>Settings</h2>
 			<md-content layout="row" layout-sm="column" layout-wrap>
-				<md-card md-theme="levels" flex>
+				<md-card flex>
 					<md-card-content>
 						<h4>Levels to include</h4>
-						<md-checkbox ng-change="Reference.change('complexities')" ng-model="complexities[level]" ng-repeat="(level, name) in ::['Green','Yellow','Red']" ng-class="'md-primary md-hue-'+(level+1)">{{::name}}</md-checkbox>
+						<md-checkbox ng-change="Reference.change('complexities')" ng-model="complexities[level]" ng-repeat="(level, name) in ::['Green','Yellow','Red']" ng-class="::'md-primary md-alien'+(level+1)+'-theme'">{{::name}}</md-checkbox>
 					</md-card-content>
 				</md-card>
 				<md-card flex>
@@ -86,10 +88,11 @@
   <script src="bower_components/angular-aria/angular-aria.min.js"></script>
   <script src="bower_components/angular-animate/angular-animate.min.js"></script>
   <script src="bower_components/angular-material/angular-material.min.js"></script>
-  <script src="js/libraries/ng-storage.min.js"></script>
-  <script src="js/libraries/material-icons.min.js"></script>
-	<script src="js/cosmic.base.min.js"></script>
-	<script src="js/cosmic.aliens.min.js"></script>
-	<script src="js/aliens.reference.min.js"></script>
+  <script src="bower_components/ngstorage/ngStorage.min.js"></script>
+  <script src="bower_components/angular-material-icons/angular-material-icons.min.js"></script>
+
+	<script src="dist/js/cosmic.base.min.js"></script>
+	<script src="dist/js/cosmic.aliens.min.js"></script>
+	<script src="dist/js/aliens.reference.min.js"></script>
 </body>
 </html>

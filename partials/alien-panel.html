@@ -1,15 +1,15 @@
 ﻿<md-card>
 	<md-card-content class="alien-head">
-		<md-button class="md-levels-theme md-primary md-hue-{{::alien.level+1}}" ng-click="opened = !opened" style="float:right;">{{opened ? '-':'+'}}</md-button>
-		<span class="md-headline alien-title alien-fg-{{::alien.level}}">{{::alien.name}}</span>
+		<md-button class="md-alien{{::alien.level+1}}-theme md-raised md-primary" ng-click="opened = !opened" style="float:right;">{{opened ? '-':'+'}}</md-button>
+		<span class="md-alien{{::alien.level+1}}-theme md-headline alien-title alien-fg-{{::alien.level}}">{{::alien.name}}</span>
 		<p style="clear:both;" class="md-subhead">{{::alien.power}}</p>
 	</md-card-content>
-	<md-card-content class="alien-bar alien-bg-{{::alien.level}}">
+	<md-card-footer class="alien-bar alien-bg-{{::alien.level}}">
 		<span style="float:left;">C{{::alien.game}}</span>
 		<span style="float:right;">{{::alien.level | levelStars}}</span>
 		<span ng-if="::(alien.setup || alien.restriction)">⚠</span>
 		<span style="clear:both"></span>
-	</md-card-content>
-	<md-card-content ng-class="{hidden:!opened}" class="alien-desc md-body-1" ng-bind-html="::alien.description">
-	</md-card-content>
+	</md-card-footer>
+	<md-card-footer ng-class="{hidden:!opened}" class="alien-desc md-body-1" ng-bind-html="::alien.description">
+  </md-card-footer>
 </md-card>
