@@ -21,6 +21,13 @@
 .alien-head {
   display: block;
 }
+body,
+md-content {
+  background-color: #eee !important;
+}
+ng-md-icon svg {
+  vertical-align: -6px !important;
+}
 .md-button {
   min-width: 0 !important;
   padding: 0 16px !important;
