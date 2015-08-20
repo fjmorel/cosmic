@@ -28,9 +28,11 @@ md-content {
 ng-md-icon svg {
   vertical-align: -6px !important;
 }
+.md-title {
+  margin: 0 0 0.5em 0;
+}
 .md-button {
   min-width: 0 !important;
-  padding: 0 16px !important;
   margin: 0 4px !important;
 }
 .alien-head .md-button {

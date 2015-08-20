@@ -1,7 +1,7 @@
 ﻿<md-card>
 	<md-card-content class="alien-head">
 		<md-button class="md-alien{{::alien.level+1}}-theme md-raised md-primary" ng-click="opened = !opened" style="float:right;">{{opened ? '-':'+'}}</md-button>
-		<span class="md-alien{{::alien.level+1}}-theme md-headline alien-title alien-fg-{{::alien.level}}">{{::alien.name}}</span>
+		<span class="md-alien{{::alien.level+1}}-theme md-title alien-title alien-fg-{{::alien.level}}">{{::alien.name}}</span>
 		<p style="clear:both;" class="md-subhead">{{::alien.power}}</p>
 	</md-card-content>
 	<md-card-footer class="alien-bar alien-bg-{{::alien.level}}">

@@ -6,10 +6,11 @@
   mod.factory('alienData', ['$q', '$http', '$filter', function ($q, $http, $filter) {
     var aliens = {}, alien_names = [];
     var loaded = false;
+    var getNames = function () { return alien_names.slice(0); };
+    
     return {
       init: function () {
-        var that = this;
-        if (loaded) return $q.defer(this.getNames()).resolve().promise;
+        if (loaded) return $q.when(getNames());
         return $http.get("data/aliens.json").then(function (result) {
           var getClass = $filter('levelClass');
           result.data.list.forEach(function (alien) {
@@ -19,11 +20,11 @@
           });
           alien_names.sort();
           loaded = true;
-          return that.getNames();
+          return getNames();
         });
       },
-      getNames: function () { return alien_names.slice(0); },
-      get: function (name) { return angular.copy(aliens[name] || {}); }
+      
+      "get": function (name) { return angular.copy(aliens[name] || {}); }
     };
   }]);
 

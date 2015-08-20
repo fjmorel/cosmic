@@ -44,8 +44,8 @@
         //Default: 500, 300 800 and A100
         'default': '700', 'hue-1': '200', 'hue-2': '900', 'hue-3': 'A100'
       })
-      // If you specify less than all of the keys, it will inherit from the
-      // default shades
+    // If you specify less than all of the keys, it will inherit from the
+    // default shades
       .accentPalette('amber', {
         //'default': '200' // use shade 200 for default, and keep all other shades the same
       });
@@ -62,7 +62,12 @@
   //Turn game initial into game name
   mod.filter('gameName', function () {
     var games = {
-      E: "Encounter", A: "Alliance", C: "Conflict", D: "Dominion", I: "Incursion", S: "Storm"
+      E: "Encounter",
+      A: "Alliance",
+      C: "Conflict",
+      D: "Dominion",
+      I: "Incursion",
+      S: "Storm"
     };
     return function (initial) { return 'Cosmic ' + games[initial]; };
   });
