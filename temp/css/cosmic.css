@@ -48,9 +48,9 @@ ng-md-icon svg {
   text-align: center;
   /*So warnings show up centered (non-float)*/
 }
-.alien-bar span {
-  /*line-height: 1em;*/
-}
 .alien-desc {
   background: #dddddd;
+}
+md-select-menu md-option[selected] {
+  background-color: rgba(103, 58, 183, 0.1);
 }

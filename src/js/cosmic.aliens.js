@@ -1,6 +1,27 @@
 ﻿(function () {
   "use strict";
   var mod = angular.module('cc.aliens', ['ngMaterial']);
+  
+  //Themes for alien-related items
+  mod.config(['$mdThemingProvider', function (ThemeProvider) {
+    ThemeProvider.definePalette('alien-green', ThemeProvider.extendPalette('green', {
+      '500': '189247'
+    }));
+    ThemeProvider.definePalette('alien-yellow', ThemeProvider.extendPalette('deep-orange', {
+      '500': 'c39c07'
+    }));
+    ThemeProvider.definePalette('alien-red', ThemeProvider.extendPalette('red', {
+      '500': 'c31b09',
+      'contrastDefaultColor': 'light',
+      'contrastDarkColors': ['600', '700', '800', '900', 'A700'],
+      'contrastLightColors': ['50', '100', '200', '300', '400', '500','A100','A200','A400']
+    }));
+
+    ThemeProvider.theme('alien1').primaryPalette('alien-green').accentPalette('deep-purple');
+    ThemeProvider.theme('alien2').primaryPalette('alien-yellow').accentPalette('deep-purple');
+    ThemeProvider.theme('alien3').primaryPalette('alien-red').accentPalette('deep-purple');
+
+  }]);
 
   //Fetch alien data and provide methods to retrieve names and aliens
   mod.factory('alienData', ['$q', '$http', '$filter', function ($q, $http, $filter) {
@@ -44,6 +65,11 @@
       //starred[lvl] = stars;
       return stars;
     };
+  });
+  
+  //Turn alien level into a string of stars to show level
+  mod.filter('levelName', function () {
+    return function (lvl) { return ["Green","Yellow","Red"][lvl]; };
   });
 
   mod.directive('alienTitle', function () {

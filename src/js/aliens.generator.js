@@ -37,7 +37,6 @@
 
     //Exclude
     $scope.namesExcluded = $localStorage.namesExcluded;
-    //$scope.excluded = $scope.namesExcluded.map(Aliens.get);//Have to load from aliensAll for ui-select
     $scope.setupLevel = $localStorage.setupLevel;
 
     //Choose
@@ -50,12 +49,12 @@
 
     //Status
     var current = [], given = [], restricted = [], pool = [];
+
     $scope.namesAll = [];
-    $scope.numOut = function () { return current.length + given.length + restricted.length; };
-    $scope.numCurrent = function () { return current.length; };
-    $scope.numGiven = function () { return given.length; };
-    $scope.numRestricted = function () { return restricted.length; };
-    $scope.numLeft = function () { return pool.length; };
+    ctrl.numOut = function () { return current.length + given.length + restricted.length; };
+    ctrl.numCurrent = function () { return current.length; };
+    ctrl.numGiven = function () { return given.length; };
+    ctrl.numLeft = function () { return pool.length; };
     //$scope.aliens;
 
     //Determine list of possible choices based on selected options
@@ -135,7 +134,7 @@
     //Keep choose # within 1 and max. Run when resetting alien list (# might have changed) and changing # to pick
     ctrl.restrictNumToChoose = function () {
       var numToGive = $scope.settings.numToChoose;
-      var max = $scope.numLeft();
+      var max = ctrl.numLeft();
       if (max > 0 && numToGive > max) numToGive = max;
       if (numToGive < 1) numToGive = 1;
 

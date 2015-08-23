@@ -31,6 +31,9 @@
     <!-- Drawer -->
     <md-sidenav class="md-sidenav-left md-whiteframe-z2" md-component-id="left">
       <md-toolbar class="md-tall">
+        <noscript>
+          This page requires JavaScript to run.
+        </noscript>
         <div class="md-toolbar-tools">
           <h2>Cosmic Companion</h2>
         </div>
@@ -40,12 +43,12 @@
         <md-divider></md-divider>
         <md-button href="generator.html" ng-disabled="true">Alien Generator</md-button>
         <md-button href="reference.html">Alien Reference</md-button>
-        <md-button href="https://play.google.com/store/apps/details?id=net.fmorel.cosmicgenerator">
+        <a href="https://play.google.com/store/apps/details?id=net.fmorel.cosmicgenerator">
           <img src="icons/playstore_badge.png" />
-        </md-button>
+        </a>
       </md-content>
     </md-sidenav>
-    <md-content ng-controller="GeneratorCtrl as ctrl">
+    <md-content ng-controller="GeneratorCtrl as Generator">
       <!-- Header -->
       <md-toolbar class="md-hue-2">
         <div class="md-toolbar-tools">
@@ -56,75 +59,65 @@
         </div>
       </md-toolbar>
       <!-- Settings -->
-      <md-content layout="row" layout-sm="column" layout-wrap>
-        <div flex-sm="100" flex-md="50" flex-lg="25" flex-gt-lg="20">
-          <md-card>
-            <md-card-content>
-              <h4 class="md-title">Levels to include</h4>
-              <md-checkbox ng-change="ctrl.saveSetting('complexities')" ng-model="complexities[level]" ng-repeat="(level, name) in ::['Green','Yellow','Red']"
-              ng-class="::'md-primary md-alien'+(level+1)+'-theme'">{{::name}}</md-checkbox>
-            </md-card-content>
-          </md-card>
-        </div>
-        <div flex-sm="100" flex-md="50" flex-lg="25" flex-gt-lg="20">
-          <md-card>
-            <md-card-content>
-              <h4 class="md-title">Games to include</h4>
-              <md-checkbox ng-change="ctrl.saveSetting('game')" ng-model="settings.games[game]" ng-repeat="game in ::['E', 'A', 'C', 'D', 'I', 'S']"
-              class="md-primary">{{::game | gameName}}</md-checkbox>
-            </md-card-content>
-          </md-card>
-        </div>
-        <div flex-sm="100" flex-md="50" flex-lg="25" flex-gt-lg="20">
-          <md-card>
-            <md-card-content>
-              <h4 class="md-title">Game setup</h4>
-              <md-radio-group ng-model="setupLevel" ng-change="ctrl.saveSetting('setupLevel')">
-                <md-radio-button value="none" class="md-primary">Remove none</md-radio-button>
-                <md-radio-button value="color" class="md-primary">Remove those requiring extra color</md-radio-button>
-                <md-radio-button value="all" class="md-primary">Remove all</md-radio-button>
-              </md-radio-group>
-            </md-card-content>
-          </md-card>
-        </div>
-        <div flex-sm="100" flex-md="50" flex-lg="25" flex-gt-lg="20">
-          <md-card>
-            <md-card-content>
-              <h4 class="md-title">Exclude by name</h4>
-              <md-select multiple ng-model="excluded" ng-change="ctrl.onExcludeChange()">
-                <md-select-label>{{namesExcluded.length? namesExcluded.length + ' removed' : 'Select names'}}</md-select-label>
-                <md-option ng-value="::alien" ng-repeat="alien in aliensAll">{{::alien.name}}</md-option>
-              </md-select>
-            </md-card-content>
-          </md-card>
-        </div>
-        <div flex>
-          <md-card>
-            <md-card-content>
-              <h4 class="md-title">How to choose</h4>
-              <md-input-container>
-                <label>Choices per player</label>
-                <input type="number" step="1" ng-model="settings.numToChoose" min="1" ng-change="ctrl.restrictNumToChoose()">
-              </md-input-container>
-              <md-checkbox class="md-primary" ng-model="settings.preventConflicts">Prevent conflicts (like Oracle vs. Magician)</md-checkbox>
-            </md-card-content>
-          </md-card>
-        </div>
+      <md-content layout="row" layout-sm="column" >
+        <md-card flex-sm="100" flex-md="48" flex-lg="23" flex-gt-lg="18">
+          <md-card-content>
+            <h4 class="md-title">Levels to include</h4>
+            <md-checkbox ng-change="Generator.saveSetting('complexities')" ng-model="complexities[level]" ng-repeat="(level, name) in ::['Green','Yellow','Red']"
+            ng-class="::'md-primary md-alien'+(level+1)+'-theme'">{{::name}}</md-checkbox>
+          </md-card-content>
+        </md-card>
+        <md-card flex-sm="100" flex-md="48" flex-lg="23" flex-gt-lg="18">
+          <md-card-content>
+            <h4 class="md-title">Games to include</h4>
+            <md-checkbox ng-change="Generator.saveSetting('game')" ng-model="settings.games[game]" ng-repeat="game in ::['E', 'A', 'C', 'D', 'I', 'S']"
+            class="md-primary">{{::game | gameName}}</md-checkbox>
+          </md-card-content>
+        </md-card>
+        <md-card flex-sm="100" flex-md="48" flex-lg="23" flex-gt-lg="18">
+          <md-card-content>
+            <h4 class="md-title">Game setup</h4>
+            <md-radio-group ng-model="setupLevel" ng-change="Generator.saveSetting('setupLevel')">
+              <md-radio-button value="none" class="md-primary">Remove none</md-radio-button>
+              <md-radio-button value="color" class="md-primary">Remove those requiring extra color</md-radio-button>
+              <md-radio-button value="all" class="md-primary">Remove all</md-radio-button>
+            </md-radio-group>
+          </md-card-content>
+        </md-card>
+        <md-card flex-sm="100" flex-md="48" flex-lg="23" flex-gt-lg="18">
+          <md-card-content>
+            <h4 class="md-title">Exclude by name</h4>
+            <md-select multiple ng-model="excluded" ng-change="Generator.onExcludeChange()" placeholder="Select names">
+              <md-option ng-value="::alien" ng-repeat="alien in aliensAll">{{::alien.name}}</md-option>
+            </md-select>
+          </md-card-content>
+        </md-card>
+        <md-card flex-sm="100" flex-md="48" flex-lg="23" flex-gt-lg="18">
+          <md-card-content>
+            <h4 class="md-title">How to choose</h4>
+            <md-input-container>
+              <label>Choices per player</label>
+              <input type="number" step="1" ng-model="settings.numToChoose" min="1" ng-change="Generator.restrictNumToChoose()">
+            </md-input-container>
+            <md-checkbox class="md-primary" ng-model="settings.preventConflicts">Prevent conflicts (like Oracle vs. Magician)</md-checkbox>
+          </md-card-content>
+        </md-card>
       </md-content>
       <!-- Actions -->
       <md-toolbar>
         <div class="md-toolbar-tools">
-          <md-button class="md-raised" ng-click="ctrl.pickAliens()" ng-disabled="numLeft() < settings.numToChoose">Draw</md-button>
-          <md-button class="md-accent md-raised" ng-click="ctrl.hide()" ng-class="{hidden:numCurrent() > 0 && aliensToShow.length <= 0}"
+          <md-button class="md-raised" ng-click="Generator.pickAliens()" ng-disabled="Generator.numLeft() < settings.numToChoose">Draw</md-button>
+          <md-button class="md-accent md-raised" ng-click="Generator.hide()" ng-class="{hidden:Generator.numCurrent() > 0 && aliensToShow.length <= 0}"
           ng-disabled="aliensToShow.length <= 0">Hide</md-button>
-          <md-button class="md-accent md-raised" ng-click="ctrl.show()" ng-class="{hidden:!(numCurrent() > 0 && aliensToShow.length <= 0)}"
-          ng-disabled="numCurrent() <= 0">Show</md-button>
-          <md-button class="md-accent md-raised" ng-click="ctrl.redo();" ng-disabled="numCurrent() <= 0 || aliensToShow.length <= 0">Redo</md-button>
-          <md-button layout-align="end center" class="md-warn md-raised" id="reset" ng-click="ctrl.reset()" ng-disabled="numCurrent() <= 0 && numGiven() <= 0">Reset</md-button>
+          <md-button class="md-accent md-raised" ng-click="Generator.show()" ng-class="{hidden:!(Generator.numCurrent() > 0 && aliensToShow.length <= 0)}"
+          ng-disabled="Generator.numCurrent() <= 0">Show</md-button>
+          <md-button class="md-accent md-raised" ng-click="Generator.redo();" ng-disabled="Generator.numCurrent() <= 0 || aliensToShow.length <= 0">Redo</md-button>
+          <md-button layout-align="end center" class="md-alien3-theme md-primary md-raised" id="reset" ng-click="Generator.reset()"
+          ng-disabled="Generator.numCurrent() <= 0 && Generator.numGiven() <= 0">Reset</md-button>
         </div>
       </md-toolbar>
       <!-- State -->
-      <md-content layout-padding>{{numOut()}} of {{numOut()+numLeft()}} drawn. {{ctrl.state}}</md-content>
+      <md-content layout-padding>{{Generator.numOut()}} of {{Generator.numOut()+Generator.numLeft()}} drawn. {{Generator.state}}</md-content>
       <!-- Aliens -->
       <md-content layout="row" layout-sm="column" layout-wrap>
         <alien-panel ng-repeat="alien in aliensToShow | orderBy:'name'" alien="alien" flex flex-md="50" flex-lg="33" flex-gt-lg="25"></alien-panel>
