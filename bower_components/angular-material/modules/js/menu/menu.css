@@ -2,21 +2,21 @@
  * Angular Material Design
  * https://github.com/angular/material
  * @license MIT
- * v0.10.1
+ * v1.0.2
  */
-/* mixin definition ; sets LTR and RTL within the same style call */
 .md-open-menu-container {
   position: fixed;
   left: 0;
   top: 0;
-  z-index: 99;
+  z-index: 100;
   opacity: 0;
-  border-radius: 2px;
-  overflow: hidden; }
+  border-radius: 2px; }
   .md-open-menu-container md-menu-divider {
     margin-top: 4px;
     margin-bottom: 4px;
     height: 1px;
+    min-height: 1px;
+    max-height: 1px;
     width: 100%; }
   .md-open-menu-container md-menu-content > * {
     opacity: 0; }
@@ -49,7 +49,8 @@ md-menu-content {
   md-menu-content.md-dense {
     max-height: 208px; }
     md-menu-content.md-dense md-menu-item {
-      height: 32px; }
+      height: 32px;
+      min-height: 0px; }
 
 md-menu-item {
   display: -webkit-flex;
@@ -71,12 +72,17 @@ md-menu-item {
     margin: auto 0;
     padding-left: 16px;
     padding-right: 16px; }
+  md-menu-item > a.md-button {
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex; }
   md-menu-item > .md-button {
     border-radius: 0;
     margin: auto 0;
     font-size: 15px;
     text-transform: none;
     font-weight: 400;
+    text-align: left;
     text-align: start;
     height: 100%;
     padding-left: 16px;
@@ -85,9 +91,9 @@ md-menu-item {
     -webkit-align-items: baseline;
         -ms-flex-align: baseline;
             align-items: baseline;
-    -webkit-align-content: left;
-        -ms-flex-line-pack: left;
-            align-content: left;
+    -webkit-align-content: flex-start;
+        -ms-flex-line-pack: start;
+            align-content: flex-start;
     width: 100%; }
     md-menu-item > .md-button md-icon {
       margin: auto 16px auto 0; }
@@ -97,15 +103,18 @@ md-menu-item {
     md-menu-item > .md-button span {
       margin-top: auto;
       margin-bottom: auto; }
+    md-menu-item > .md-button .md-ripple-container {
+      border-radius: inherit; }
 
 .md-menu {
   padding: 8px 0; }
 
 md-toolbar .md-menu {
   height: auto;
-  margin: auto; }
+  margin: auto;
+  padding: 0; }
 
-@media (max-width: 599px) {
+@media (max-width: 959px) {
   md-menu-content {
     min-width: 112px; }
   md-menu-content[width="3"] {
@@ -119,7 +128,7 @@ md-toolbar .md-menu {
   md-menu-content[width="7"] {
     min-width: 392px; } }
 
-@media (min-width: 600px) {
+@media (min-width: 960px) {
   md-menu-content {
     min-width: 96px; }
   md-menu-content[width="3"] {
