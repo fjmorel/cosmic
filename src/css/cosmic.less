@@ -5,64 +5,70 @@
 
 /*Background to something based on alien level*/
 .alien-bg-0 {
-    background: @level0;
+  background: @level0;
 }
 
 .alien-bg-1 {
-    background: @level1;
+  background: @level1;
 }
 
 .alien-bg-2 {
-    background: @level2;
+  background: @level2;
 }
 /*Foreground to something based on alien level*/
 .alien-fg-0 {
-    color: @level0;
+  color: @level0;
 }
 
 .alien-fg-1 {
-    color: @level1;
+  color: @level1;
 }
 
 .alien-fg-2 {
-    color: @level2;
+  color: @level2;
 }
 
 
 .alien-head {
-    display: block;
+  display: block;
 }
 
 body, md-content {
   background-color: #eee !important;
 }
 
-ng-md-icon svg { vertical-align:-6px !important; }
-.md-title {
-    margin: 0 0 0.5em 0;
+ng-md-icon svg {
+  vertical-align: -6px !important;
 }
-.md-button{
-  min-width:0 !important;
-  margin:0 4px !important;
+
+.md-title {
+  margin: 0 0 0.5em 0;
+}
+
+.md-button {
+  min-width: 0 !important;
+  margin: 0 4px !important;
 }
 
 .alien-head .md-button {
-  font-size:large;
+  font-size: large;
 }
 
-.alien-title {
-    font-weight: bold;
+.alien-head .md-title {
+  font-weight: bold;
 }
 
 .alien-bar {
-    color: #fff;
-    padding: 8px 16px;
-    font-size: smaller;
-    text-align: center; /*So warnings show up centered (non-float)*/
+  color: #fff;
+  padding: 8px 16px;
+  font-size: smaller;
+  text-align: center; /*So warnings show up centered (non-float)*/
 }
 
 .alien-desc {
-    background: @desc-bg;
+  background: @desc-bg;
 }
 
-md-select-menu md-option[selected] { background-color: rgba(103, 58, 183, 0.1); }
+md-select-menu md-option[selected] {
+  background-color: rgba(103, 58, 183, 0.1);
+}

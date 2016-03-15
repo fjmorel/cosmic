@@ -51,10 +51,10 @@
     var current = [], given = [], restricted = [], pool = [];
 
     $scope.namesAll = [];
-    ctrl.numOut = function () { return current.length + given.length + restricted.length; };
-    ctrl.numCurrent = function () { return current.length; };
-    ctrl.numGiven = function () { return given.length; };
-    ctrl.numLeft = function () { return pool.length; };
+    ctrl.numOut = () => current.length + given.length + restricted.length;
+    ctrl.numCurrent = () =>  current.length;
+    ctrl.numGiven = () =>  given.length;
+    ctrl.numLeft = () =>  pool.length;
     //$scope.aliens;
 
     //Determine list of possible choices based on selected options

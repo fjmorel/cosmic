@@ -17,11 +17,6 @@
   <meta name="application-name" content="Cosmic Generator" />
   <meta name="apple-mobile-web-app-title" content="Cosmic" />
   <link rel="stylesheet" type="text/css" href="dist/css/cosmic.min.css" />
-  <style>
-    .hidden {
-      display: none;
-    }
-  </style>
 </head>
 
 <body>
@@ -119,7 +114,7 @@
       <md-content layout-padding>{{Generator.numOut()}} of {{Generator.numOut()+Generator.numLeft()}} drawn. {{Generator.state}}</md-content>
       <!-- Aliens -->
       <md-content layout="row" layout-sm="column" layout-wrap>
-        <alien-panel ng-repeat="alien in aliensToShow | orderBy:'name'" alien="alien" flex flex-md="50" flex-lg="33" flex-gt-lg="25"></alien-panel>
+        <alien-panel ng-repeat="alien in aliensToShow | orderBy:'name'" item="::alien" flex flex-md="50" flex-lg="33" flex-gt-lg="25"></alien-panel>
       </md-content>
 
     </md-content>
