@@ -1,6 +1,6 @@
 ﻿(function () {
   "use strict";
-  var app = angular.module('cc.aliens.generator', ['ngAria', 'cc.base', 'cc.aliens', 'ngStorage', 'ngMaterial', 'ngMdIcons']);
+  let app = angular.module('cc.aliens.generator', ['ngAria', 'cc.base', 'cc.aliens', 'ngStorage', 'ngMaterial', 'ngMdIcons']);
   app.constant('generatorVersion', 2);
 
   //TODO: testing
@@ -15,9 +15,9 @@
   //Based on settings, allow user to pick aliens randomly
   app.controller('GeneratorCtrl', ["$scope", "alienData", '$localStorage', '$sessionStorage', 'generatorVersion', function ($scope, Aliens, $localStorage, $sessionStorage, VERSION) {
 
-    var ctrl = this;
+    let ctrl = this;
 
-    var defaults = {
+    let defaults = {
       complexities: [true, true, true],
       games: { E: true },
       namesExcluded: [],
@@ -48,7 +48,7 @@
     $scope.aliensAll = [];
 
     //Status
-    var current = [], given = [], restricted = [], pool = [];
+    let current = [], given = [], restricted = [], pool = [];
 
     $scope.namesAll = [];
     ctrl.numOut = () => current.length + given.length + restricted.length;
@@ -58,11 +58,11 @@
     //$scope.aliens;
 
     //Determine list of possible choices based on selected options
-    var resetGenerator = function () {
+    let resetGenerator = function () {
       //Create POOL from aliens that match level and game and are not excluded, and clear other lists
-      var opts = $scope.settings;
+      let opts = $scope.settings;
       pool = $scope.namesAll.filter(function (name) {
-        var e = Aliens.get(name);
+        let e = Aliens.get(name);
         return opts.complexities[e.level] && opts.games[e.game] && $scope.namesExcluded.indexOf(name) < 0 && ($scope.setupLevel === 'none' || e.setup === undefined || ($scope.setupLevel === 'color' && e.setup !== "color"));
       });
       given = [];
@@ -86,20 +86,20 @@
     };
 
     //Choose alien from pool
-    var pickAlien = function () {
+    let pickAlien = function () {
       //Select name (return if wasn't able to select
-      var choice = Math.floor(Math.random() * pool.length);
+      let choice = Math.floor(Math.random() * pool.length);
       if (!pool[choice]) return;
-      var name = pool.splice(choice, 1)[0];
+      let name = pool.splice(choice, 1)[0];
       current.push(name);
       current.sort();
 
       //If current choice has any restrictions, remove them from pool as well
-      var alien = Aliens.get(name);
+      let alien = Aliens.get(name);
       if ($scope.settings.preventConflicts && alien.restriction) {
-        var restrictions = alien.restriction.split(',');
-        for (var j = 0; j < restrictions.length; j++) {
-          var index = pool.indexOf(restrictions[j]);
+        let restrictions = alien.restriction.split(',');
+        for (let j = 0; j < restrictions.length; j++) {
+          let index = pool.indexOf(restrictions[j]);
           if (index > -1) { restricted.push(pool.splice(index, 1)[0]); }
         }
       }
@@ -107,18 +107,18 @@
       return name;
     };
     //Move current to given and move on
-    var makePickFinal = function () {
+    let makePickFinal = function () {
       given = given.concat(current, restricted).sort();
       restricted = []; current = [];
     };
     //Move current selection back to pool
-    var undo = function () {
+    let undo = function () {
       pool = pool.concat(current, restricted);
       pool.sort();
       current = []; restricted = [];
     };
 
-    var NOT_RESET = 0;
+    let NOT_RESET = 0;
     ctrl.reset = function () {
       if (confirm("Reset list of aliens?")) resetGenerator();
       else NOT_RESET++;
@@ -133,8 +133,8 @@
 
     //Keep choose # within 1 and max. Run when resetting alien list (# might have changed) and changing # to pick
     ctrl.restrictNumToChoose = function () {
-      var numToGive = $scope.settings.numToChoose;
-      var max = ctrl.numLeft();
+      let numToGive = $scope.settings.numToChoose;
+      let max = ctrl.numLeft();
       if (max > 0 && numToGive > max) numToGive = max;
       if (numToGive < 1) numToGive = 1;
 
@@ -146,9 +146,9 @@
       makePickFinal();
 
       //Pick aliens randomly
-      var howManyToChoose = $scope.settings.numToChoose;
-      for (var i = 0; i < howManyToChoose; i++) {
-        var name = pickAlien();
+      let howManyToChoose = $scope.settings.numToChoose;
+      for (let i = 0; i < howManyToChoose; i++) {
+        let name = pickAlien();
         if (!name) break;
       }
 
@@ -174,7 +174,7 @@
 
     ctrl.show = function () {
       //Ask for initial of one of the aliens before reshowing them
-      var initials = current.map(function (e) { return e[0].toLowerCase(); });
+      let initials = current.map(function (e) { return e[0].toLowerCase(); });
       if (initials.indexOf((prompt("Enter the first initial of one of the aliens you were given, then click OK.") || "").toLowerCase()) < 0) {
         ctrl.state = "Wrong letter.";
         return;
@@ -202,4 +202,6 @@
       //TODO: something about being unable to load aliens
     });
   }]);
+	
+	//angular.bootstrap(document, ['cc.aliens.generator'], { 'strictDi' : true });
 })();

@@ -1,7 +1,7 @@
 ﻿(function () {
   "use strict";
   //TODO: testing
-  var app = angular.module('cc.aliens.reference', ['cc.base', 'cc.aliens', 'ngStorage', 'ngAria', 'ngMaterial', 'ngMdIcons']);
+  let app = angular.module('cc.aliens.reference', ['cc.base', 'cc.aliens', 'ngStorage', 'ngAria', 'ngMaterial', 'ngMdIcons']);
 
   app.controller('NavDrawer', ['$scope', '$mdSidenav', function ($scope, $mdSidenav) {
     $scope.close = function () { $mdSidenav('left').close(); };
@@ -10,7 +10,7 @@
 
   //Based on settings, allow user to pick aliens randomly
   app.controller('AlienReferenceController', ["$scope", "alienData", '$localStorage', '$sessionStorage', function ($scope, Aliens, $localStorage, $sessionStorage) {
-    var ctrl = this;
+    let ctrl = this;
 
     $localStorage.$default({
       complexities: [true, true, true],
@@ -25,21 +25,21 @@
     $scope.orderPref = $localStorage.orderPref;
     $scope.groupPref = $localStorage.groupPref;
     $scope.alienGroups = [];
-    var namesAll = [], aliensAll = [];
+    let namesAll = [], aliensAll = [];
 
     function groupAliens(list, level) {
       if ($scope.groupPref.length < 1) return { value: '', items: list };
 
-      var grouped = {};
-      var field = $scope.groupPref[level];
+      let grouped = {};
+      let field = $scope.groupPref[level];
       list.forEach(function (item) {
-        var group = item[field];//var group = $parse(field)(item);
+        let group = item[field];//let group = $parse(field)(item);
         grouped[group] = grouped[group] || [];
         grouped[group].push(angular.copy(item));
       });
-      var groups = Object.keys(grouped);
+      let groups = Object.keys(grouped);
 
-      var result = groups.map(function (group) {
+      let result = groups.map(function (group) {
         return { value: group, items: grouped[group] };
       });
       if ($scope.groupPref[level + 1]) result = result.map(function (group) {
@@ -54,7 +54,7 @@
       if (setting) $localStorage[setting] = $scope[setting];
 
       //Filter
-      var aliens = aliensAll.filter(function (e) {
+      let aliens = aliensAll.filter(function (e) {
         return $scope.complexities[e.level] && $scope.games[e.game];
       });
 

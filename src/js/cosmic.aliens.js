@@ -1,9 +1,10 @@
 ﻿(function() {
   "use strict";
-  var mod = angular.module('cc.aliens', ['ngMaterial']);
+  let mod = angular.module('cc.aliens', ['ngMaterial']);
 
   //Themes for alien-related items
   mod.config(['$mdThemingProvider', function(ThemeProvider) {
+		//TODO: Override more colors, especially active color on btns
     ThemeProvider.definePalette('alien-green', ThemeProvider.extendPalette('green', {
       '500': '189247'
     }));
@@ -25,15 +26,15 @@
 
   //Fetch alien data and provide methods to retrieve names and aliens
   mod.factory('alienData', ['$q', '$http', '$filter', function($q, $http, $filter) {
-    var aliens = {}, alien_names = [];
-    var loaded = false;
-    var getNames = () => alien_names.slice(0);
+    let aliens = {}, alien_names = [];
+    let loaded = false;
+    let getNames = () => alien_names.slice(0);
 
     return {
       init: function() {
         if (loaded) return $q.when(getNames());
         return $http.get("data/aliens.json").then(function(result) {
-          var getClass = $filter('levelClass');
+          let getClass = $filter('levelClass');
           result.data.list.forEach(function(alien) {
             alien.class = getClass(alien.level);//save class immediately
             aliens[alien.name] = alien;
@@ -51,7 +52,7 @@
 
   //Turn alien level into Bootstrap class name for colors
   mod.filter('levelClass', function() {
-    var classes = ["success", "warning", "danger"];
+    let classes = ["success", "warning", "danger"];
 		return lvl => classes[lvl];
   });
 
@@ -70,8 +71,7 @@
   //Turn alien object into a panel with its information
   mod.component("alienPanel", {
     bindings: { alien: '<item' },
-    templateUrl: "partials/alien-panel.html",
-    controllerAs: '$ctrl',
+    templateUrl: "partials/alien.html",
     controller: ['$sce', function($sce) {
       if (typeof this.alien.description === 'string')
         this.alien.description = $sce.trustAsHtml(this.alien.description);

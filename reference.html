@@ -20,23 +20,11 @@
 </head>
 
 <body>
+	<noscript>
+		This page requires JavaScript to run.
+	</noscript>
   <div ng-controller="NavDrawer">
-    <md-sidenav class="md-sidenav-left md-whiteframe-z2" md-component-id="left">
-      <md-toolbar class="md-tall">
-        <div class="md-toolbar-tools">
-          <h2>Cosmic Companion</h2>
-        </div>
-      </md-toolbar>
-      <md-content layout-padding layout="column" layout-align="start start">
-        <md-button href="index.html" md-list-item>Home</md-button>
-        <md-divider></md-divider>
-        <md-button href="generator.html">Alien Generator</md-button>
-        <md-button href="reference.html" ng-disabled="true">Alien Reference</md-button>
-        <md-button href="https://play.google.com/store/apps/details?id=net.fmorel.cosmicgenerator">
-          <img src="icons/playstore_badge.png" />
-        </md-button>
-      </md-content>
-    </md-sidenav>
+		<cosmic-drawer page="reference"></cosmic-drawer>
     <md-content ng-controller="AlienReferenceController as Reference">
       <md-toolbar class="md-hue-2">
         <div class="md-toolbar-tools">
@@ -76,7 +64,7 @@
         <div ng-repeat="levelGroup in ::gameGroup.items">
           <h3 layout-padding>{{::gameGroup.value | gameName}} - {{::levelGroup.value| levelName}} {{::levelGroup.value | levelStars}}</h3>
           <md-content layout="row" layout-sm="column" layout-wrap>
-            <alien-panel ng-repeat="alien in ::levelGroup.items | orderBy:orderPref" data-item="::alien" flex-md="50" flex-lg="33" flex-gt-lg="25"></alien-panel>
+            <alien-panel ng-repeat="alien in ::levelGroup.items track by alien.name | orderBy:orderPref" data-item="::alien" flex-md="50" flex-lg="33" flex-gt-lg="25"></alien-panel>
           </md-content>
         </div>
       </div>

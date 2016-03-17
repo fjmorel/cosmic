@@ -2,8 +2,15 @@
 .vs
 .vscode
 *.sln
-*.xproj
-*.xproj.user
+*.suo
+*.csproj
+*.csproj.user
 gruntfile.js
 package.json
 temp/
+bin/
+obj/
+Properties/
+app.config
+Web.config
+Web.*.config
