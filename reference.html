@@ -1,6 +1,5 @@
 ﻿<!DOCTYPE html>
-<html lang="en" ng-app="cc.aliens.reference" ng-strict-di>
-
+<html lang="en">
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
@@ -18,17 +17,16 @@
   <meta name="apple-mobile-web-app-title" content="Cosmic Aliens" />
   <link rel="stylesheet" type="text/css" href="dist/css/cosmic.min.css" />
 </head>
-
 <body>
 	<noscript>
 		This page requires JavaScript to run.
 	</noscript>
-  <div ng-controller="NavDrawer">
-		<cosmic-drawer page="reference"></cosmic-drawer>
+  <div ng-controller="NavDrawer as Drawer">
+		<cosmic-drawer page="'reference'"></cosmic-drawer>
     <md-content ng-controller="AlienReferenceController as Reference">
       <md-toolbar class="md-hue-2">
         <div class="md-toolbar-tools">
-          <md-button class="md-icon-button" ng-click="open()" aria-label="Settings">
+          <md-button class="md-icon-button" ng-click="Drawer.open()" aria-label="Settings">
             <ng-md-icon icon="menu" style="fill:#fff;"></ng-md-icon>
           </md-button>
           <h2>Alien Reference</h2>
@@ -36,18 +34,10 @@
       </md-toolbar>
       <md-content layout="row" layout-sm="column" layout-wrap>
         <md-card flex-sm="100" flex-md="48" flex-lg="30" flex-gt-lg="31">
-          <md-card-content>
-            <h4 class="md-title">Levels to include</h4>
-            <md-checkbox ng-change="Reference.change('complexities')" ng-model="complexities[level]" ng-repeat="(level, name) in ::['Green','Yellow','Red']"
-            ng-class="::'md-primary md-alien'+(level+1)+'-theme'">{{::name}}</md-checkbox>
-          </md-card-content>
+          <alien-level-options save="Reference.change" options="Reference.complexities"></alien-level-options>
         </md-card>
         <md-card flex-sm="100" flex-md="48" flex-lg="37" flex-gt-lg="31">
-          <md-card-content>
-            <h4 class="md-title">Games to include</h4>
-            <md-checkbox ng-change="Reference.change('game')" ng-model="games[game]" ng-repeat="game in ::['E', 'A', 'C', 'D', 'I', 'S']"
-            class="md-primary">{{::game | gameName}}</md-checkbox>
-          </md-card-content>
+          <alien-game-options save="Reference.change" options="Reference.games"></alien-game-options>
         </md-card>
         <md-card flex-sm="100" flex-md="48" flex-lg="30" flex-gt-lg="31">
           <md-card-content>
@@ -60,11 +50,11 @@
           </md-card-content>
         </md-card>
       </md-content>
-      <div ng-repeat="gameGroup in alienGroups">
+      <div ng-repeat="gameGroup in Reference.alienGroups">
         <div ng-repeat="levelGroup in ::gameGroup.items">
           <h3 layout-padding>{{::gameGroup.value | gameName}} - {{::levelGroup.value| levelName}} {{::levelGroup.value | levelStars}}</h3>
           <md-content layout="row" layout-sm="column" layout-wrap>
-            <alien-panel ng-repeat="alien in ::levelGroup.items track by alien.name | orderBy:orderPref" data-item="::alien" flex-md="50" flex-lg="33" flex-gt-lg="25"></alien-panel>
+            <alien-panel ng-repeat="alien in ::levelGroup.items track by alien.name | orderBy:Reference.orderPref" data-item="::alien" flex-md="50" flex-lg="33" flex-gt-lg="25"></alien-panel>
           </md-content>
         </div>
       </div>
