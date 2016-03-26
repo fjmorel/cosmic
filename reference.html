@@ -18,12 +18,12 @@
   <link rel="stylesheet" type="text/css" href="dist/css/cosmic.min.css" />
 </head>
 <body>
-	<noscript>
-		This page requires JavaScript to run.
-	</noscript>
+  <noscript>
+    This page requires JavaScript to run.
+  </noscript>
   <div ng-controller="NavDrawer as Drawer">
-		<cosmic-drawer page="'reference'"></cosmic-drawer>
-    <md-content ng-controller="AlienReferenceController as Reference">
+    <cosmic-drawer page="'reference'"></cosmic-drawer>
+    <md-content ng-controller="AlienReference as Reference">
       <md-toolbar class="md-hue-2">
         <div class="md-toolbar-tools">
           <md-button class="md-icon-button" ng-click="Drawer.open()" aria-label="Settings">
@@ -42,10 +42,15 @@
         <md-card flex-sm="100" flex-md="48" flex-lg="30" flex-gt-lg="31">
           <md-card-content>
             <h4 class="md-title">Sort by</h4>
-            <ol >
+            <ol>
               <li>Game</li>
               <li>Level</li>
               <li>Name</li>
+            </ol>
+            <h4 class="md-title">Group by</h4>
+            <ol>
+              <li>Game</li>
+              <li>Level</li>
             </ol>
           </md-card-content>
         </md-card>
@@ -60,7 +65,7 @@
       </div>
     </md-content>
   </div>
-  <script src="dist/js/libraries.min.js"></script> 
+  <script src="dist/js/libraries.min.js"></script>
   <script src="dist/js/common.min.js"></script>
   <script src="dist/js/aliens.reference.min.js"></script>
 </body>

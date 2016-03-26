@@ -20,9 +20,9 @@
 
 <body>
   <!-- Drawer Controller on container div to show over main content -->
-	<noscript>
-		This page requires JavaScript to run.
-	</noscript>
+  <noscript>
+    This page requires JavaScript to run.
+  </noscript>
   <div ng-controller="NavDrawer as Drawer">
     <cosmic-drawer page="'generator'"></cosmic-drawer>
     <md-content ng-controller="GeneratorCtrl as Generator">
@@ -36,9 +36,9 @@
         </div>
       </md-toolbar>
       <!-- Settings -->
-      <md-content layout="row" layout-sm="column" >
+      <md-content layout="row" layout-sm="column">
         <md-card flex-sm="100" flex-md="48" flex-lg="23" flex-gt-lg="18">
-          <alien-level-options save="Generator.saveSetting" options="Generator.complexities"></alien-level-options>
+          <alien-level-options save="Generator.saveSetting" options="Generator.settings.complexities"></alien-level-options>
         </md-card>
         <md-card flex-sm="100" flex-md="48" flex-lg="23" flex-gt-lg="18">
           <alien-game-options save="Generator.saveSetting" options="Generator.settings.games"></alien-game-options>
@@ -46,7 +46,7 @@
         <md-card flex-sm="100" flex-md="48" flex-lg="23" flex-gt-lg="18">
           <md-card-content>
             <h4 class="md-title">Game setup</h4>
-            <md-radio-group ng-model="Generator.setupLevel" ng-change="Generator.saveSetting('setupLevel')">
+            <md-radio-group ng-model="Generator.settings.setupLevel" ng-change="Generator.saveSetting('setupLevel')">
               <md-radio-button value="none" class="md-primary">Remove none</md-radio-button>
               <md-radio-button value="color" class="md-primary">Remove those requiring extra color</md-radio-button>
               <md-radio-button value="all" class="md-primary">Remove all</md-radio-button>
@@ -56,7 +56,7 @@
         <md-card flex-sm="100" flex-md="48" flex-lg="23" flex-gt-lg="18">
           <md-card-content>
             <h4 class="md-title">Exclude by name</h4>
-            <md-select multiple ng-model="Generator.namesExcluded" ng-change="Generator.saveSetting('namesExcluded')" placeholder="Select names">
+            <md-select multiple ng-model="Generator.settings.namesExcluded" ng-change="Generator.saveSetting('namesExcluded')" placeholder="Select names">
               <md-option ng-value="::name" ng-repeat="name in Generator.namesAll">{{::name}}</md-option>
             </md-select>
           </md-card-content>
@@ -75,26 +75,22 @@
       <!-- Actions -->
       <md-toolbar>
         <div class="md-toolbar-tools">
-          <md-button class="md-raised" ng-click="Generator.pickAliens()" ng-disabled="Generator.numLeft() < Generator.settings.numToChoose">Draw</md-button>
-          <md-button class="md-accent md-raised" ng-click="Generator.hide()" ng-class="{hidden:Generator.numCurrent() > 0 && Generator.aliensToShow.length <= 0}"
-          ng-disabled="Generator.aliensToShow.length <= 0">Hide</md-button>
-          <md-button class="md-accent md-raised" ng-click="Generator.show()" ng-class="{hidden:!(Generator.numCurrent() > 0 && Generator.aliensToShow.length <= 0)}"
-          ng-disabled="Generator.numCurrent() <= 0">Show</md-button>
-          <md-button class="md-accent md-raised" ng-click="Generator.redo();" ng-disabled="Generator.numCurrent() <= 0 || Generator.aliensToShow.length <= 0">Redo</md-button>
-          <md-button layout-align="end center" class="md-alien3-theme md-primary md-raised" id="reset" ng-click="Generator.reset()"
-          ng-disabled="Generator.numCurrent() <= 0 && Generator.numGiven() <= 0">Reset</md-button>
+          <md-button class="md-raised" ng-click="Generator.draw()" ng-disabled="Generator.disabled.draw">Draw</md-button>
+          <md-button class="md-accent md-raised" ng-click="Generator.hide()" ng-disabled="Generator.disabled.hide">Hide</md-button>
+          <md-button class="md-accent md-raised" ng-click="Generator.show()" ng-disabled="Generator.disabled.show">Show</md-button>
+          <md-button class="md-accent md-raised" ng-click="Generator.redo();" ng-disabled="Generator.disabled.redo">Redo</md-button>
+          <md-button class="md-alien3-theme md-primary md-raised" ng-click="Generator.reset()" ng-disabled="Generator.disabled.reset">Reset</md-button>
         </div>
       </md-toolbar>
       <!-- State -->
-      <md-content layout-padding>{{Generator.numOut()}} of {{Generator.numOut()+Generator.numLeft()}} drawn. {{Generator.state}}</md-content>
-      <!-- Aliens -->
+      <md-content layout-padding>{{Generator.status}} {{Generator.state}}</md-content>
       <md-content layout="row" layout-sm="column" layout-wrap>
         <alien-panel ng-repeat="alien in Generator.aliensToShow track by alien.name | orderBy:'name'" item="::alien" flex flex-md="50" flex-lg="33" flex-gt-lg="25"></alien-panel>
       </md-content>
 
     </md-content>
   </div>
-  <script src="dist/js/libraries.min.js"></script> 
+  <script src="dist/js/libraries.min.js"></script>
   <script src="dist/js/common.min.js"></script>
   <script src="dist/js/aliens.generator.min.js"></script>
 </body>

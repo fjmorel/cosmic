@@ -1,14 +1,143 @@
 ﻿(function () {
   "use strict";
-  let app = angular.module('cc.aliens.generator', ['ngAria', 'cc.base', 'cc.aliens', 'ngStorage', 'ngMaterial', 'ngMdIcons']);
+  //TODO: testing
+
+  let app = angular.module('cc.aliens.generator', ['ngAria', 'cc.base', 'cc.aliens', 'ngStorage', 'ngMaterial']);
+  //app.config(['$compileProvider', function(provider) { provider.debugInfoEnabled(false); }]);
   app.constant('generatorVersion', 2);
 
-  //TODO: testing
   //TODO: use sessionstorage for current state (current, given, pool, etc)
-  //app.config(['$compileProvider', function(provider) { provider.debugInfoEnabled(false); }]);
-  
+  app.service('GeneratorService', ['alienData', function (Aliens) {
+    //Status
+    let service = {};
+    //Current = currently drawn. Given = previously given/restricted. Restricted = restricted by those currently drawn. Pool = all left to draw from
+    let current = [], given = [], restricted = [], pool = [];
+
+    //Determine list of possible choices based on selected options
+    service.reset = function (complexities, games, namesExcluded, setupLevel) {
+      pool = Aliens.getMatchingNames(complexities, games, namesExcluded, setupLevel);
+      given = [];
+      current = [];
+      restricted = [];
+
+      return { aliens: [], message: "List reset." };
+    };
+
+    //Choose alien from pool
+    let drawOne = function (preventConflicts) {
+      //Select name (return if wasn't able to select
+      let choice = Math.floor(Math.random() * pool.length);
+      if (!pool[choice]) return;
+      let name = pool.splice(choice, 1)[0];
+      current.push(name);
+      current.sort();
+
+      //If current choice has any restrictions, remove them from pool as well
+      let alien = Aliens.get(name);
+      if (preventConflicts && alien.restriction) {
+        let restrictions = alien.restriction.split(',');
+        for (let j = 0; j < restrictions.length; j++) {
+          let index = pool.indexOf(restrictions[j]);
+          if (index > -1) { restricted.push(pool.splice(index, 1)[0]); }
+        }
+      }
+      //Return select name
+      return name;
+    };
+
+    //Move current to given and move on
+    let makePickFinal = function () {
+      given = given.concat(current, restricted);
+      restricted = []; current = [];
+    };
+
+    //Move current selection back to pool
+    let undo = function () {
+      pool = pool.concat(current, restricted);
+      pool.sort();
+      current = []; restricted = [];
+    };
+
+    service.getAllGiven = function () {
+      makePickFinal();
+      return { aliens: given.sort().map(Aliens.get), message: "Aliens given out so far:" };
+    };
+
+    //Keep choose # within 1 and max. Run when resetting alien list (# might have changed) and changing # to pick
+    service.getChooseLimit = function (original) {
+      let numToGive = original;
+      let max = pool.length;
+      if (max > 0 && numToGive > max) numToGive = max;
+      if (numToGive < 1) numToGive = 1;
+      return numToGive;
+    };
+
+    //Pick aliens randomly
+    service.draw = function (howManyToChoose) {
+      makePickFinal();
+      for (let i = 0; i < howManyToChoose; i++) {
+        let name = drawOne();
+        if (!name) break;
+      }
+
+      //If unable to pick desired number, undo
+      if (current.length < howManyToChoose) {
+        undo();
+        return { aliens: [], message: "Not enough potential aliens left." + (service.settings.preventConflicts ? " It's possible that the \"Prevent conflicts\" option is preventing me from displaying remaining aliens." : "") };
+      }
+
+      //Display
+      return { aliens: current.map(Aliens.get), message: "Choices:", limit: service.getChooseLimit(howManyToChoose) };
+    };
+
+
+    //Hide all aliens (so return nothing to show
+    service.hide = () => ({ aliens: [], state: "Choices hidden." });
+
+    //Show current aliens if pass test
+    service.show = function () {
+      //Ask for initial of one of the aliens before reshowing them
+      let initials = current.map(function (e) { return e[0].toLowerCase(); });
+      if (initials.indexOf((prompt("Enter the first initial of one of the aliens you were given, then click OK.") || "").toLowerCase()) < 0) {
+        return { aliens: [], state: "Wrong letter." };
+      }
+
+      //If passed, then show aliens
+      return { aliens: current.map(Aliens.get), message: "Choices:" };
+    };
+
+    //Undo last draw, then draw again
+    service.redo = function (howManyToChoose) {
+      if (confirm("Redo?")) {
+        undo();
+        return service.draw(howManyToChoose);
+      }
+    };
+
+    //Get which actions are not allowed
+    service.getDisabledActions = function (howManyToChoose, numShown) {
+      return {
+        draw: (pool.length < howManyToChoose),
+        hide: (numShown < 1),
+        show: !(current.length > 0 && numShown < 1),
+        redo: (current.length <= 0 || numShown <= 0),
+        reset: (current.length <= 0 && given.length <= 0)
+      };
+    };
+
+    //Get number given out and size of pool
+    service.getStatus = function () {
+      return (current.length + given.length + restricted.length) + " of " + (current.length + given.length + restricted.length + pool.length) + " drawn.";
+    };
+
+    //Start Generator by getting alien names
+    service.init = Aliens.init;
+
+    return service;
+  }]);
+
   //Based on settings, allow user to pick aliens randomly
-  app.controller('GeneratorCtrl', ["$scope", "alienData", '$localStorage', '$sessionStorage', 'generatorVersion', function ($scope, Aliens, $localStorage, $sessionStorage, VERSION) {
+  app.controller('GeneratorCtrl', ['$localStorage', 'generatorVersion', 'GeneratorService', function ($localStorage, VERSION, Generator) {
 
     let ctrl = this;
 
@@ -19,7 +148,7 @@
       setupLevel: "none",
       numToChoose: 2,
       preventConflicts: true,
-      version: 1
+      version: 2
     };
     $localStorage.$default(defaults);
     if (!$localStorage.version || $localStorage.version < VERSION) {
@@ -28,80 +157,38 @@
     }
 
     ctrl.settings = $localStorage;
-    ctrl.complexities = $localStorage.complexities;
-
-    //Exclude
-    ctrl.namesExcluded = $localStorage.namesExcluded;
-    ctrl.setupLevel = $localStorage.setupLevel;
-
-    //Choose
-    ctrl.numToChoose = $localStorage.numToChoose;
 
     //Output
+    ctrl.status = "0 of 0 drawn."
     ctrl.state = "Loading aliens...";
     ctrl.aliensToShow = [];
 
-    //Status
-    let current = [], given = [], restricted = [], pool = [];
+    //Button states
+    ctrl.disabled = {
+      draw: true, hide: true, show: true, redo: true, reset: true
+    };
 
-    ctrl.namesAll = [];
-    ctrl.numOut = () => current.length + given.length + restricted.length;
-    ctrl.numCurrent = () =>  current.length;
-    ctrl.numGiven = () =>  given.length;
-    ctrl.numLeft = () =>  pool.length;
+    let setState = function (newState) {
+      if (!newState) return;
+      ctrl.state = newState.message;
+      ctrl.aliensToShow = newState.aliens;
+      if (newState.limit) {
+        ctrl.settings.numToChoose = newState.limit;
+        $localStorage.numToChoose = newState.limit;
+      }
+      ctrl.status = Generator.getStatus();
+      ctrl.disabled = Generator.getDisabledActions(ctrl.settings.numToChoose, ctrl.aliensToShow.length);
+    };
 
-    //Determine list of possible choices based on selected options
     let resetGenerator = function () {
-      //Create POOL from aliens that match level and game and are not excluded, and clear other lists
       let opts = ctrl.settings;
-      pool = Aliens.getMatchingNames(opts.complexities, opts.games, ctrl.namesExcluded, ctrl.setupLevel);
-      given = [];
-      current = [];
-      restricted = [];
-
-      //SETTINGS.resetHowManyToSelect();//Make sure it's within new limit
+      setState(Generator.reset(opts.complexities, opts.games, opts.namesExcluded, opts.setupLevel));
       ctrl.restrictNumToChoose();
-      //Write status
-      ctrl.state = "List reset.";
-      ctrl.aliensToShow = [];
     };
 
     ctrl.saveSetting = function (setting) {
-      $localStorage[setting] = ctrl[setting];
+      $localStorage[setting] = ctrl.settings[setting];
       resetGenerator();
-    };
-
-    //Choose alien from pool
-    let pickAlien = function () {
-      //Select name (return if wasn't able to select
-      let choice = Math.floor(Math.random() * pool.length);
-      if (!pool[choice]) return;
-      let name = pool.splice(choice, 1)[0];
-      current.push(name);
-      current.sort();
-
-      //If current choice has any restrictions, remove them from pool as well
-      let alien = Aliens.get(name);
-      if (ctrl.settings.preventConflicts && alien.restriction) {
-        let restrictions = alien.restriction.split(',');
-        for (let j = 0; j < restrictions.length; j++) {
-          let index = pool.indexOf(restrictions[j]);
-          if (index > -1) { restricted.push(pool.splice(index, 1)[0]); }
-        }
-      }
-      //Return select name
-      return name;
-    };
-    //Move current to given and move on
-    let makePickFinal = function () {
-      given = given.concat(current, restricted).sort();
-      restricted = []; current = [];
-    };
-    //Move current selection back to pool
-    let undo = function () {
-      pool = pool.concat(current, restricted);
-      pool.sort();
-      current = []; restricted = [];
     };
 
     let NOT_RESET = 0;
@@ -110,80 +197,26 @@
       else NOT_RESET++;
 
       if (NOT_RESET > 2) {
-        makePickFinal();
-        ctrl.state = "Aliens given out so far:";
-        ctrl.aliensToShow = given.map(Aliens.get);
+        setState(Generator.getAllGiven());
         NOT_RESET = 0;
       }
     };
 
     //Keep choose # within 1 and max. Run when resetting alien list (# might have changed) and changing # to pick
     ctrl.restrictNumToChoose = function () {
-      let numToGive = ctrl.settings.numToChoose;
-      let max = ctrl.numLeft();
-      if (max > 0 && numToGive > max) numToGive = max;
-      if (numToGive < 1) numToGive = 1;
-
-      ctrl.settings.numToChoose = numToGive;
-      $localStorage.numToChoose = numToGive;
+      ctrl.settings.numToChoose = Generator.getChooseLimit(ctrl.settings.numToChoose);
+      $localStorage.numToChoose = ctrl.settings.numToChoose;
     };
 
-    ctrl.pickAliens = function () {
-      makePickFinal();
-
-      //Pick aliens randomly
-      let howManyToChoose = ctrl.settings.numToChoose;
-      for (let i = 0; i < howManyToChoose; i++) {
-        let name = pickAlien();
-        if (!name) break;
-      }
-
-      //If unable to pick desired number, undo
-      if (current.length < howManyToChoose) {
-        undo();
-        ctrl.aliensToShow = [];
-        ctrl.state = "Not enough potential aliens left." + (ctrl.settings.preventConflicts ? " It's possible that the \"Prevent conflicts\" option is preventing me from displaying remaining aliens." : "");
-        return;
-      }
-
-      //Display
-      ctrl.state = "Choices:";
-      ctrl.aliensToShow = current.map(Aliens.get);
-      ctrl.restrictNumToChoose();
-      return;
-    };
-
-    ctrl.hide = function () {
-      ctrl.aliensToShow = [];
-      ctrl.state = "Choices hidden.";
-    };
-
-    ctrl.show = function () {
-      //Ask for initial of one of the aliens before reshowing them
-      let initials = current.map(function (e) { return e[0].toLowerCase(); });
-      if (initials.indexOf((prompt("Enter the first initial of one of the aliens you were given, then click OK.") || "").toLowerCase()) < 0) {
-        ctrl.state = "Wrong letter.";
-        return;
-      }
-
-      //If passed, then show aliens
-      ctrl.state = "Choices:";
-      ctrl.aliensToShow = current.map(Aliens.get);
-    };
-
-    ctrl.redo = function () {
-      if (confirm("Redo?")) {
-        undo();
-        ctrl.pickAliens();
-      }
-    };
+    ctrl.draw = function () { setState(Generator.draw(ctrl.settings.numToChoose)); };
+    ctrl.hide = function () { setState(Generator.hide()); };
+    ctrl.show = function () { setState(Generator.show()); };
+    ctrl.redo = function () { setState(Generator.redo(ctrl.settings.numToChoose)); };
 
     //Init generator
-    Aliens.init().then(function (names) {
-      ctrl.namesAll = ctrl.namesAll.concat(names);
+    Generator.init().then(function (names) {
+      ctrl.namesAll = names;
       resetGenerator();
-    }).catch(function (error) {
-      //TODO: something about being unable to load aliens
     });
   }]);
 
