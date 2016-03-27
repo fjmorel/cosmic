@@ -1,6 +1,6 @@
 ﻿(function () {
   "use strict";
-  //TODO: testing
+  //TODO: testing, remove debug info
 
   let app = angular.module('cc.aliens.generator', ['ngAria', 'cc.base', 'cc.aliens', 'ngStorage', 'ngMaterial']);
   //app.config(['$compileProvider', function(provider) { provider.debugInfoEnabled(false); }]);
@@ -30,7 +30,6 @@
       if (!pool[choice]) return;
       let name = pool.splice(choice, 1)[0];
       current.push(name);
-      current.sort();
 
       //If current choice has any restrictions, remove them from pool as well
       let alien = Aliens.get(name);
@@ -54,10 +53,10 @@
     //Move current selection back to pool
     let undo = function () {
       pool = pool.concat(current, restricted);
-      pool.sort();
       current = []; restricted = [];
     };
 
+    //Show all aliens that have been given out so far
     service.getAllGiven = function () {
       makePickFinal();
       return { aliens: given.sort().map(Aliens.get), message: "Aliens given out so far:" };
@@ -87,7 +86,7 @@
       }
 
       //Display
-      return { aliens: current.map(Aliens.get), message: "Choices:", limit: service.getChooseLimit(howManyToChoose) };
+      return { aliens: current.sort().map(Aliens.get), message: "Choices:", limit: service.getChooseLimit(howManyToChoose) };
     };
 
 
@@ -127,7 +126,8 @@
 
     //Get number given out and size of pool
     service.getStatus = function () {
-      return (current.length + given.length + restricted.length) + " of " + (current.length + given.length + restricted.length + pool.length) + " drawn.";
+      let numGiven = current.length + given.length + restricted.length;
+      return numGiven + " of " + (numGiven + pool.length) + " drawn.";
     };
 
     //Start Generator by getting alien names
@@ -164,9 +164,7 @@
     ctrl.aliensToShow = [];
 
     //Button states
-    ctrl.disabled = {
-      draw: true, hide: true, show: true, redo: true, reset: true
-    };
+    ctrl.disabled = { draw: true, hide: true, show: true, redo: true, reset: true };
 
     let setState = function (newState) {
       if (!newState) return;
@@ -216,9 +214,6 @@
     //Init generator
     Generator.init().then(function (names) {
       ctrl.namesAll = names;
-      resetGenerator();
-    });
+    }).then(resetGenerator);
   }]);
-
-  angular.bootstrap(document, ['cc.aliens.generator'], { 'strictDi': true });
 })();

@@ -1,10 +1,16 @@
 ﻿(function () {
   "use strict";
-  let mod = angular.module('cc.base', ['ngMaterial']);
+  let mod = angular.module('cc.base', ['ngMaterial', 'ngMdIcons']);
 
   //Cosmic Theme
   mod.config(['$mdThemingProvider', function (ThemeProvider) {
+    ThemeProvider.definePalette('cosmic-warn', ThemeProvider.extendPalette('red', {
+      '500': 'c31b09',
+      'contrastDefaultColor': 'dark'
+    }));
+
     ThemeProvider.theme('default').primaryPalette('deep-purple').accentPalette('amber');
+    ThemeProvider.theme('warn').primaryPalette('cosmic-warn').accentPalette('orange');
   }]);
 
   mod.value('gameInitials', ['E', 'A', 'C', 'D', 'I', 'S']);
@@ -48,8 +54,22 @@
     bindings: { page: '<' }
   });
 
+  mod.component('cosmicToolbar', {
+    template: `
+<md-toolbar class ="md-hue-2">
+  <div class ="md-toolbar-tools">
+    <md-button class ="md-icon-button" ng-click="$ctrl.drawer.open()" aria-label="Settings">
+      <ng-md-icon icon="menu" style="fill:#fff;"></ng-md-icon>
+    </md-button>
+    <h2>{{$ctrl.title}}</h2>
+  </div>
+</md-toolbar>
+      `,
+    bindings: { title: '<', drawer : '<' }
+  })
+
   mod.controller('NavDrawer', ['$mdSidenav', function ($mdSidenav) {
-    this.open = () => $mdSidenav('left').open();
+    this.open = function () { $mdSidenav('left').open(); };
   }]);
 
   mod.filter('groupBy', [function () {
@@ -67,11 +87,11 @@
       });
 
       //Generate array with named groups
-      let result = Object.keys(grouped).map((group) => ({ value: group, items: grouped[group] }));
+      let result = Object.keys(grouped).map(group => ({ value: group, items: grouped[group] }));
 
       //If more fields to group by, go deeper
       if (fields[level + 1]) {
-        result = result.map((group) => ({ value: group.value, items: groupItems(group.items, fields, level + 1) }));
+        result = result.map(group => ({ value: group.value, items: groupItems(group.items, fields, level + 1) }));
       }
 
       return result;

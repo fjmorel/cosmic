@@ -15,7 +15,7 @@
   <meta name="msapplication-TileImage" content="icons/144.png" />
   <meta name="application-name" content="Alien Reference - Companion for Cosmic Encounter" />
   <meta name="apple-mobile-web-app-title" content="Cosmic Aliens" />
-  <link rel="stylesheet" type="text/css" href="dist/css/cosmic.min.css" />
+  <link rel="stylesheet" type="text/css" href="dist/styles.css" />
 </head>
 <body>
   <noscript>
@@ -24,14 +24,7 @@
   <div ng-controller="NavDrawer as Drawer">
     <cosmic-drawer page="'reference'"></cosmic-drawer>
     <md-content ng-controller="AlienReference as Reference">
-      <md-toolbar class="md-hue-2">
-        <div class="md-toolbar-tools">
-          <md-button class="md-icon-button" ng-click="Drawer.open()" aria-label="Settings">
-            <ng-md-icon icon="menu" style="fill:#fff;"></ng-md-icon>
-          </md-button>
-          <h2>Alien Reference</h2>
-        </div>
-      </md-toolbar>
+      <cosmic-toolbar title="'Alien Reference'" drawer="Drawer"></cosmic-toolbar>
       <md-content layout="row" layout-sm="column" layout-wrap>
         <md-card flex-sm="100" flex-md="48" flex-lg="30" flex-gt-lg="31">
           <alien-level-options save="Reference.change" options="Reference.complexities"></alien-level-options>
@@ -65,9 +58,15 @@
       </div>
     </md-content>
   </div>
-  <script src="dist/js/libraries.min.js"></script>
-  <script src="dist/js/common.min.js"></script>
-  <script src="dist/js/aliens.reference.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.1/angular.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.1/angular-aria.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.1/angular-animate.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/angular_material/1.0.5/angular-material.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/angular-material-icons/0.7.0/angular-material-icons.min.js"></script>
+  <script src="dist/index.js"></script>
+  <script>
+    angular.bootstrap(document, ['cc.aliens.reference'], { 'strictDi': true });
+  </script>
 </body>
 
 </html>

@@ -3,6 +3,8 @@
 @level2: #c31b09;
 @desc-bg: #ddd;
 
+@import (inline) '../../node_modules/angular-material/angular-material.min.css';
+
 /*Background to something based on alien level*/
 .alien-bg-0 {
   background: @level0;
@@ -39,6 +41,16 @@ body, md-content {
 
 ng-md-icon svg {
   vertical-align: -6px !important;
+}
+
+#generator-actions ng-md-icon {
+  fill-opacity: 0.87;
+  fill:#000;
+}
+
+#generator-actions [disabled] ng-md-icon {
+  fill-opacity: 0.26 !important;
+  fill:#000 !important;
 }
 
 .md-title {

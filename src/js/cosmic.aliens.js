@@ -4,7 +4,6 @@
 
   //Themes for alien-related items
   mod.config(['$mdThemingProvider', function (ThemeProvider) {
-    //TODO: Override more colors, especially active color on btns
     ThemeProvider.definePalette('alien-green', ThemeProvider.extendPalette('green', {
       '500': '189247',
       'contrastDefaultColor': 'light'
@@ -14,56 +13,46 @@
     }));
     ThemeProvider.definePalette('alien-red', ThemeProvider.extendPalette('red', {
       '500': 'c31b09',
-      'contrastDefaultColor': 'light',
-      'contrastDarkColors': ['600', '700', '800', '900', 'A700'],
-      'contrastLightColors': ['50', '100', '200', '300', '400', '500', 'A100', 'A200', 'A400']
+      'contrastDefaultColor': 'light'
     }));
 
-    ThemeProvider.theme('alien1').primaryPalette('alien-green').accentPalette('deep-purple');
-    ThemeProvider.theme('alien2').primaryPalette('alien-yellow').accentPalette('deep-purple');
-    ThemeProvider.theme('alien3').primaryPalette('alien-red').accentPalette('deep-purple');
-
+    ThemeProvider.theme('alien0').primaryPalette('alien-green').accentPalette('deep-purple');
+    ThemeProvider.theme('alien1').primaryPalette('alien-yellow').accentPalette('deep-purple');
+    ThemeProvider.theme('alien2').primaryPalette('alien-red').accentPalette('deep-purple');
   }]);
 
   //Fetch alien data and provide methods to retrieve names and aliens
-  mod.factory('alienData', ['$q', '$http', 'levelClassFilter', function ($q, $http, getClass) {
+  mod.factory('alienData', ['$http', function ($http) {
     let aliens = {}, alien_names = [];
-    let getNames = () => alien_names.slice(0);
-    let initPromise;
 
     return {
       init: function () {
-        if (initPromise) return initPromise;
-        if (alien_names.length) return $q.when(getNames());
-        initPromise = $http.get("data/aliens.json").then(function (result) {
+        return $http.get("data/aliens.json").then(function (result) {
           result.data.list.forEach(function (alien) {
             aliens[alien.name] = alien;
             alien_names.push(alien.name);
           });
           alien_names.sort();
-          return getNames();
+          return alien_names.slice(0);
         });
-        return initPromise;
       },
 
-      "get": name => angular.copy(aliens[name] || {}),
+      get: name => aliens[name] || {},
       getMatching: function (levels, games, exclude, setup) {
-        return this.getMatchingNames(levels, games, exclude, setup).map((name) =>aliens[name]);
+        return this.getMatchingNames(levels, games, exclude, setup).map(name => aliens[name]);
       },
       getMatchingNames: function (levels, games, exclude, setup) {
         //Remove wrong game/level
-        let names = alien_names.filter((name) => levels[aliens[name].level] && games[aliens[name].game]);
+        let names = alien_names.filter(name => levels[aliens[name].level] && games[aliens[name].game]);
         //Remove specific names
-        if (exclude && exclude.length) names = names.filter((name) => exclude.indexOf(name) < 0);
+        if (exclude && exclude.length) names = names.filter(name => exclude.indexOf(name) < 0);
         //Remove if removing game setup (unless only removing extra color)
-        if (setup && setup !== "none") names = names.filter((name) => (!aliens[name].setup || (setup === 'color' && aliens[name].setup !== "color")));
+        if (setup && setup !== "none") names = names.filter(name => (!aliens[name].setup || (setup === 'color' && aliens[name].setup !== "color")));
 
         return names;
       }
     };
   }]);
-
-  mod.value('levels', ['Green', 'Yellow', 'Red']);
 
   //Turn alien level into Bootstrap class name for colors
   mod.filter('levelClass', function () {
@@ -78,16 +67,20 @@
   });
 
   //Turn alien level into a string of stars to show level
-  mod.filter('levelName', ['levels', function (names) { return lvl => names[lvl]; }]);
+  mod.filter('levelName', function () {
+    let names = ['Green', 'Yellow', 'Red'];
+    return lvl => names[lvl];
+  });
 
+  //TODO: Add extra information (and update JSON file)
   //Turn alien object into a panel with its information
   mod.component("alienPanel", {
     bindings: { alien: '<item' },
     template: `
 <md-card>
 	<md-card-content class ="alien-head">
-		<md-button class ="md-alien{{::$ctrl.alien.level+1}}-theme md-raised md-primary" ng-click="$ctrl.opened = !$ctrl.opened">{{$ctrl.opened ? '-': '+'}}</md-button>
-		<h2 class ="md-alien{{::$ctrl.alien.level+1}}-theme md-title alien-fg-{{::$ctrl.alien.level}}">{{::$ctrl.alien.name}}</h2>
+		<md-button class ="md-alien{{::$ctrl.alien.level}}-theme md-raised md-primary" ng-click="$ctrl.opened = !$ctrl.opened">{{$ctrl.opened ? '-': '+'}}</md-button>
+		<h2 class ="md-alien{{::$ctrl.alien.level}}-theme md-title alien-fg-{{::$ctrl.alien.level}}">{{::$ctrl.alien.name}}</h2>
 		<p class ="md-subhead clear">{{::$ctrl.alien.power}}</p>
 	</md-card-content>
 	<md-card-footer class ="alien-bar alien-bg-{{::$ctrl.alien.level}}">
@@ -112,7 +105,7 @@
 <md-card-content>
   <h4 class ="md-title">Levels to include</h4>
   <md-checkbox ng-change="$ctrl.save('complexities')" ng-model="$ctrl.options[level]" ng-repeat="(level, name) in ::['Green','Yellow','Red']"
-  ng-class ="::'md-primary md-alien'+(level+1)+'-theme'">{{::name}}</md-checkbox>
+  ng-class ="::'md-primary md-alien'+level+'-theme'">{{::name}}</md-checkbox>
 </md-card-content>
       `
   });

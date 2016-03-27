@@ -4,7 +4,7 @@
   let app = angular.module('cc.aliens.reference', ['cc.base', 'cc.aliens', 'ngStorage', 'ngAria', 'ngMaterial']);
   
   //Based on settings, allow user to pick aliens randomly
-  app.controller('AlienReference', ["alienData", '$localStorage', 'groupByFilter', function AlienReference(Aliens, $localStorage, groupBy) {
+  app.controller('AlienReference', ["alienData", '$localStorage', 'groupByFilter', function(Aliens, $localStorage, groupBy) {
     let ctrl = this;
 
     //Set up default settings
@@ -28,7 +28,7 @@
       let aliens = Aliens.getMatching(ctrl.complexities, ctrl.games);
 
       //Group
-      ctrl.alienGroups = groupBy(aliens, ctrl.groupPref, 0);
+      ctrl.alienGroups = groupBy(aliens, ctrl.groupPref);
     }
 
     //Save, then show filtered, grouped list of aliens
@@ -40,6 +40,4 @@
     //Initialize reference page
     Aliens.init().then(refresh);
   }]);
-
-  angular.bootstrap(document, ['cc.aliens.reference'], { 'strictDi': true });
 })();
