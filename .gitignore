@@ -14,3 +14,4 @@ Properties/
 app.config
 Web.config
 Web.*.config
+/node_modules
