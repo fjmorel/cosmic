@@ -7,7 +7,6 @@
 *.csproj.user
 gruntfile.js
 gulpfile.js
-package.json
 temp/
 bin/
 obj/
