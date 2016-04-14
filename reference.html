@@ -26,14 +26,14 @@
     <cosmic-drawer page="'reference'"></cosmic-drawer>
     <md-content ng-controller="AlienReference as Reference">
       <cosmic-toolbar title="'Alien Reference'" drawer="Drawer"></cosmic-toolbar>
-      <md-content layout-gt-sm="row" layout="column" layout-wrap>
-        <md-card flex>
+      <md-content layout="row" layout-wrap>
+        <md-card flex="grow" flex-gt-xs="30">
           <alien-level-options save="Reference.change" options="Reference.complexities"></alien-level-options>
         </md-card>
-        <md-card flex>
+        <md-card flex="grow" flex-gt-xs="30">
           <alien-game-options save="Reference.change" options="Reference.games"></alien-game-options>
         </md-card>
-        <md-card flex>
+        <md-card flex="grow" flex-gt-xs="30">
           <md-card-content>
             <h4 class="md-title">Sort by</h4>
             <ol>
@@ -52,8 +52,8 @@
       <div ng-repeat="gameGroup in Reference.alienGroups">
         <div ng-repeat="levelGroup in ::gameGroup.items">
           <h3 layout-padding>{{::gameGroup.value | gameName}} - {{::levelGroup.value| levelName}} {{::levelGroup.value | levelStars}}</h3>
-          <md-content layout="row" layout-xs="column" layout-wrap>
-            <alien-panel ng-repeat="alien in ::levelGroup.items track by alien.name | orderBy:Reference.orderPref" data-item="::alien" flex="100" flex-gt-xs="50" flex-lg="33" flex-gt-lg="25"></alien-panel>
+          <md-content layout="row" layout-wrap>
+            <alien-panel ng-repeat="alien in ::levelGroup.items track by alien.name | orderBy:Reference.orderPref" data-item="::alien" flex="grow" flex-gt-xs="50" flex-lg="33" flex-gt-lg="25"></alien-panel>
           </md-content>
         </div>
       </div>

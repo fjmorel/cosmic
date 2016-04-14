@@ -30,7 +30,7 @@
       <!-- Header -->
       <cosmic-toolbar title="'Alien Generator'" drawer="Drawer"></cosmic-toolbar>
       <!-- Settings -->
-      <md-content layout="column" layout-gt-xs="row" layout-wrap>
+      <md-content layout="row" layout-wrap>
         <md-card flex="100" flex-gt-xs="45" flex-md="30" flex-lg="10" flex-gt-lg="15">
           <alien-level-options save="Generator.saveSetting" options="Generator.settings.complexities"></alien-level-options>
         </md-card>
@@ -81,8 +81,8 @@
       </md-toolbar>
       <!-- State -->
       <md-content layout-padding>{{Generator.status}} {{Generator.state}}</md-content>
-      <md-content layout="row" layout-xs="column" layout-wrap>
-        <alien-panel ng-repeat="alien in Generator.aliensToShow track by alien.name | orderBy:'name'" item="::alien" flex="100" flex-gt-xs="50" flex-gt-sm="33" flex-gt-lg="25"></alien-panel>
+      <md-content layout="row" layout-wrap>
+        <alien-panel ng-repeat="alien in Generator.aliensToShow track by alien.name | orderBy:'name'" item="::alien" flex="100" flex-gt-xs="50" flex-lg="33" flex-gt-lg="25"></alien-panel>
       </md-content>
 
     </md-content>
