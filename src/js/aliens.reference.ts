@@ -4,7 +4,10 @@
   let app = angular.module('cc.aliens.reference', ['cc.base', 'cc.aliens', 'ngStorage', 'ngAria', 'ngMaterial']);
   
   //Based on settings, allow user to pick aliens randomly
-  app.controller('AlienReference', ["alienData", '$localStorage', 'groupByFilter', function(Aliens: AlienService, $localStorage: IStorageService, groupBy) {
+  app.controller('AlienReference', ReferenceController);
+  
+  ReferenceController.$inject = ["alienData", '$localStorage', 'groupByFilter'];
+  function ReferenceController(Aliens: AlienService, $localStorage: IStorageService, groupBy) {
     let ctrl = this;
 
     //Set up default settings
@@ -39,5 +42,5 @@
 
     //Initialize reference page
     Aliens.init().then(refresh);
-  }]);
+  }
 })();

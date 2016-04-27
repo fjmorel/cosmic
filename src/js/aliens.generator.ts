@@ -54,7 +54,7 @@ interface GeneratorSettings {
       pool: string[] = [];
 
     //Determine list of possible choices based on selected options
-    service.reset = function (complexities, games, namesExcluded, setupLevel): GeneratorStatus {
+    service.reset = function (complexities: boolean[], games: Object, namesExcluded: string[], setupLevel: string): GeneratorStatus {
       pool = Aliens.getMatchingNames(complexities, games, namesExcluded, setupLevel);
       given = [];
       current = [];

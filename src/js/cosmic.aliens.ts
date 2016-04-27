@@ -58,10 +58,10 @@ interface AlienService {
       },
 
       get: (name: string): Alien | Object => aliens[name] || {},
-      getMatching: function (levels: boolean[], games: Object, exclude: string[], setup: string): Alien[] {
+      getMatching: function (levels: boolean[], games: Object, exclude?: string[], setup?: string): Alien[] {
         return this.getMatchingNames(levels, games, exclude, setup).map((name: string): Alien => aliens[name]);
       },
-      getMatchingNames: function (levels: boolean[], games: Object, exclude: string[], setup: string): string[] {
+      getMatchingNames: function (levels: boolean[], games: Object, exclude?: string[], setup?: string): string[] {
         //Remove wrong game/level
         let names = alien_names.filter((name: string): boolean => levels[aliens[name].level] && games[aliens[name].game]);
         //Remove specific names
