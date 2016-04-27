@@ -1,9 +1,29 @@
-﻿(function () {
+﻿interface Alien {
+  name: string,
+  game: string,
+  power: string,
+  level: number,
+  description: string,
+  setup: string,
+  restriction?: string,
+  player?: string,
+  mandatory?: string,
+  phases?: string
+}
+
+interface AlienService {
+  init: Function,//TODO promise like
+  get: Function,
+  getMatchingNames: Function,
+  getMatching: Function
+}
+
+(function () {
   "use strict";
   let mod = angular.module('cc.aliens', ['ngMaterial']);
 
   //Themes for alien-related items
-  mod.config(['$mdThemingProvider', function (ThemeProvider) {
+  mod.config(['$mdThemingProvider', function (ThemeProvider: IThemingProvider) {
     ThemeProvider.definePalette('alien-green', ThemeProvider.extendPalette('green', {
       '500': '189247',
       'contrastDefaultColor': 'light'
@@ -22,13 +42,13 @@
   }]);
 
   //Fetch alien data and provide methods to retrieve names and aliens
-  mod.factory('alienData', ['$http', function ($http) {
-    let aliens = {}, alien_names = [];
+  mod.factory('alienData', ['$http', function ($http: IHttpService): AlienService {
+    let aliens: Object = {}, alien_names: string[] = [];
 
     return {
       init: function () {
-        return $http.get("data/aliens.json").then(function (result) {
-          result.data.list.forEach(function (alien) {
+        return $http.get("data/aliens.json").then(function (result): string[] {
+          result.data.list.forEach(function (alien: Alien) {
             aliens[alien.name] = alien;
             alien_names.push(alien.name);
           });
@@ -37,17 +57,17 @@
         });
       },
 
-      get: name => aliens[name] || {},
-      getMatching: function (levels, games, exclude, setup) {
-        return this.getMatchingNames(levels, games, exclude, setup).map(name => aliens[name]);
+      get: (name: string): Alien | Object => aliens[name] || {},
+      getMatching: function (levels: boolean[], games: Object, exclude: string[], setup: string): Alien[] {
+        return this.getMatchingNames(levels, games, exclude, setup).map((name: string): Alien => aliens[name]);
       },
-      getMatchingNames: function (levels, games, exclude, setup) {
+      getMatchingNames: function (levels: boolean[], games: Object, exclude: string[], setup: string): string[] {
         //Remove wrong game/level
-        let names = alien_names.filter(name => levels[aliens[name].level] && games[aliens[name].game]);
+        let names = alien_names.filter((name: string): boolean => levels[aliens[name].level] && games[aliens[name].game]);
         //Remove specific names
-        if (exclude && exclude.length) names = names.filter(name => exclude.indexOf(name) < 0);
+        if (exclude && exclude.length) names = names.filter((name: string): boolean => exclude.indexOf(name) < 0);
         //Remove if removing game setup (unless only removing extra color)
-        if (setup && setup !== "none") names = names.filter(name => (!aliens[name].setup || (setup === 'color' && aliens[name].setup !== "color")));
+        if (setup && setup !== "none") names = names.filter((name: string): boolean => (!aliens[name].setup || (setup === 'color' && aliens[name].setup !== "color")));
 
         return names;
       }
@@ -57,19 +77,19 @@
   //Turn alien level into Bootstrap class name for colors
   mod.filter('levelClass', function () {
     let classes = ["success", "warning", "danger"];
-    return lvl => classes[lvl];
+    return (lvl: number): string => classes[lvl];
   });
 
   //Turn alien level into a string of stars to show level
   mod.filter('levelStars', function () {
     let stars = ['★', '★★', '★★★'];
-    return lvl => stars[lvl];
+    return (lvl: number): string => stars[lvl];
   });
 
   //Turn alien level into a string of stars to show level
   mod.filter('levelName', function () {
     let names = ['Green', 'Yellow', 'Red'];
-    return lvl => names[lvl];
+    return (lvl: number): string => names[lvl];
   });
 
   //TODO: Add extra information (and update JSON file)
@@ -93,7 +113,7 @@
 	</md-card-footer>
 </md-card>
       `,
-    controller: ['$sce', function ($sce) {
+    controller: ['$sce', function ($sce: ISCEService) {
       if (typeof this.alien.description === 'string')
         this.alien.description = $sce.trustAsHtml(this.alien.description);
     }]

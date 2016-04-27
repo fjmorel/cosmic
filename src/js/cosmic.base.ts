@@ -3,7 +3,7 @@
   let mod = angular.module('cc.base', ['ngMaterial', 'ngMdIcons']);
 
   //Cosmic Theme
-  mod.config(['$mdThemingProvider', function (ThemeProvider) {
+  mod.config(['$mdThemingProvider', function (ThemeProvider: IThemingProvider) {
     ThemeProvider.definePalette('cosmic-warn', ThemeProvider.extendPalette('red', {
       '500': 'c31b09',
       'contrastDefaultColor': 'dark'
@@ -16,8 +16,8 @@
   mod.value('gameInitials', ['E', 'A', 'C', 'D', 'I', 'S']);
 
   //Turn game initial into game name
-  mod.filter('gameName', function () {
-    let games = {
+  mod.filter('gameName', function (): Function {
+    let games: Object = {
       E: "Encounter",
       A: "Alliance",
       C: "Conflict",
@@ -25,7 +25,7 @@
       I: "Incursion",
       S: "Storm"
     };
-    return initial => 'Cosmic ' + games[initial];
+    return (initial: string): string => ('Cosmic ' + games[initial]);
   });
 
   mod.component("cosmicDrawer", {
@@ -65,16 +65,16 @@
   </div>
 </md-toolbar>
       `,
-    bindings: { title: '<', drawer : '<' }
+    bindings: { title: '<', drawer: '<' }
   })
 
-  mod.controller('NavDrawer', ['$mdSidenav', function ($mdSidenav) {
+  mod.controller('NavDrawer', ['$mdSidenav', function ($mdSidenav: ISidenavObject) {
     this.open = function () { $mdSidenav('left').open(); };
   }]);
 
-  mod.filter('groupBy', [function () {
+  mod.filter('groupBy', [function (): Function {
 
-    function groupItems(list, fields, level) {
+    function groupItems(list: Object[], fields: string[], level: number) {
       if (fields.length < 1) return { value: '', items: list };
 
       //Group objects by property
@@ -97,11 +97,11 @@
       return result;
     }
     //Begin grouping from first level
-    return (list, fields) => groupItems(list, fields, 0);
+    return (list: Object[], fields: string[]) => groupItems(list, fields, 0);
   }]);
 
 })();
 
-(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+(function (i, s, o, g, r, a, m) { i['GoogleAnalyticsObject'] = r; i[r] = i[r] || function () { (i[r].q = i[r].q || []).push(arguments) }, i[r].l = 1 * new Date(); a = s.createElement(o), m = s.getElementsByTagName(o)[0]; a.async = 1; a.src = g; m.parentNode.insertBefore(a, m) })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
 ga('create', 'UA-76241009-1', 'auto');
 ga('send', 'pageview');
