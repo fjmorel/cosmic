@@ -1,4 +1,6 @@
-﻿interface GeneratorStatus {
+﻿/// <reference path="cosmic.aliens.ts" />
+
+interface GeneratorStatus {
   aliens: Alien[],
   message: string,
   limit?: number
@@ -39,29 +41,20 @@ interface GeneratorSettings {
   "use strict";
   //TODO: testing, remove debug info
 
-  let app = angular.module('cc.aliens.generator', ['ngAria', 'cc.base', 'cc.aliens', 'ngStorage', 'ngMaterial']);
-  //app.config(['$compileProvider', function(provider) { provider.debugInfoEnabled(false); }]);
-  app.constant('generatorVersion', 2);
+  angular
+    .module('cc.aliens.generator', ['ngAria', 'cc.base', 'cc.aliens', 'ngStorage', 'ngMaterial'])
+    //.config(['$compileProvider', function(provider) { provider.debugInfoEnabled(false); }]);
+    .constant('generatorVersion', 2)
+    .service('GeneratorService', ['alienData', GeneratorServiceProvider])
+    .controller('GeneratorCtrl', ['$localStorage', 'generatorVersion', 'GeneratorService', GeneratorController]);
 
   //TODO: use sessionstorage for current state (current, given, pool, etc)
-  app.service('GeneratorService', ['alienData', function (Aliens: AlienService): GeneratorService {
-    //Status
-    let service: GeneratorService = {};
+  function GeneratorServiceProvider(Aliens: AlienService): GeneratorService {
     //Current = currently drawn. Given = previously given/restricted. Restricted = restricted by those currently drawn. Pool = all left to draw from
     let current: string[] = [],
       given: string[] = [],
       restricted: string[] = [],
       pool: string[] = [];
-
-    //Determine list of possible choices based on selected options
-    service.reset = function (complexities: boolean[], games: Object, namesExcluded: string[], setupLevel: string): GeneratorStatus {
-      pool = Aliens.getMatchingNames(complexities, games, namesExcluded, setupLevel);
-      given = [];
-      current = [];
-      restricted = [];
-
-      return { aliens: [], message: "List reset." };
-    };
 
     //Choose alien from pool
     let drawOne = function (preventConflicts: boolean): string {
@@ -96,23 +89,15 @@ interface GeneratorSettings {
       current = []; restricted = [];
     };
 
-    //Show all aliens that have been given out so far
-    service.getAllGiven = function (): GeneratorStatus {
-      makePickFinal();
-      return { aliens: given.sort().map(Aliens.get), message: "Aliens given out so far:" };
-    };
-
-    //Keep choose # within 1 and max. Run when resetting alien list (# might have changed) and changing # to pick
-    service.getChooseLimit = function (original: number): number {
+    let getLimit = function (original: number): number {
       let numToGive = original;
       let max = pool.length;
       if (max > 0 && numToGive > max) numToGive = max;
       if (numToGive < 1) numToGive = 1;
       return numToGive;
-    };
+    }
 
-    //Pick aliens randomly
-    service.draw = function (howManyToChoose: number, preventConflicts: boolean = false): GeneratorStatus {
+    let draw = function (howManyToChoose: number, preventConflicts: boolean = false): GeneratorStatus {
       makePickFinal();
       for (let i = 0; i < howManyToChoose; i++) {
         let name = drawOne(preventConflicts);
@@ -126,58 +111,81 @@ interface GeneratorSettings {
       }
 
       //Display
-      return { aliens: current.sort().map(Aliens.get), message: "Choices:", limit: service.getChooseLimit(howManyToChoose) };
-    };
+      return { aliens: current.sort().map(Aliens.get), message: "Choices:", limit: getLimit(howManyToChoose) };
+    }
 
+    return {
 
-    //Hide all aliens (so return nothing to show
-    service.hide = (): GeneratorStatus => ({ aliens: [], message: "Choices hidden." });
+      //Determine list of possible choices based on selected options
+      reset: function (complexities: boolean[], games: Map<boolean>, namesExcluded: string[], setupLevel: string): GeneratorStatus {
+        pool = Aliens.getMatchingNames(complexities, games, namesExcluded, setupLevel);
+        given = [];
+        current = [];
+        restricted = [];
 
-    //Show current aliens if pass test
-    service.show = function (): GeneratorStatus {
-      //Ask for initial of one of the aliens before reshowing them
-      let initials = current.map(function (e) { return e[0].toLowerCase(); });
-      if (initials.indexOf((prompt("Enter the first initial of one of the aliens you were given, then click OK.") || "").toLowerCase()) < 0) {
-        return { aliens: [], message: "Wrong letter." };
-      }
+        return { aliens: [], message: "List reset." };
+      },
 
-      //If passed, then show aliens
-      return { aliens: current.sort().map(Aliens.get), message: "Choices:" };
-    };
+      //Show all aliens that have been given out so far
+      getAllGiven: function (): GeneratorStatus {
+        makePickFinal();
+        return { aliens: given.sort().map(Aliens.get), message: "Aliens given out so far:" };
+      },
 
-    //Undo last draw, then draw again
-    service.redo = function (howManyToChoose: number, preventConflicts: boolean = false) {
-      if (confirm("Redo?")) {
-        undo();
-        return service.draw(howManyToChoose, preventConflicts);
-      }
-    };
+      //Keep choose # within 1 and max. Run when resetting alien list (# might have changed) and changing # to pick
+      getChooseLimit: getLimit,
 
-    //Get which actions are not allowed
-    service.getDisabledActions = function (howManyToChoose: number, numShown: number): GeneratorAllowedActions {
-      return {
-        draw: (pool.length < howManyToChoose),
-        hide: (numShown < 1),
-        show: !(current.length > 0 && numShown < 1),
-        redo: (current.length <= 0 || numShown <= 0),
-        reset: (current.length <= 0 && given.length <= 0)
-      };
-    };
+      //Pick aliens randomly
+      draw: draw,
 
-    //Get number given out and size of pool
-    service.getStatus = function () {
-      let numGiven = current.length + given.length + restricted.length;
-      return numGiven + " of " + (numGiven + pool.length) + " drawn.";
-    };
+      //Hide all aliens (so return nothing to show
+      hide: (): GeneratorStatus => ({ aliens: [], message: "Choices hidden." }),
 
-    //Start Generator by getting alien names
-    service.init = Aliens.init;
+      //Show current aliens if pass test
+      show: function (): GeneratorStatus {
+        //Ask for initial of one of the aliens before reshowing them
+        let initials = current.map(function (e) { return e[0].toLowerCase(); });
+        if (initials.indexOf((prompt("Enter the first initial of one of the aliens you were given, then click OK.") || "").toLowerCase()) < 0) {
+          return { aliens: [], message: "Wrong letter." };
+        }
 
-    return service;
-  }]);
+        //If passed, then show aliens
+        return { aliens: current.sort().map(Aliens.get), message: "Choices:" };
+      },
+
+      //Undo last draw, then draw again
+      redo: function (howManyToChoose: number, preventConflicts: boolean = false) {
+        if (confirm("Redo?")) {
+          undo();
+          return draw(howManyToChoose, preventConflicts);
+        }
+      },
+
+      //Get which actions are not allowed
+      getDisabledActions: function (howManyToChoose: number, numShown: number): GeneratorAllowedActions {
+        return {
+          draw: (pool.length < howManyToChoose),
+          hide: (numShown < 1),
+          show: !(current.length > 0 && numShown < 1),
+          redo: (current.length <= 0 || numShown <= 0),
+          reset: (current.length <= 0 && given.length <= 0)
+        };
+      },
+
+      //Get number given out and size of pool
+      getStatus: function () {
+        let numGiven = current.length + given.length + restricted.length;
+        return numGiven + " of " + (numGiven + pool.length) + " drawn.";
+      },
+
+      //Start Generator by getting alien names
+      init: Aliens.init
+
+    }
+  }
 
   //Based on settings, allow user to pick aliens randomly
-  app.controller('GeneratorCtrl', ['$localStorage', 'generatorVersion', 'GeneratorService', function ($localStorage: IStorageService, VERSION: number, Generator: GeneratorService) {
+  function GeneratorController($localStorage: IStorageService, VERSION: number, Generator: GeneratorService) {
 
     let ctrl = this;
 
@@ -255,5 +263,5 @@ interface GeneratorSettings {
     Generator.init().then(function (names: string[]): void {
       ctrl.namesAll = names;
     }).then(resetGenerator);
-  }]);
+  }
 })();

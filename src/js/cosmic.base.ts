@@ -1,4 +1,31 @@
-﻿(function () {
+﻿/// <reference path="../../typings/tsd.d.ts" />
+
+interface JsonResult<T> {
+  data: T,
+  status: number,
+  headers: Function,
+  config: Object,
+  statusText: string
+}
+
+interface GameNameFilter {
+  (initial: string): string
+}
+
+interface GroupedItems {
+  value: string,
+  items: Object[]
+}
+
+interface GroupByFilter {
+    (list: Object[], fields: string[]): GroupedItems[]
+  }
+
+interface Map<T> {
+  [key: string]: T
+}
+
+(function () {
   "use strict";
   let mod = angular.module('cc.base', ['ngMaterial', 'ngMdIcons']);
 
@@ -16,8 +43,8 @@
   mod.value('gameInitials', ['E', 'A', 'C', 'D', 'I', 'S']);
 
   //Turn game initial into game name
-  mod.filter('gameName', function (): Function {
-    let games: Object = {
+  mod.filter('gameName', function (): GameNameFilter {
+    let games: Map<String> = {
       E: "Encounter",
       A: "Alliance",
       C: "Conflict",
@@ -72,22 +99,22 @@
     this.open = function () { $mdSidenav('left').open(); };
   }]);
 
-  mod.filter('groupBy', [function (): Function {
+  mod.filter('groupBy', [function (): GroupByFilter {
 
-    function groupItems(list: Object[], fields: string[], level: number) {
-      if (fields.length < 1) return { value: '', items: list };
+    function groupItems(list: Object[], fields: string[], level: number): GroupedItems[] {
+      if (fields.length < 1) return [{ value: '', items: list }];
 
       //Group objects by property
-      let grouped = {};
+      let grouped: Map<Object[]> = {};
       let field = fields[level];
       list.forEach(function (item) {
-        let group = item[field];
+        let group: string = item[field];
         grouped[group] = grouped[group] || [];
         grouped[group].push(item);
       });
 
       //Generate array with named groups
-      let result = Object.keys(grouped).map(group => ({ value: group, items: grouped[group] }));
+      let result = Object.keys(grouped).map((group): GroupedItems => ({ value: group, items: grouped[group] }));
 
       //If more fields to group by, go deeper
       if (fields[level + 1]) {
@@ -101,7 +128,8 @@
   }]);
 
 })();
-
+/*
 (function (i, s, o, g, r, a, m) { i['GoogleAnalyticsObject'] = r; i[r] = i[r] || function () { (i[r].q = i[r].q || []).push(arguments) }, i[r].l = 1 * new Date(); a = s.createElement(o), m = s.getElementsByTagName(o)[0]; a.async = 1; a.src = g; m.parentNode.insertBefore(a, m) })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
 ga('create', 'UA-76241009-1', 'auto');
 ga('send', 'pageview');
+*/

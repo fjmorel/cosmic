@@ -1,13 +1,14 @@
-﻿(function () {
+﻿/// <reference path="cosmic.aliens.ts" />
+
+(function () {
   "use strict";
   //TODO: testing
-  let app = angular.module('cc.aliens.reference', ['cc.base', 'cc.aliens', 'ngStorage', 'ngAria', 'ngMaterial']);
-  
+  angular
+    .module('cc.aliens.reference', ['cc.base', 'cc.aliens', 'ngStorage', 'ngAria', 'ngMaterial'])
+    .controller('AlienReference', ["alienData", '$localStorage', 'groupByFilter', ReferenceController]);
+
   //Based on settings, allow user to pick aliens randomly
-  app.controller('AlienReference', ReferenceController);
-  
-  ReferenceController.$inject = ["alienData", '$localStorage', 'groupByFilter'];
-  function ReferenceController(Aliens: AlienService, $localStorage: IStorageService, groupBy) {
+  function ReferenceController(Aliens: AlienService, $localStorage: IStorageService, groupBy: GroupByFilter) {
     let ctrl = this;
 
     //Set up default settings

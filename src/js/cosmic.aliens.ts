@@ -1,4 +1,6 @@
-﻿interface Alien {
+﻿/// <reference path="cosmic.base.ts" />
+
+interface Alien {
   name: string,
   game: string,
   power: string,
@@ -11,11 +13,17 @@
   phases?: string
 }
 
+interface AlienJson {
+  list: Alien[]
+}
+
+interface myCallbackType { (myArgument: string): void }
+
 interface AlienService {
   init: Function,//TODO promise like
-  get: Function,
-  getMatchingNames: Function,
-  getMatching: Function
+  get(name: string): Alien,
+  getMatchingNames(levels: boolean[], games: Map<boolean>, exclude?: string[], setup?: string): string[]
+  getMatching(levels: boolean[], games: Map<boolean>, exclude?: string[], setup?: string): Alien[]
 }
 
 (function () {
@@ -43,11 +51,20 @@ interface AlienService {
 
   //Fetch alien data and provide methods to retrieve names and aliens
   mod.factory('alienData', ['$http', function ($http: IHttpService): AlienService {
-    let aliens: Object = {}, alien_names: string[] = [];
+    let aliens: Map<Alien> = {},
+      alien_names: string[] = [],
+      fake_alien: Alien = {
+        name: '',
+        game: '',
+        power: '',
+        level: 0,
+        description: '',
+        setup: '',
+      };
 
     return {
       init: function () {
-        return $http.get("data/aliens.json").then(function (result): string[] {
+        return $http.get("data/aliens.json").then(function (result: JsonResult<AlienJson>): string[] {
           result.data.list.forEach(function (alien: Alien) {
             aliens[alien.name] = alien;
             alien_names.push(alien.name);
@@ -57,11 +74,11 @@ interface AlienService {
         });
       },
 
-      get: (name: string): Alien | Object => aliens[name] || {},
-      getMatching: function (levels: boolean[], games: Object, exclude?: string[], setup?: string): Alien[] {
+      get: (name: string): Alien => aliens[name] || fake_alien,
+      getMatching: function (levels: boolean[], games: Map<boolean>, exclude?: string[], setup?: string): Alien[] {
         return this.getMatchingNames(levels, games, exclude, setup).map((name: string): Alien => aliens[name]);
       },
-      getMatchingNames: function (levels: boolean[], games: Object, exclude?: string[], setup?: string): string[] {
+      getMatchingNames: function (levels: boolean[], games: Map<boolean>, exclude?: string[], setup?: string): string[] {
         //Remove wrong game/level
         let names = alien_names.filter((name: string): boolean => levels[aliens[name].level] && games[aliens[name].game]);
         //Remove specific names
