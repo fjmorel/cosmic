@@ -1,55 +1,17 @@
-﻿/// <reference path="cosmic.aliens.ts" />
-
-interface GeneratorStatus {
-  aliens: Alien[],
-  message: string,
-  limit?: number
-}
-
-interface GeneratorService {
-  reset: Function,
-  getAllGiven: Function,
-  getChooseLimit: Function,
-  draw: Function,
-  hide: Function,
-  show: Function,
-  redo: Function,
-  init: Function,
-  getDisabledActions: Function,
-  getStatus: Function
-}
-
-interface GeneratorAllowedActions {
-  draw: boolean,
-  hide: boolean,
-  show: boolean,
-  redo: boolean,
-  reset: boolean
-}
-
-interface GeneratorSettings {
-  complexities: boolean[],
-  games: { E: boolean },
-  namesExcluded: string[],
-  setupLevel: string,
-  numToChoose: number,
-  preventConflicts: boolean,
-  version: number
-}
-
+﻿/// <reference path="../../typings/project.d.ts" />
 (function () {
   "use strict";
   //TODO: testing, remove debug info
 
   angular
     .module('cc.aliens.generator', ['ngAria', 'cc.base', 'cc.aliens', 'ngStorage', 'ngMaterial'])
-    //.config(['$compileProvider', function(provider) { provider.debugInfoEnabled(false); }]);
+    .config(['$compileProvider', function(provider: ng.ICompileProvider) { provider.debugInfoEnabled(false); }])
     .constant('generatorVersion', 2)
     .service('GeneratorService', ['alienData', GeneratorServiceProvider])
     .controller('GeneratorCtrl', ['$localStorage', 'generatorVersion', 'GeneratorService', GeneratorController]);
 
   //TODO: use sessionstorage for current state (current, given, pool, etc)
-  function GeneratorServiceProvider(Aliens: AlienService): GeneratorService {
+  function GeneratorServiceProvider(Aliens: AlienService): AlienGenerator.GeneratorService {
     //Current = currently drawn. Given = previously given/restricted. Restricted = restricted by those currently drawn. Pool = all left to draw from
     let current: string[] = [],
       given: string[] = [],
@@ -97,7 +59,7 @@ interface GeneratorSettings {
       return numToGive;
     }
 
-    let draw = function (howManyToChoose: number, preventConflicts: boolean = false): GeneratorStatus {
+    let draw = function (howManyToChoose: number, preventConflicts: boolean = false): AlienGenerator.Status {
       makePickFinal();
       for (let i = 0; i < howManyToChoose; i++) {
         let name = drawOne(preventConflicts);
@@ -117,7 +79,7 @@ interface GeneratorSettings {
     return {
 
       //Determine list of possible choices based on selected options
-      reset: function (complexities: boolean[], games: Map<boolean>, namesExcluded: string[], setupLevel: string): GeneratorStatus {
+      reset: function (complexities: boolean[], games: Map<boolean>, namesExcluded: string[], setupLevel: string): AlienGenerator.Status {
         pool = Aliens.getMatchingNames(complexities, games, namesExcluded, setupLevel);
         given = [];
         current = [];
@@ -127,7 +89,7 @@ interface GeneratorSettings {
       },
 
       //Show all aliens that have been given out so far
-      getAllGiven: function (): GeneratorStatus {
+      getAllGiven: function (): AlienGenerator.Status {
         makePickFinal();
         return { aliens: given.sort().map(Aliens.get), message: "Aliens given out so far:" };
       },
@@ -139,10 +101,10 @@ interface GeneratorSettings {
       draw: draw,
 
       //Hide all aliens (so return nothing to show
-      hide: (): GeneratorStatus => ({ aliens: [], message: "Choices hidden." }),
+      hide: (): AlienGenerator.Status => ({ aliens: [], message: "Choices hidden." }),
 
       //Show current aliens if pass test
-      show: function (): GeneratorStatus {
+      show: function (): AlienGenerator.Status {
         //Ask for initial of one of the aliens before reshowing them
         let initials = current.map(function (e) { return e[0].toLowerCase(); });
         if (initials.indexOf((prompt("Enter the first initial of one of the aliens you were given, then click OK.") || "").toLowerCase()) < 0) {
@@ -162,7 +124,7 @@ interface GeneratorSettings {
       },
 
       //Get which actions are not allowed
-      getDisabledActions: function (howManyToChoose: number, numShown: number): GeneratorAllowedActions {
+      getDisabledActions: function (howManyToChoose: number, numShown: number): AlienGenerator.AllowedActions {
         return {
           draw: (pool.length < howManyToChoose),
           hide: (numShown < 1),
@@ -185,18 +147,18 @@ interface GeneratorSettings {
   }
 
   //Based on settings, allow user to pick aliens randomly
-  function GeneratorController($localStorage: IStorageService, VERSION: number, Generator: GeneratorService) {
+  function GeneratorController($localStorage: AlienGenerator.Storage, VERSION: number, Generator: AlienGenerator.GeneratorService) {
 
     let ctrl = this;
 
-    let defaults: GeneratorSettings = {
+    let defaults: AlienGenerator.Settings = {
       complexities: [true, true, true],
       games: { E: true },
       namesExcluded: [],
       setupLevel: "none",
       numToChoose: 2,
       preventConflicts: true,
-      version: 2
+      version: VERSION
     };
     $localStorage.$default(defaults);
     if (!$localStorage.version || $localStorage.version < VERSION) {
@@ -214,7 +176,7 @@ interface GeneratorSettings {
     //Button states
     ctrl.disabled = { draw: true, hide: true, show: true, redo: true, reset: true };
 
-    function setState(newState: GeneratorStatus): void {
+    function setState(newState: AlienGenerator.Status): void {
       if (!newState) return;
       ctrl.state = newState.message;
       ctrl.aliensToShow = newState.aliens;
@@ -233,7 +195,6 @@ interface GeneratorSettings {
     }
 
     ctrl.saveSetting = function (setting: string) {
-      $localStorage[setting] = ctrl.settings[setting];
       resetGenerator();
     };
 

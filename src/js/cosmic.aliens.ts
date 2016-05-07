@@ -1,37 +1,10 @@
-﻿/// <reference path="cosmic.base.ts" />
-
-interface Alien {
-  name: string,
-  game: string,
-  power: string,
-  level: number,
-  description: string,
-  setup: string,
-  restriction?: string,
-  player?: string,
-  mandatory?: string,
-  phases?: string
-}
-
-interface AlienJson {
-  list: Alien[]
-}
-
-interface myCallbackType { (myArgument: string): void }
-
-interface AlienService {
-  init: Function,//TODO promise like
-  get(name: string): Alien,
-  getMatchingNames(levels: boolean[], games: Map<boolean>, exclude?: string[], setup?: string): string[]
-  getMatching(levels: boolean[], games: Map<boolean>, exclude?: string[], setup?: string): Alien[]
-}
-
+﻿/// <reference path="../../typings/project.d.ts" />
 (function () {
   "use strict";
   let mod = angular.module('cc.aliens', ['ngMaterial']);
 
   //Themes for alien-related items
-  mod.config(['$mdThemingProvider', function (ThemeProvider: IThemingProvider) {
+  mod.config(['$mdThemingProvider', function (ThemeProvider: ng.material.IThemingProvider) {
     ThemeProvider.definePalette('alien-green', ThemeProvider.extendPalette('green', {
       '500': '189247',
       'contrastDefaultColor': 'light'
@@ -50,7 +23,7 @@ interface AlienService {
   }]);
 
   //Fetch alien data and provide methods to retrieve names and aliens
-  mod.factory('alienData', ['$http', function ($http: IHttpService): AlienService {
+  mod.factory('alienData', ['$http', function ($http: ng.IHttpService): AlienService {
     let aliens: Map<Alien> = {},
       alien_names: string[] = [],
       fake_alien: Alien = {
@@ -64,7 +37,7 @@ interface AlienService {
 
     return {
       init: function () {
-        return $http.get("data/aliens.json").then(function (result: JsonResult<AlienJson>): string[] {
+        return $http.get("data/aliens.json").then(function (result: ng.IHttpPromiseCallbackArg<AlienJson>): string[] {
           result.data.list.forEach(function (alien: Alien) {
             aliens[alien.name] = alien;
             alien_names.push(alien.name);
@@ -74,11 +47,11 @@ interface AlienService {
         });
       },
 
-      get: (name: string): Alien => aliens[name] || fake_alien,
-      getMatching: function (levels: boolean[], games: Map<boolean>, exclude?: string[], setup?: string): Alien[] {
-        return this.getMatchingNames(levels, games, exclude, setup).map((name: string): Alien => aliens[name]);
+      get: name => aliens[name] || fake_alien,
+      getMatching: function (levels, games, exclude, setup) {
+        return this.getMatchingNames(levels, games, exclude, setup).map(this.get);
       },
-      getMatchingNames: function (levels: boolean[], games: Map<boolean>, exclude?: string[], setup?: string): string[] {
+      getMatchingNames: function (levels, games, exclude, setup) {
         //Remove wrong game/level
         let names = alien_names.filter((name: string): boolean => levels[aliens[name].level] && games[aliens[name].game]);
         //Remove specific names
@@ -92,21 +65,21 @@ interface AlienService {
   }]);
 
   //Turn alien level into Bootstrap class name for colors
-  mod.filter('levelClass', function () {
+  mod.filter('levelClass', function (): LevelFilter {
     let classes = ["success", "warning", "danger"];
-    return (lvl: number): string => classes[lvl];
+    return lvl => classes[lvl];
   });
 
   //Turn alien level into a string of stars to show level
-  mod.filter('levelStars', function () {
+  mod.filter('levelStars', function (): LevelFilter {
     let stars = ['★', '★★', '★★★'];
-    return (lvl: number): string => stars[lvl];
+    return lvl => stars[lvl];
   });
 
   //Turn alien level into a string of stars to show level
-  mod.filter('levelName', function () {
+  mod.filter('levelName', function (): LevelFilter {
     let names = ['Green', 'Yellow', 'Red'];
-    return (lvl: number): string => names[lvl];
+    return lvl => names[lvl];
   });
 
   //TODO: Add extra information (and update JSON file)
@@ -130,7 +103,7 @@ interface AlienService {
 	</md-card-footer>
 </md-card>
       `,
-    controller: ['$sce', function ($sce: ISCEService) {
+    controller: ['$sce', function ($sce: ng.ISCEService) {
       if (typeof this.alien.description === 'string')
         this.alien.description = $sce.trustAsHtml(this.alien.description);
     }]

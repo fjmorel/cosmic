@@ -1,36 +1,12 @@
-﻿/// <reference path="../../typings/tsd.d.ts" />
+﻿/// <reference path="../../typings/project.d.ts" />
 
-interface JsonResult<T> {
-  data: T,
-  status: number,
-  headers: Function,
-  config: Object,
-  statusText: string
-}
-
-interface GameNameFilter {
-  (initial: string): string
-}
-
-interface GroupedItems {
-  value: string,
-  items: Object[]
-}
-
-interface GroupByFilter {
-    (list: Object[], fields: string[]): GroupedItems[]
-  }
-
-interface Map<T> {
-  [key: string]: T
-}
 
 (function () {
   "use strict";
   let mod = angular.module('cc.base', ['ngMaterial', 'ngMdIcons']);
 
   //Cosmic Theme
-  mod.config(['$mdThemingProvider', function (ThemeProvider: IThemingProvider) {
+  mod.config(['$mdThemingProvider', function (ThemeProvider: ng.material.IThemingProvider) {
     ThemeProvider.definePalette('cosmic-warn', ThemeProvider.extendPalette('red', {
       '500': 'c31b09',
       'contrastDefaultColor': 'dark'
@@ -52,7 +28,7 @@ interface Map<T> {
       I: "Incursion",
       S: "Storm"
     };
-    return (initial: string): string => ('Cosmic ' + games[initial]);
+    return initial => ('Cosmic ' + games[initial]);
   });
 
   mod.component("cosmicDrawer", {
@@ -95,7 +71,7 @@ interface Map<T> {
     bindings: { title: '<', drawer: '<' }
   })
 
-  mod.controller('NavDrawer', ['$mdSidenav', function ($mdSidenav: ISidenavObject) {
+  mod.controller('NavDrawer', ['$mdSidenav', function ($mdSidenav: ng.material.ISidenavService) {
     this.open = function () { $mdSidenav('left').open(); };
   }]);
 
@@ -108,7 +84,7 @@ interface Map<T> {
       let grouped: Map<Object[]> = {};
       let field = fields[level];
       list.forEach(function (item) {
-        let group: string = item[field];
+        let group: string = (<any>item)[field];
         grouped[group] = grouped[group] || [];
         grouped[group].push(item);
       });
