@@ -7,7 +7,7 @@
     .module('cc.aliens.generator', ['ngAria', 'cc.base', 'cc.aliens', 'ngStorage', 'ngMaterial'])
     .config(['$compileProvider', '$localStorageProvider', function (compiler: ng.ICompileProvider, storage: ng.storage.IStorageProvider) {
       compiler.debugInfoEnabled(false);
-      storage.setKeyPrefix("aliengen");
+      storage.setKeyPrefix("alien-gen-");
     }])
     .constant('generatorVersion', 2)
     .service('GeneratorService', ['alienData', GeneratorServiceProvider])

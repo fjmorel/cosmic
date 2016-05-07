@@ -6,7 +6,7 @@
     .module('cc.aliens.reference', ['cc.base', 'cc.aliens', 'ngStorage', 'ngAria', 'ngMaterial'])
     .config(['$compileProvider', '$localStorageProvider', function (compiler: ng.ICompileProvider, storage: ng.storage.IStorageProvider) {
       compiler.debugInfoEnabled(false);
-      storage.setKeyPrefix("alienref");
+      storage.setKeyPrefix("alien-ref-");
     }])
     .controller('AlienReference', ["alienData", '$localStorage', 'groupByFilter', ReferenceController]);
 
