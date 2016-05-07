@@ -5,7 +5,10 @@
 
   angular
     .module('cc.aliens.generator', ['ngAria', 'cc.base', 'cc.aliens', 'ngStorage', 'ngMaterial'])
-    .config(['$compileProvider', function(provider: ng.ICompileProvider) { provider.debugInfoEnabled(false); }])
+    .config(['$compileProvider', '$localStorageProvider', function (compiler: ng.ICompileProvider, storage: ng.storage.IStorageProvider) {
+      compiler.debugInfoEnabled(false);
+      storage.setKeyPrefix("aliengen");
+    }])
     .constant('generatorVersion', 2)
     .service('GeneratorService', ['alienData', GeneratorServiceProvider])
     .controller('GeneratorCtrl', ['$localStorage', 'generatorVersion', 'GeneratorService', GeneratorController]);

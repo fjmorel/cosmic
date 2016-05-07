@@ -4,7 +4,10 @@
   //TODO: testing
   angular
     .module('cc.aliens.reference', ['cc.base', 'cc.aliens', 'ngStorage', 'ngAria', 'ngMaterial'])
-    .config(['$compileProvider', function(provider: ng.ICompileProvider) { provider.debugInfoEnabled(false); }])
+    .config(['$compileProvider', '$localStorageProvider', function (compiler: ng.ICompileProvider, storage: ng.storage.IStorageProvider) {
+      compiler.debugInfoEnabled(false);
+      storage.setKeyPrefix("alienref");
+    }])
     .controller('AlienReference', ["alienData", '$localStorage', 'groupByFilter', ReferenceController]);
 
   //Based on settings, allow user to pick aliens randomly
