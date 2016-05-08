@@ -30,7 +30,7 @@
     ctrl.alienGroups = [];
 
     //Show filtered, grouped list of aliens
-    function refresh(): void {
+    ctrl.change = function (): void {
       //Filter
       let aliens = Aliens.getMatching(ctrl.complexities, ctrl.games);
 
@@ -38,12 +38,7 @@
       ctrl.alienGroups = groupBy(aliens, ctrl.groupPref);
     }
 
-    //Save, then show filtered, grouped list of aliens
-    ctrl.change = function (setting: string): void {
-      refresh();
-    };
-
     //Initialize reference page
-    Aliens.init().then(refresh);
+    Aliens.init().then(ctrl.change);
   }
 })();

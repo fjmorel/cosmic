@@ -1,5 +1,6 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -15,9 +16,11 @@
   <meta name="msapplication-TileImage" content="icons/144.png" />
   <meta name="application-name" content="Alien Reference - Companion for Cosmic Encounter" />
   <meta name="apple-mobile-web-app-title" content="Cosmic Aliens" />
-  <link rel="stylesheet" type="text/css" href="https://ajax.googleapis.com/ajax/libs/angular_material/1.0.7/angular-material.min.css" />
+  <link rel="stylesheet" type="text/css" href="https://ajax.googleapis.com/ajax/libs/angular_material/1.0.7/angular-material.min.css"
+  />
   <link rel="stylesheet" type="text/css" href="dist/styles.css" />
 </head>
+
 <body>
   <noscript>
     This page requires JavaScript to run.
@@ -53,7 +56,8 @@
         <div ng-repeat="levelGroup in ::gameGroup.items">
           <h3 layout-padding>{{::gameGroup.value | gameName}} - {{::levelGroup.value| levelName}} {{::levelGroup.value | levelStars}}</h3>
           <md-content layout="row" layout-wrap>
-            <alien-panel ng-repeat="alien in ::levelGroup.items track by alien.name | orderBy:Reference.orderPref" data-item="::alien" flex="grow" flex-gt-xs="50" flex-lg="33" flex-gt-lg="25"></alien-panel>
+            <alien-panel ng-repeat="alien in ::levelGroup.items track by alien.name | orderBy:Reference.orderPref" data-item="::alien"
+              flex="grow" flex-gt-xs="50" flex-lg="33" flex-gt-lg="25"></alien-panel>
           </md-content>
         </div>
       </div>

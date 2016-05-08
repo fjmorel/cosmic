@@ -15,4 +15,4 @@ app.config
 Web.config
 Web.*.config
 /node_modules
-/typings
+typings/*/

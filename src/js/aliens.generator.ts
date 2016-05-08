@@ -54,35 +54,10 @@
       current = []; restricted = [];
     };
 
-    let getLimit = function (original: number): number {
-      let numToGive = original;
-      let max = pool.length;
-      if (max > 0 && numToGive > max) numToGive = max;
-      if (numToGive < 1) numToGive = 1;
-      return numToGive;
-    }
-
-    let draw = function (howManyToChoose: number, preventConflicts: boolean = false): AlienGenerator.Status {
-      makePickFinal();
-      for (let i = 0; i < howManyToChoose; i++) {
-        let name = drawOne(preventConflicts);
-        if (!name) break;
-      }
-
-      //If unable to pick desired number, undo
-      if (current.length < howManyToChoose) {
-        undo();
-        return { aliens: [], message: "Not enough potential aliens left." + (preventConflicts ? " It's possible that the \"Prevent conflicts\" option is preventing me from displaying remaining aliens." : "") };
-      }
-
-      //Display
-      return { aliens: current.sort().map(Aliens.get), message: "Choices:", limit: getLimit(howManyToChoose) };
-    }
-
     return {
 
       //Determine list of possible choices based on selected options
-      reset: function (complexities: boolean[], games: Map<boolean>, namesExcluded: string[], setupLevel: string): AlienGenerator.Status {
+      reset: function (complexities, games, namesExcluded, setupLevel) {
         pool = Aliens.getMatchingNames(complexities, games, namesExcluded, setupLevel);
         given = [];
         current = [];
@@ -92,22 +67,43 @@
       },
 
       //Show all aliens that have been given out so far
-      getAllGiven: function (): AlienGenerator.Status {
+      getAllGiven: function () {
         makePickFinal();
         return { aliens: given.sort().map(Aliens.get), message: "Aliens given out so far:" };
       },
 
       //Keep choose # within 1 and max. Run when resetting alien list (# might have changed) and changing # to pick
-      getChooseLimit: getLimit,
+      getChooseLimit: function (original) {
+        let numToGive = original;
+        let max = pool.length;
+        if (max > 0 && numToGive > max) numToGive = max;
+        if (numToGive < 1) numToGive = 1;
+        return numToGive;
+      },
 
       //Pick aliens randomly
-      draw: draw,
+      draw: function (howManyToChoose, preventConflicts = false) {
+        makePickFinal();
+        for (let i = 0; i < howManyToChoose; i++) {
+          let name = drawOne(preventConflicts);
+          if (!name) break;
+        }
+
+        //If unable to pick desired number, undo
+        if (current.length < howManyToChoose) {
+          undo();
+          return { aliens: [], message: "Not enough potential aliens left." + (preventConflicts ? " It's possible that the \"Prevent conflicts\" option is preventing me from displaying remaining aliens." : "") };
+        }
+
+        //Display
+        return { aliens: current.sort().map(Aliens.get), message: "Choices:", limit: this.getChooseLimit(howManyToChoose) };
+      },
 
       //Hide all aliens (so return nothing to show
-      hide: (): AlienGenerator.Status => ({ aliens: [], message: "Choices hidden." }),
+      hide: () => ({ aliens: [], message: "Choices hidden." }),
 
       //Show current aliens if pass test
-      show: function (): AlienGenerator.Status {
+      show: function () {
         //Ask for initial of one of the aliens before reshowing them
         let initials = current.map(function (e) { return e[0].toLowerCase(); });
         if (initials.indexOf((prompt("Enter the first initial of one of the aliens you were given, then click OK.") || "").toLowerCase()) < 0) {
@@ -119,15 +115,16 @@
       },
 
       //Undo last draw, then draw again
-      redo: function (howManyToChoose: number, preventConflicts: boolean = false) {
+      redo: function (howManyToChoose, preventConflicts = false) {
         if (confirm("Redo?")) {
           undo();
-          return draw(howManyToChoose, preventConflicts);
+          return this.draw(howManyToChoose, preventConflicts);
         }
+        return { aliens: current.sort().map(Aliens.get), message: "Choices:" }
       },
 
       //Get which actions are not allowed
-      getDisabledActions: function (howManyToChoose: number, numShown: number): AlienGenerator.AllowedActions {
+      getDisabledActions: function (howManyToChoose, numShown) {
         return {
           draw: (pool.length < howManyToChoose),
           hide: (numShown < 1),
@@ -185,7 +182,6 @@
       ctrl.aliensToShow = newState.aliens;
       if (newState.limit) {
         ctrl.settings.numToChoose = newState.limit;
-        $localStorage.numToChoose = newState.limit;
       }
       ctrl.status = Generator.getStatus();
       ctrl.disabled = Generator.getDisabledActions(ctrl.settings.numToChoose, ctrl.aliensToShow.length);
@@ -215,13 +211,12 @@
     //Keep choose # within 1 and max. Run when resetting alien list (# might have changed) and changing # to pick
     ctrl.restrictNumToChoose = function (): void {
       ctrl.settings.numToChoose = Generator.getChooseLimit(ctrl.settings.numToChoose);
-      $localStorage.numToChoose = ctrl.settings.numToChoose;
     };
 
-    ctrl.draw = function (): void { setState(Generator.draw(ctrl.settings.numToChoose, ctrl.settings.preventConflicts)); };
-    ctrl.hide = function (): void { setState(Generator.hide()); };
-    ctrl.show = function (): void { setState(Generator.show()); };
-    ctrl.redo = function (): void { setState(Generator.redo(ctrl.settings.numToChoose, ctrl.settings.preventConflicts)); };
+    ctrl.draw = () => setState(Generator.draw(ctrl.settings.numToChoose, ctrl.settings.preventConflicts));
+    ctrl.hide = () => setState(Generator.hide());
+    ctrl.show = () => setState(Generator.show());
+    ctrl.redo = () => setState(Generator.redo(ctrl.settings.numToChoose, ctrl.settings.preventConflicts));
 
     //Init generator
     Generator.init().then(function (names: string[]): void {

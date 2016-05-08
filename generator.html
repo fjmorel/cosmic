@@ -1,5 +1,6 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -15,9 +16,11 @@
   <meta name="msapplication-TileImage" content="icons/144.png" />
   <meta name="application-name" content="Cosmic Generator" />
   <meta name="apple-mobile-web-app-title" content="Cosmic" />
-  <link rel="stylesheet" type="text/css" href="https://ajax.googleapis.com/ajax/libs/angular_material/1.0.7/angular-material.min.css" />
+  <link rel="stylesheet" type="text/css" href="https://ajax.googleapis.com/ajax/libs/angular_material/1.0.7/angular-material.min.css"
+  />
   <link rel="stylesheet" type="text/css" href="dist/styles.css" />
 </head>
+
 <body>
   <noscript>
     This page requires JavaScript to run.
@@ -70,17 +73,22 @@
       <md-toolbar class="" layout-wrap>
         <div id="generator-actions" layout-wrap class="padded-action">
           <md-button class="md-raised" ng-click="Generator.draw()" ng-disabled="Generator.disabled.draw">Draw</md-button>
-          <md-button class="md-accent md-raised" ng-click="Generator.hide()" ng-disabled="Generator.disabled.hide"><ng-md-icon icon="visibility_off"></ng-md-icon> Hide</md-button>
+          <md-button class="md-accent md-raised" ng-click="Generator.hide()" ng-disabled="Generator.disabled.hide">
+            <ng-md-icon icon="visibility_off"></ng-md-icon> Hide</md-button>
           <span flex></span>
-          <md-button class="md-accent md-raised" ng-click="Generator.show()" ng-disabled="Generator.disabled.show"><ng-md-icon icon="visibility"></ng-md-icon> Show</md-button>
-          <md-button class="md-accent md-raised" ng-click="Generator.redo();" ng-disabled="Generator.disabled.redo"><ng-md-icon icon="history"></ng-md-icon> Redo</md-button>
-          <md-button class="md-warn-theme md-primary md-raised" ng-click="Generator.reset()" ng-disabled="Generator.disabled.reset"><ng-md-icon icon="replay"></ng-md-icon> Reset</md-button>
+          <md-button class="md-accent md-raised" ng-click="Generator.show()" ng-disabled="Generator.disabled.show">
+            <ng-md-icon icon="visibility"></ng-md-icon> Show</md-button>
+          <md-button class="md-accent md-raised" ng-click="Generator.redo();" ng-disabled="Generator.disabled.redo">
+            <ng-md-icon icon="history"></ng-md-icon> Redo</md-button>
+          <md-button class="md-warn-theme md-primary md-raised" ng-click="Generator.reset()" ng-disabled="Generator.disabled.reset">
+            <ng-md-icon icon="replay"></ng-md-icon> Reset</md-button>
         </div>
       </md-toolbar>
       <!-- State -->
       <md-content layout-padding>{{Generator.status}} {{Generator.state}}</md-content>
       <md-content layout="row" layout-wrap>
-        <alien-panel ng-repeat="alien in Generator.aliensToShow track by alien.name | orderBy:'name'" item="::alien" flex="100" flex-gt-xs="50" flex-lg="33" flex-gt-lg="25"></alien-panel>
+        <alien-panel ng-repeat="alien in Generator.aliensToShow track by alien.name | orderBy:'name'" item="::alien" flex="100" flex-gt-xs="50"
+          flex-lg="33" flex-gt-lg="25"></alien-panel>
       </md-content>
 
     </md-content>
@@ -95,4 +103,5 @@
     angular.bootstrap(document, ['cc.aliens.generator'], { 'strictDi': true });
   </script>
 </body>
+
 </html>
