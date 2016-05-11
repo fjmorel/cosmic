@@ -1,54 +1,50 @@
 ﻿/// <reference path="../../typings/project.d.ts" />
 (function () {
   "use strict";
-  class AlienPanel {
+  
+  class AlienPanel{
     alien: Alien;
     constructor($sce: ng.ISCEService) {
-      if (typeof this.alien.description === 'string')
-        this.alien.description = $sce.trustAsHtml(this.alien.description);
+      let alien = this.alien;
+      if (typeof alien.description === 'string')
+        alien.description = $sce.trustAsHtml(alien.description);
     }
   }
 
   class Service implements AlienService {
-    private aliens: Map<Alien> = {};
-    private alien_names: string[] = [];
-    private fake_alien: Alien = {
-      name: '',
-      game: '',
-      power: '',
-      level: 0,
-      description: '',
-      setup: '',
-    };
-
     init: ng.IPromise<string[]>;
-
-    get(name: string): Alien { return this.aliens[name] || this.fake_alien };
-    getMatchingNames(levels: boolean[], games: Map<boolean>, exclude?: string[], setup?: string): string[] {
-      let aliens = this.aliens;
-      //Remove wrong game/level
-      let names = this.alien_names.filter((name: string): boolean => levels[aliens[name].level] && games[aliens[name].game]);
-      //Remove specific names
-      if (exclude && exclude.length) names = names.filter((name: string): boolean => exclude.indexOf(name) < 0);
-      //Remove if removing game setup (unless only removing extra color)
-      if (setup && setup !== "none") names = names.filter((name: string): boolean => (!aliens[name].setup || (setup === 'color' && aliens[name].setup !== "color")));
-
-      return names;
-    };
-    getMatching(levels: boolean[], games: Map<boolean>, exclude?: string[], setup?: string): Alien[] {
-      return this.getMatchingNames(levels, games, exclude, setup).map(<(name: string) => Alien>this.get.bind(this));
-    };
+    get(name: string): Alien { return <Alien>{} };
+    getMatchingNames(levels: boolean[], games: Map<boolean>, exclude?: string[], setup?: string): string[] { return []; };
+    getMatching(levels: boolean[], games: Map<boolean>, exclude?: string[], setup?: string): Alien[] { return []; };
 
     constructor($http: ng.IHttpService) {
-      let service = this, names = service.alien_names;
+      let service = this,
+        aliens: Map<Alien> = {},
+        alien_names: string[] = [];
+
       service.init = $http.get("data/aliens.json").then(function (result: ng.IHttpPromiseCallbackArg<AlienJson>): string[] {
         result.data.list.forEach(function (alien: Alien) {
-          service.aliens[alien.name] = alien;
-          names.push(alien.name);
+          aliens[alien.name] = alien;
+          alien_names.push(alien.name);
         });
-        names.sort();
-        return names.slice(0);
+        alien_names.sort();
+        return alien_names.slice(0);
       });
+
+      service.get = name => aliens[name] || <Alien>{};
+      service.getMatchingNames = function (levels, games, exclude, setup) {
+        //Remove wrong game/level
+        let names = alien_names.filter((name: string): boolean => levels[aliens[name].level] && games[aliens[name].game]);
+        //Remove specific names
+        if (exclude && exclude.length) names = names.filter((name: string): boolean => exclude.indexOf(name) < 0);
+        //Remove if removing game setup (unless only removing extra color)
+        if (setup && setup !== "none") names = names.filter((name: string): boolean => (!aliens[name].setup || (setup === 'color' && aliens[name].setup !== "color")));
+
+        return names;
+      };
+      service.getMatching = function (levels, games, exclude, setup) {
+        return service.getMatchingNames(levels, games, exclude, setup).map(service.get);
+      };
     }
   }
 

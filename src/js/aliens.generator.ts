@@ -4,7 +4,7 @@
   //TODO: testing
   //TODO: use sessionstorage for current state (current, given, pool, etc)
 
-  interface Settings {
+  interface Storage extends ng.storage.IStorageService {
     complexities: boolean[],
     games: Map<boolean>,
     namesExcluded: string[],
@@ -12,8 +12,6 @@
     numToChoose: number,
     preventConflicts: boolean
   }
-
-  interface Storage extends Settings, ng.storage.IStorageService { }
 
   interface Status {
     aliens: Alien[],
@@ -33,149 +31,182 @@
    * Manage aliens given, available, etc
    */
   class GeneratorService {
-    private Aliens: AlienService;
-    private namesToAliens(names: string[]): Alien[] {
-      return names.sort().map(<(name: string) => Alien>this.Aliens.get.bind(this.Aliens));
-    }
+    private empty_status: Status = { aliens: [], message: '' };
 
-    //Current = currently drawn. Given = previously given/restricted. Restricted = restricted by those currently drawn. Pool = all left to draw from
-    private current: string[] = [];
-    private given: string[] = [];
-    private restricted: string[] = [];
-    private pool: string[] = [];
+    /**
+     * Determine list of possible choices based on selected options
+     */
+    reset(complexities: boolean[], games: Map<boolean>, namesExcluded: string[], setupLevel: string): Status { return this.empty_status };
 
-    //Choose alien from pool
-    private drawOne(preventConflicts: boolean): string {
-      let service = this;
-      //Select name (return if wasn't able to select
-      let choice = Math.floor(Math.random() * service.pool.length);
-      if (!service.pool[choice]) return;
-      let name = service.pool.splice(choice, 1)[0];
-      service.current.push(name);
+    /**
+     * Show all aliens that have been given out so far
+     */
+    getAllGiven(): Status { return this.empty_status };
 
-      //If current choice has any restrictions, remove them from pool as well
-      let alien: Alien = service.Aliens.get(name);
-      if (preventConflicts && alien.restriction) {
-        let restrictions = alien.restriction.split(',');
-        for (let j = 0; j < restrictions.length; j++) {
-          let index = service.pool.indexOf(restrictions[j]);
-          if (index > -1) { service.restricted.push(service.pool.splice(index, 1)[0]); }
-        }
-      }
-      //Return select name
-      return name;
-    }
+    /**
+     * Keep choose # within 1 and max. Run when resetting alien list (# might have changed) and changing # to pick
+     */
+    getChooseLimit(original: number): number { return 0; };
 
-    //Move current to given and move on
-    private makePickFinal(): void {
-      let service = this;
-      service.given = service.given.concat(service.current, service.restricted);
-      service.restricted = []; service.current = [];
-    };
+    /**
+     * Pick aliens randomly, if possible
+     */
+    draw(howManyToChoose: number, preventConflicts?: boolean): Status { return this.empty_status };
 
-    //Move current selection back to pool
-    private undo(): void {
-      let service = this;
-      service.pool = service.pool.concat(service.current, service.restricted);
-      service.current = []; service.restricted = [];
-    };
+    /**
+     * Hide all aliens (so return nothing to show
+     */
+    hide(): Status { return this.empty_status };
 
-    //Determine list of possible choices based on selected options
-    reset(complexities: boolean[], games: Map<boolean>, namesExcluded: string[], setupLevel: string): Status {
-      let service = this;
-      service.pool = service.Aliens.getMatchingNames(complexities, games, namesExcluded, setupLevel);
-      service.given = [];
-      service.current = [];
-      service.restricted = [];
-      return { aliens: [], message: "List reset." };
-    }
+    /**
+     * Show current aliens if pass test
+     */
+    show(): Status { return this.empty_status };
 
-    //Show all aliens that have been given out so far
-    getAllGiven(): Status {
-      let service = this;
-      service.makePickFinal();
-      return { aliens: service.namesToAliens(service.given), message: "Aliens given out so far:" };
-    };
+    /**
+     * Undo last draw, then draw again
+     */
+    redo(howManyToChoose: number, preventConflicts?: boolean): Status { return this.empty_status; };
 
-    //Keep choose # within 1 and max. Run when resetting alien list (# might have changed) and changing # to pick
-    getChooseLimit(original: number): number {
-      let numToGive = original;
-      let max = this.pool.length;
-      if (max > 0 && numToGive > max) numToGive = max;
-      if (numToGive < 1) numToGive = 1;
-      return numToGive;
-    };
+    /**
+     * Get which actions are not allowed
+     */
+    getDisabledActions(howManyToChoose: number, numShown: number): AllowedActions { return <AllowedActions>{}; };
 
-    //Pick aliens randomly
-    draw(howManyToChoose: number, preventConflicts?: boolean): Status {
-      let service = this;
-      service.makePickFinal();
-      for (let i = 0; i < howManyToChoose; i++) {
-        let name = service.drawOne(preventConflicts);
-        if (!name) break;
-      }
-
-      //If unable to pick desired number, undo
-      if (service.current.length < howManyToChoose) {
-        service.undo();
-        return { aliens: [], message: "Not enough potential aliens left." + (preventConflicts ? " It's possible that the \"Prevent conflicts\" option is preventing me from displaying remaining aliens." : "") };
-      }
-
-      //Display
-      return { aliens: service.namesToAliens(service.current), message: "Choices:", limit: service.getChooseLimit(howManyToChoose) };
-    };
-
-    //Hide all aliens (so return nothing to show
-    hide(): Status { return { aliens: [], message: "Choices hidden." } };
-
-    //Show current aliens if pass test
-    show(): Status {
-      let service = this;
-      //Ask for initial of one of the aliens before reshowing them
-      let initials = service.current.map(function (e) { return e[0].toLowerCase(); });
-      if (initials.indexOf((prompt("Enter the first initial of one of the aliens you were given, then click OK.") || "").toLowerCase()) < 0) {
-        return { aliens: [], message: "Wrong letter." };
-      }
-
-      //If passed, then show aliens
-      return { aliens: service.namesToAliens(service.current), message: "Choices:" };
-    };
-
-    //Undo last draw, then draw again
-    redo(howManyToChoose: number, preventConflicts?: boolean): Status {
-      let service = this;
-      if (confirm("Redo?")) {
-        service.undo();
-        return service.draw(howManyToChoose, preventConflicts);
-      }
-      return { aliens: service.namesToAliens(service.current), message: "Choices:" }
-    };
-
-    //Get which actions are not allowed
-    getDisabledActions(howManyToChoose: number, numShown: number): AllowedActions {
-      let service = this;
-      return {
-        draw: (service.pool.length < howManyToChoose),
-        hide: (numShown < 1),
-        show: !(service.current.length > 0 && numShown < 1),
-        redo: (service.current.length <= 0 || numShown <= 0),
-        reset: (service.current.length <= 0 && service.given.length <= 0)
-      };
-    };
-
-    //Get number given out and size of pool
-    getStatus(): string {
-      let service = this;
-      let numGiven = service.current.length + service.given.length + service.restricted.length;
-      return numGiven + " of " + (numGiven + service.pool.length) + " drawn.";
-    };
+    /**
+     * Get number given out and size of pool
+     */
+    getStatus(): string { return ''; };
 
     //Start Generator by getting alien names
     init: ng.IPromise<string[]>;
 
     constructor(Aliens: AlienService) {
-      this.init = Aliens.init;
-      this.Aliens = Aliens;
+      let service = this;
+      service.init = Aliens.init;
+
+      function namesToAliens(names: string[]): Alien[] {
+        return names.sort().map(Aliens.get);
+      }
+
+      //Current = currently drawn. Given = previously given/restricted. Restricted = restricted by those currently drawn. Pool = all left to draw from
+      let current: string[] = [];
+      let given: string[] = [];
+      let restricted: string[] = [];
+      let pool: string[] = [];
+
+      /**
+       * Choose alien from pool
+       */
+      function drawOne(preventConflicts: boolean): string {
+        //Select name (return if wasn't able to select
+        let choice = Math.floor(Math.random() * pool.length);
+        if (!pool[choice]) return;
+        let name = pool.splice(choice, 1)[0];
+        current.push(name);
+
+        //If current choice has any restrictions, remove them from pool as well
+        let alien: Alien = Aliens.get(name);
+        if (preventConflicts && alien.restriction) {
+          let restrictions = alien.restriction.split(',');
+          for (let j = 0; j < restrictions.length; j++) {
+            let index = pool.indexOf(restrictions[j]);
+            if (index > -1) { restricted.push(pool.splice(index, 1)[0]); }
+          }
+        }
+        //Return select name
+        return name;
+      }
+
+      /**
+       * Move current to given and move on
+       */
+      function makePickFinal(): void {
+        given = given.concat(current, restricted);
+        restricted = []; current = [];
+      };
+
+      /**
+       * Move current selection back to pool
+       */
+      function undo(): void {
+        pool = pool.concat(current, restricted);
+        current = []; restricted = [];
+      };
+
+      service.reset = function (complexities, games, namesExcluded, setupLevel) {
+        pool = Aliens.getMatchingNames(complexities, games, namesExcluded, setupLevel);
+        given = [];
+        current = [];
+        restricted = [];
+        return { aliens: [], message: "List reset." };
+      };
+
+      service.getAllGiven = function () {
+        makePickFinal();
+        return { aliens: namesToAliens(given), message: "Aliens given out so far:" };
+      };
+
+      service.getChooseLimit = function (original) {
+        let numToGive = original;
+        let max = pool.length;
+        if (max > 0 && numToGive > max) numToGive = max;
+        if (numToGive < 1) numToGive = 1;
+        return numToGive;
+      };
+
+      service.draw = function (howManyToChoose, preventConflicts = false) {
+        makePickFinal();
+        for (let i = 0; i < howManyToChoose; i++) {
+          let name = drawOne(preventConflicts);
+          if (!name) break;
+        }
+
+        //If unable to pick desired number, undo
+        if (current.length < howManyToChoose) {
+          undo();
+          return { aliens: [], message: "Not enough potential aliens left." + (preventConflicts ? " It's possible that the \"Prevent conflicts\" option is preventing me from displaying remaining aliens." : "") };
+        }
+
+        //Display
+        return { aliens: namesToAliens(current), message: "Choices:", limit: service.getChooseLimit(howManyToChoose) };
+      };
+
+      service.hide = () => ({ aliens: [], message: "Choices hidden." });
+
+      service.show = function () {
+        //Ask for initial of one of the aliens before reshowing them
+        let initials = current.map(function (e) { return e[0].toLowerCase(); });
+        if (initials.indexOf((prompt("Enter the first initial of one of the aliens you were given, then click OK.") || "").toLowerCase()) < 0) {
+          return { aliens: [], message: "Wrong letter." };
+        }
+
+        //If passed, then show aliens
+        return { aliens: namesToAliens(current), message: "Choices:" };
+      }
+
+      service.redo = function (howManyToChoose, preventConflicts = false) {
+        if (confirm("Redo?")) {
+          undo();
+          return service.draw(howManyToChoose, preventConflicts);
+        }
+        return { aliens: namesToAliens(current), message: "Choices:" }
+      };
+
+      service.getDisabledActions = function (howManyToChoose, numShown) {
+        return {
+          draw: (pool.length < howManyToChoose),
+          hide: (numShown < 1),
+          show: !(current.length > 0 && numShown < 1),
+          redo: (current.length <= 0 || numShown <= 0),
+          reset: (current.length <= 0 && given.length <= 0)
+        };
+      };
+
+      service.getStatus = function () {
+        let numGiven = current.length + given.length + restricted.length;
+        return numGiven + " of " + (numGiven + pool.length) + " drawn.";
+      };
     }
   }
 
