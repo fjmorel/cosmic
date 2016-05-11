@@ -40,7 +40,7 @@ interface AlienService {
 	 * The .init() method is used to download the Alien data to enable the other methods afterwards.
 	 * @return Promise in order to run any callbacks after data has loaded.
 	 */
-  init(): ng.IHttpPromise<string[]>,
+  init: ng.IHttpPromise<string[]>,
 	/**
 	 * The .get() method is used to get information about an alien by its name.
 	 * @return Information about alien
@@ -64,62 +64,4 @@ interface AlienService {
 	 * @return Details of matching aliens
 	 */
   getMatching(levels: boolean[], games: Map<boolean>, exclude?: string[], setup?: string): Alien[]
-}
-
-declare namespace AlienGenerator {
-	export interface Status {
-		aliens: Alien[],
-		message: string,
-		limit?: number
-	}
-
-	export interface GeneratorService {
-		reset(complexities: boolean[], games: Map<boolean>, namesExcluded: string[], setupLevel: string): Status,
-		getAllGiven(): Status,
-		getChooseLimit(original: number): number,
-		draw(howManyToChoose: number, preventConflicts?: boolean): Status,
-		hide(): Status,
-		show(): Status,
-		redo(howManyToChoose: number, preventConflicts?: boolean): Status,
-		init(): ng.IHttpPromise<string[]>,
-		getDisabledActions(howManyToChoose: number, numShown: number): AllowedActions,
-		getStatus(): string
-	}
-
-	export interface AllowedActions {
-		draw: boolean,
-		hide: boolean,
-		show: boolean,
-		redo: boolean,
-		reset: boolean
-	}
-
-	export interface Settings {
-		complexities: boolean[],
-		games: { E: boolean },
-		namesExcluded: string[],
-		setupLevel: string,
-		numToChoose: number,
-		preventConflicts: boolean,
-		version: number
-	}
-
-	export interface Storage extends ng.storage.IStorageService {
-		complexities: boolean[],
-		games: { E: boolean },
-		namesExcluded: string[],
-		setupLevel: string,
-		numToChoose: number,
-		preventConflicts: boolean,
-		version: number
-	}
-}
-
-declare namespace AlienReference {
-	export interface Storage extends ng.storage.IStorageService {
-		complexities: boolean[],
-		games: { E: boolean },
-		orderPref: string[],
-		groupPref: string[]
-	}
 }

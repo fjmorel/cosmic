@@ -90,7 +90,7 @@
       });
 
       //Generate array with named groups
-      let result = Object.keys(grouped).map((group): GroupedItems => ({ value: group, items: grouped[group] }));
+      let result = Object.keys(grouped).sort().map((group): GroupedItems => ({ value: group, items: grouped[group] }));
 
       //If more fields to group by, go deeper
       if (fields[level + 1]) {

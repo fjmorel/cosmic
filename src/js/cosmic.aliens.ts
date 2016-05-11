@@ -1,6 +1,57 @@
 ﻿/// <reference path="../../typings/project.d.ts" />
 (function () {
   "use strict";
+  class AlienPanel {
+    alien: Alien;
+    constructor($sce: ng.ISCEService) {
+      if (typeof this.alien.description === 'string')
+        this.alien.description = $sce.trustAsHtml(this.alien.description);
+    }
+  }
+
+  class Service implements AlienService {
+    private aliens: Map<Alien> = {};
+    private alien_names: string[] = [];
+    private fake_alien: Alien = {
+      name: '',
+      game: '',
+      power: '',
+      level: 0,
+      description: '',
+      setup: '',
+    };
+
+    init: ng.IPromise<string[]>;
+
+    get(name: string): Alien { return this.aliens[name] || this.fake_alien };
+    getMatchingNames(levels: boolean[], games: Map<boolean>, exclude?: string[], setup?: string): string[] {
+      let aliens = this.aliens;
+      //Remove wrong game/level
+      let names = this.alien_names.filter((name: string): boolean => levels[aliens[name].level] && games[aliens[name].game]);
+      //Remove specific names
+      if (exclude && exclude.length) names = names.filter((name: string): boolean => exclude.indexOf(name) < 0);
+      //Remove if removing game setup (unless only removing extra color)
+      if (setup && setup !== "none") names = names.filter((name: string): boolean => (!aliens[name].setup || (setup === 'color' && aliens[name].setup !== "color")));
+
+      return names;
+    };
+    getMatching(levels: boolean[], games: Map<boolean>, exclude?: string[], setup?: string): Alien[] {
+      return this.getMatchingNames(levels, games, exclude, setup).map(<(name: string) => Alien>this.get.bind(this));
+    };
+
+    constructor($http: ng.IHttpService) {
+      let service = this, names = service.alien_names;
+      service.init = $http.get("data/aliens.json").then(function (result: ng.IHttpPromiseCallbackArg<AlienJson>): string[] {
+        result.data.list.forEach(function (alien: Alien) {
+          service.aliens[alien.name] = alien;
+          names.push(alien.name);
+        });
+        names.sort();
+        return names.slice(0);
+      });
+    }
+  }
+
   let mod = angular.module('cc.aliens', ['ngMaterial']);
 
   //Themes for alien-related items
@@ -23,46 +74,7 @@
   }]);
 
   //Fetch alien data and provide methods to retrieve names and aliens
-  mod.factory('alienData', ['$http', function ($http: ng.IHttpService): AlienService {
-    let aliens: Map<Alien> = {},
-      alien_names: string[] = [],
-      fake_alien: Alien = {
-        name: '',
-        game: '',
-        power: '',
-        level: 0,
-        description: '',
-        setup: '',
-      };
-
-    return {
-      init: function () {
-        return $http.get("data/aliens.json").then(function (result: ng.IHttpPromiseCallbackArg<AlienJson>): string[] {
-          result.data.list.forEach(function (alien: Alien) {
-            aliens[alien.name] = alien;
-            alien_names.push(alien.name);
-          });
-          alien_names.sort();
-          return alien_names.slice(0);
-        });
-      },
-
-      get: name => aliens[name] || fake_alien,
-      getMatching: function (levels, games, exclude, setup) {
-        return this.getMatchingNames(levels, games, exclude, setup).map(this.get);
-      },
-      getMatchingNames: function (levels, games, exclude, setup) {
-        //Remove wrong game/level
-        let names = alien_names.filter((name: string): boolean => levels[aliens[name].level] && games[aliens[name].game]);
-        //Remove specific names
-        if (exclude && exclude.length) names = names.filter((name: string): boolean => exclude.indexOf(name) < 0);
-        //Remove if removing game setup (unless only removing extra color)
-        if (setup && setup !== "none") names = names.filter((name: string): boolean => (!aliens[name].setup || (setup === 'color' && aliens[name].setup !== "color")));
-
-        return names;
-      }
-    };
-  }]);
+  mod.service('alienData', ['$http', Service]);
 
   //Turn alien level into Bootstrap class name for colors
   mod.filter('levelClass', function (): LevelFilter {
@@ -86,6 +98,7 @@
   //Turn alien object into a panel with its information
   mod.component("alienPanel", {
     bindings: { alien: '<item' },
+    controller: ['$sce', AlienPanel],
     template: `
 <md-card>
 	<md-card-content class ="alien-head">
@@ -102,11 +115,7 @@
 	<md-card-footer ng-if="$ctrl.opened" class ="alien-desc md-body-1" ng-bind-html="::$ctrl.alien.description">
 	</md-card-footer>
 </md-card>
-      `,
-    controller: ['$sce', function ($sce: ng.ISCEService) {
-      if (typeof this.alien.description === 'string')
-        this.alien.description = $sce.trustAsHtml(this.alien.description);
-    }]
+      `
   });
 
   mod.component('alienLevelOptions', {
@@ -114,7 +123,7 @@
     template: `
 <md-card-content>
   <h4 class ="md-title">Levels to include</h4>
-  <md-checkbox ng-change="$ctrl.save('complexities')" ng-model="$ctrl.options[level]" ng-repeat="(level, name) in ::['Green','Yellow','Red']"
+  <md-checkbox ng-change="$ctrl.save()" ng-model="$ctrl.options[level]" ng-repeat="(level, name) in ::['Green','Yellow','Red']"
   ng-class ="::'md-primary md-alien'+level+'-theme'">{{::name}}</md-checkbox>
 </md-card-content>
       `
@@ -125,7 +134,7 @@
     template: `
 <md-card-content>
   <h4 class ="md-title">Games to include</h4>
-  <md-checkbox ng-change="$ctrl.save('game')" ng-model="$ctrl.options[game]" ng-repeat="game in ::['E', 'A', 'C', 'D', 'I', 'S']"
+  <md-checkbox ng-change="$ctrl.save()" ng-model="$ctrl.options[game]" ng-repeat="game in ::['E', 'A', 'C', 'D', 'I', 'S']"
   class ="md-primary">{{::game | gameName}}</md-checkbox>
 </md-card-content>
       `
