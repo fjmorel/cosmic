@@ -1,13 +1,11 @@
 ﻿/// <reference path="../../typings/project.d.ts" />
-
-
 (function () {
   "use strict";
   let mod = angular.module('cc.base', ['ngMaterial', 'ngMdIcons']);
 
   class Drawer {
-    open(): void {};
-    
+    open(): void { };
+
     constructor($mdSidenav: ng.material.ISidenavService) {
       this.open = function () { $mdSidenav('left').open(); };
     }
@@ -111,6 +109,7 @@
 
 })();
 
-(function (i, s, o, g, r, a, m) { i['GoogleAnalyticsObject'] = r; i[r] = i[r] || function () { (i[r].q = i[r].q || []).push(arguments) }, i[r].l = 1 * new Date(); a = s.createElement(o), m = s.getElementsByTagName(o)[0]; a.async = 1; a.src = g; m.parentNode.insertBefore(a, m) })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
+//Add ?:any to all parameters to avoid TypeScript errors, and make new Date() in formula <any> as well
+(function(i?:any,s?:any,o?:any,g?:any,r?:any,a?:any,m?:any){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=<any>(new Date())*1;a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
 ga('create', 'UA-76241009-1', 'auto');
 ga('send', 'pageview');

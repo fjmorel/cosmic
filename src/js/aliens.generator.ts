@@ -230,7 +230,7 @@
     redo(): void { };
     reset(): void { };
     restrictNumToChoose(): void { };
-    changeSetting(): void { };
+    change(): void { };
 
     constructor($localStorage: Storage, Generator: GeneratorService) {
       let ctrl = this;
@@ -262,7 +262,7 @@
         ctrl.restrictNumToChoose();
       }
 
-      ctrl.changeSetting = resetGenerator;
+      ctrl.change = resetGenerator;
 
       let NOT_RESET = 0;
       ctrl.reset = function (): void {

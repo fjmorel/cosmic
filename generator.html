@@ -33,15 +33,15 @@
       <!-- Settings -->
       <md-content layout="row" layout-wrap>
         <md-card flex="100" flex-gt-xs="45" flex-md="30" flex-lg="10" flex-gt-lg="15">
-          <alien-level-options save="Generator.changeSetting" options="Generator.settings.complexities"></alien-level-options>
+          <alien-level-options save="Generator.change" options="Generator.settings.complexities"></alien-level-options>
         </md-card>
         <md-card flex="100" flex-gt-xs="45" flex-md="30" flex-lg="15" flex-gt-lg="15">
-          <alien-game-options save="Generator.changeSetting" options="Generator.settings.games"></alien-game-options>
+          <alien-game-options save="Generator.change" options="Generator.settings.games"></alien-game-options>
         </md-card>
         <md-card flex="100" flex-gt-xs="45" flex-md="30" flex-lg="20" flex-gt-lg="15">
           <md-card-content>
             <h4 class="md-title">Game setup</h4>
-            <md-radio-group ng-model="Generator.settings.setupLevel" ng-change="Generator.changeSetting()">
+            <md-radio-group ng-model="Generator.settings.setupLevel" ng-change="Generator.change()">
               <md-radio-button value="none" class="md-primary">Remove none</md-radio-button>
               <md-radio-button value="color" class="md-primary">Remove those requiring extra color</md-radio-button>
               <md-radio-button value="all" class="md-primary">Remove all</md-radio-button>
@@ -51,7 +51,7 @@
         <md-card flex="100" flex-gt-xs="45" flex-lg="20" flex-gt-lg="15">
           <md-card-content>
             <h4 class="md-title">Exclude by name</h4>
-            <md-select multiple ng-model="Generator.settings.namesExcluded" ng-change="Generator.changeSetting()" placeholder="Select names">
+            <md-select multiple ng-model="Generator.settings.namesExcluded" ng-change="Generator.change()" placeholder="Select names">
               <md-option ng-value="::name" ng-repeat="name in Generator.namesAll">{{::name}}</md-option>
             </md-select>
           </md-card-content>

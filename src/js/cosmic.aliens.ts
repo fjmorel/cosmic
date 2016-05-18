@@ -1,8 +1,8 @@
 ﻿/// <reference path="../../typings/project.d.ts" />
 (function () {
   "use strict";
-  
-  class AlienPanel{
+
+  class AlienPanel {
     alien: Alien;
     constructor($sce: ng.ISCEService) {
       let alien = this.alien;
@@ -15,7 +15,6 @@
     init: ng.IPromise<string[]>;
     get(name: string): Alien { return <Alien>{} };
     getMatchingNames(levels: boolean[], games: Map<boolean>, exclude?: string[], setup?: string): string[] { return []; };
-    getMatching(levels: boolean[], games: Map<boolean>, exclude?: string[], setup?: string): Alien[] { return []; };
 
     constructor($http: ng.IHttpService) {
       let service = this,
@@ -23,7 +22,7 @@
         alien_names: string[] = [];
 
       service.init = $http.get("data/aliens.json").then(function (result: ng.IHttpPromiseCallbackArg<AlienJson>): string[] {
-        result.data.list.forEach(function (alien: Alien) {
+        result.data.list.forEach(function (alien) {
           aliens[alien.name] = alien;
           alien_names.push(alien.name);
         });
@@ -42,60 +41,50 @@
 
         return names;
       };
-      service.getMatching = function (levels, games, exclude, setup) {
-        return service.getMatchingNames(levels, games, exclude, setup).map(service.get);
-      };
     }
   }
 
-  let mod = angular.module('cc.aliens', ['ngMaterial']);
+  angular.module('cc.aliens', ['ngMaterial'])
+    .service('alienData', ['$http', Service])
 
-  //Themes for alien-related items
-  mod.config(['$mdThemingProvider', function (ThemeProvider: ng.material.IThemingProvider) {
-    ThemeProvider.definePalette('alien-green', ThemeProvider.extendPalette('green', {
-      '500': '189247',
-      'contrastDefaultColor': 'light'
-    }));
-    ThemeProvider.definePalette('alien-yellow', ThemeProvider.extendPalette('deep-orange', {
-      '500': 'c39c07'
-    }));
-    ThemeProvider.definePalette('alien-red', ThemeProvider.extendPalette('red', {
-      '500': 'c31b09',
-      'contrastDefaultColor': 'light'
-    }));
+    //Themes for alien-related items
+    .config(['$mdThemingProvider', function (ThemeProvider: ng.material.IThemingProvider) {
+      function createPalette(index: number, name: string, base: string, main: string): void {
+        ThemeProvider.definePalette(name, ThemeProvider.extendPalette(base, {
+          500: main,
+          contrastDefaultColor: 'light'
+        }));
+        ThemeProvider.theme('alien' + index).primaryPalette(name).accentPalette('deep-purple');
+      }
+      createPalette(0, "alien-green", "green", "189247");
+      createPalette(1, "alien-yellow", "deep-orange", "c39c07");
+      createPalette(2, "alien-red", "red", "c31b09");
+    }])
 
-    ThemeProvider.theme('alien0').primaryPalette('alien-green').accentPalette('deep-purple');
-    ThemeProvider.theme('alien1').primaryPalette('alien-yellow').accentPalette('deep-purple');
-    ThemeProvider.theme('alien2').primaryPalette('alien-red').accentPalette('deep-purple');
-  }]);
+    .filter('levelClass', function (): LevelFilter {
+      //Turn alien level into Bootstrap class name for colors
+      let classes = ["success", "warning", "danger"];
+      return lvl => classes[lvl];
+    })
 
-  //Fetch alien data and provide methods to retrieve names and aliens
-  mod.service('alienData', ['$http', Service]);
+    .filter('levelStars', function (): LevelFilter {
+      //Turn alien level into a string of stars to show level
+      let stars = ['★', '★★', '★★★'];
+      return lvl => stars[lvl];
+    })
 
-  //Turn alien level into Bootstrap class name for colors
-  mod.filter('levelClass', function (): LevelFilter {
-    let classes = ["success", "warning", "danger"];
-    return lvl => classes[lvl];
-  });
+    .filter('levelName', function (): LevelFilter {
+      //Turn alien level into a string of stars to show level
+      let names = ['Green', 'Yellow', 'Red'];
+      return lvl => names[lvl];
+    })
 
-  //Turn alien level into a string of stars to show level
-  mod.filter('levelStars', function (): LevelFilter {
-    let stars = ['★', '★★', '★★★'];
-    return lvl => stars[lvl];
-  });
-
-  //Turn alien level into a string of stars to show level
-  mod.filter('levelName', function (): LevelFilter {
-    let names = ['Green', 'Yellow', 'Red'];
-    return lvl => names[lvl];
-  });
-
-  //TODO: Add extra information (and update JSON file)
-  //Turn alien object into a panel with its information
-  mod.component("alienPanel", {
-    bindings: { alien: '<item' },
-    controller: ['$sce', AlienPanel],
-    template: `
+    .component("alienPanel", {
+      //TODO: Add extra information (and update JSON file)
+      //Turn alien object into a panel with its information
+      bindings: { alien: '<item' },
+      controller: ['$sce', AlienPanel],
+      template: `
 <md-card>
 	<md-card-content class ="alien-head">
 		<md-button class ="md-alien{{::$ctrl.alien.level}}-theme md-raised md-primary" ng-click="$ctrl.opened = !$ctrl.opened">{{$ctrl.opened ? '-': '+'}}</md-button>
@@ -111,28 +100,29 @@
 	<md-card-footer ng-if="$ctrl.opened" class ="alien-desc md-body-1" ng-bind-html="::$ctrl.alien.description">
 	</md-card-footer>
 </md-card>
-      `
-  });
+`
+    })
 
-  mod.component('alienLevelOptions', {
-    bindings: { options: '=', save: '=' },
-    template: `
+    .component('alienLevelOptions', {
+      bindings: { options: '=', save: '=' },
+      template: `
 <md-card-content>
-  <h4 class ="md-title">Levels to include</h4>
-  <md-checkbox ng-change="$ctrl.save()" ng-model="$ctrl.options[level]" ng-repeat="(level, name) in ::['Green','Yellow','Red']"
-  ng-class ="::'md-primary md-alien'+level+'-theme'">{{::name}}</md-checkbox>
+<h4 class ="md-title">Levels to include</h4>
+<md-checkbox ng-change="$ctrl.save()" ng-model="$ctrl.options[level]" ng-repeat="(level, name) in ::['Green','Yellow','Red']"
+ng-class ="::'md-primary md-alien'+level+'-theme'">{{::name}}</md-checkbox>
 </md-card-content>
-      `
-  });
+`
+    })
 
-  mod.component('alienGameOptions', {
-    bindings: { options: '=', save: '=' },
-    template: `
+    .component('alienGameOptions', {
+      bindings: { options: '=', save: '=' },
+      template: `
 <md-card-content>
-  <h4 class ="md-title">Games to include</h4>
-  <md-checkbox ng-change="$ctrl.save()" ng-model="$ctrl.options[game]" ng-repeat="game in ::['E', 'A', 'C', 'D', 'I', 'S']"
-  class ="md-primary">{{::game | gameName}}</md-checkbox>
+<h4 class ="md-title">Games to include</h4>
+<md-checkbox ng-change="$ctrl.save()" ng-model="$ctrl.options[game]" ng-repeat="game in ::['E', 'A', 'C', 'D', 'I', 'S']"
+class ="md-primary">{{::game | gameName}}</md-checkbox>
 </md-card-content>
-      `
-  })
+`
+    });
+
 })();

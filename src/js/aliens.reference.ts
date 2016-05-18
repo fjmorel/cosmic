@@ -18,7 +18,7 @@
     orderPref: string[];
     groupPref: string[];
     alienGroups: GroupedItems[];
-    changeSetting(): void {};
+    change(): void {};
 
     constructor(Aliens: AlienService, $localStorage: Storage, groupBy: GroupByFilter) {
       let ctrl = this;
@@ -39,12 +39,12 @@
       ctrl.alienGroups = [];
       
       //Show filtered, grouped list of aliens
-      ctrl.changeSetting = function (): void {
-        ctrl.alienGroups = groupBy(Aliens.getMatching(ctrl.complexities, ctrl.games), ctrl.groupPref);
+      ctrl.change = function (): void {
+        ctrl.alienGroups = groupBy(Aliens.getMatchingNames(ctrl.complexities, ctrl.games).map(Aliens.get), ctrl.groupPref);
       }
 
       //Initialize reference page
-      Aliens.init.then(ctrl.changeSetting);
+      Aliens.init.then(ctrl.change);
     }
   }
 

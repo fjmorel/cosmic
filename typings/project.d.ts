@@ -55,13 +55,4 @@ interface AlienService {
 	 * @return Names of matching aliens
 	 */
   getMatchingNames(levels: boolean[], games: Map<boolean>, exclude?: string[], setup?: string): string[]
-	/**
-	 * The .getMatching() method is used to get details about aliens that match given filters
-	 * @param levels Array of booleans for Green, Yellow, and Red levels.
-	 * @param games Booleans mapped by the initials of base game and expansions
-	 * @param exclude Array of alien names to exclude from results
-	 * @param setup Which level of game setup to exclude from results 
-	 * @return Details of matching aliens
-	 */
-  getMatching(levels: boolean[], games: Map<boolean>, exclude?: string[], setup?: string): Alien[]
 }
