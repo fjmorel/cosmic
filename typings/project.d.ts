@@ -35,7 +35,7 @@ interface AlienJson extends ng.IHttpPromiseCallbackArg<{}> {
 /**
  * The AlienService takes care of downloading data about aliens and enables lookups by name or information.
  */
-interface AlienService {
+interface IAlienService {
 	/**
 	 * The .init() method is used to download the Alien data to enable the other methods afterwards.
 	 * @return Promise in order to run any callbacks after data has loaded.
