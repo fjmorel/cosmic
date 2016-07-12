@@ -4,9 +4,9 @@ export default function Theme(ThemeProvider: ng.material.IThemingProvider) {
 	function createPalette(index: number, name: string, base: string, main: string): void {
 		ThemeProvider.definePalette(name, ThemeProvider.extendPalette(base, {
 			500: main,
-			contrastDefaultColor: 'light'
+			contrastDefaultColor: "light"
 		}));
-		ThemeProvider.theme('alien' + index).primaryPalette(name).accentPalette('deep-purple');
+		ThemeProvider.theme("alien" + index).primaryPalette(name).accentPalette("deep-purple");
 	}
 	createPalette(0, "alien-green", "green", "189247");
 	createPalette(1, "alien-yellow", "deep-orange", "c39c07");

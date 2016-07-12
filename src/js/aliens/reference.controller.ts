@@ -1,9 +1,9 @@
 ﻿/// <reference path="../../../typings/project.d.ts" />
-interface Storage extends ng.storage.IStorageService {
-		complexities: boolean[],
-		games: Map<boolean>,
-		orderPref: string[],
-		groupPref: string[]
+interface IStorage extends ng.storage.IStorageService {
+		complexities: boolean[];
+		games: Map<boolean>;
+		orderPref: string[];
+		groupPref: string[];
 }
 
 /**
@@ -15,9 +15,9 @@ export class Controller {
   orderPref: string[];
   groupPref: string[];
   alienGroups: GroupedItems[];
-  change(): void { };
+  change: () => void;
 
-  constructor(Aliens: IAlienService, $localStorage: Storage, groupBy: GroupByFilter) {
+  constructor(Aliens: IAlienService, $localStorage: IStorage, groupBy: GroupByFilter) {
     let ctrl = this;
 
     //Set up default settings

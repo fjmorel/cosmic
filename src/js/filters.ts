@@ -2,7 +2,7 @@
 export function GroupBy() {
 
 	function groupItems(list: Object[], fields: string[], level: number): GroupedItems[] {
-		if (fields.length < 1) return [{ value: '', items: list }];
+		if (fields.length < 1) return [{ value: "", items: list }];
 
 		//Group objects by property
 		let grouped: Map<Object[]> = {};
@@ -37,7 +37,7 @@ export function InitialToGameName(): GameNameFilter {
 		I: "Incursion",
 		S: "Storm"
 	};
-	return initial => ('Cosmic ' + games[initial]);
+	return initial => ("Cosmic " + games[initial]);
 }
 
 export function LevelToClass(): LevelFilter {
@@ -48,12 +48,12 @@ export function LevelToClass(): LevelFilter {
 
 export function LevelToStars(): LevelFilter {
 	//Turn alien level into a string of stars to show level
-	let stars = ['★', '★★', '★★★'];
+	let stars = ["★", "★★", "★★★"];
 	return lvl => stars[lvl];
 }
 
 export function LevelToName(): LevelFilter {
 	//Turn alien level into a string of stars to show level
-	let names = ['Green', 'Yellow', 'Red'];
+	let names = ["Green", "Yellow", "Red"];
 	return lvl => names[lvl];
 }

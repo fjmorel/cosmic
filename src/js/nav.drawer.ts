@@ -2,7 +2,7 @@
 export class Controller {
   open: () => void;
   constructor($mdSidenav: ng.material.ISidenavService) {
-    this.open = function () { $mdSidenav('left').open(); };
+    this.open = function () { $mdSidenav("left").open(); };
   }
 }
 

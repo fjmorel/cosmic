@@ -1,29 +1,29 @@
 ﻿/// <reference path="../../../typings/project.d.ts" />
-import * as Generator from './generator.service';
+import * as Generator from "./generator.service";
 
-export { Service } from './generator.service';
+export { Service } from "./generator.service";
 
-interface Storage extends ng.storage.IStorageService {
-  complexities: boolean[],
-  games: Map<boolean>,
-  namesExcluded: string[],
-  setupLevel: string,
-  numToChoose: number,
-  preventConflicts: boolean
+interface IStorage extends ng.storage.IStorageService {
+  complexities: boolean[];
+  games: Map<boolean>;
+  namesExcluded: string[];
+  setupLevel: string;
+  numToChoose: number;
+  preventConflicts: boolean;
 }
 
 /**
  * Based on settings, allow user to pick aliens randomly
  */
 export class Controller {
-  settings: Storage;
+  settings: IStorage;
   namesAll: string[];
 
   //Output
   status = "0 of 0 drawn.";
   state = "Loading aliens...";
   aliensToShow: Alien[] = [];
-  disabled: Generator.AllowedActions = { draw: true, hide: true, show: true, redo: true, reset: true };
+  disabled: Generator.IAllowedActions = { draw: true, hide: true, show: true, redo: true, reset: true };
 
   //Actions
   draw: () => void;
@@ -34,7 +34,7 @@ export class Controller {
   restrictNumToChoose: () => void;
   change: () => void;
 
-  constructor($localStorage: Storage, Generator: Generator.Service) {
+  constructor($localStorage: IStorage, Generator: Generator.Service) {
     let ctrl = this;
 
     $localStorage.$default({
@@ -47,7 +47,7 @@ export class Controller {
     });
     ctrl.settings = $localStorage;
 
-    function setState(newState: Generator.Status): void {
+    function setState(newState: Generator.IStatus): void {
       if (!newState) return;
       ctrl.state = newState.message;
       ctrl.aliensToShow = newState.aliens;

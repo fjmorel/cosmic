@@ -1,42 +1,41 @@
 ﻿/// <reference path="../../../typings/project.d.ts" />
-interface Storage extends ng.storage.IStorageService {
-  complexities: boolean[],
-  games: Map<boolean>,
-  namesExcluded: string[],
-  setupLevel: string,
-  numToChoose: number,
-  preventConflicts: boolean
+interface IStorage extends ng.storage.IStorageService {
+  complexities: boolean[];
+  games: Map<boolean>;
+  namesExcluded: string[];
+  setupLevel: string;
+  numToChoose: number;
+  preventConflicts: boolean;
 }
 
-export interface Status {
-  aliens: Alien[],
-  message: string,
-  limit?: number
+export interface IStatus {
+  aliens: Alien[];
+  message: string;
+  limit?: number;
 }
 
-export interface AllowedActions {
-  draw: boolean,
-  hide: boolean,
-  show: boolean,
-  redo: boolean,
-  reset: boolean
+export interface IAllowedActions {
+  draw: boolean;
+  hide: boolean;
+  show: boolean;
+  redo: boolean;
+  reset: boolean;
 }
 
 /**
  * Manage aliens given, available, etc
  */
 export class Service {
-  private empty_status: Status = { aliens: [], message: '' };
 
   /**
    * Determine list of possible choices based on selected options
    */
-  reset: (complexities: boolean[], games: Map<boolean>, namesExcluded: string[], setupLevel: string) => Status;
+  reset: (complexities: boolean[], games: Map<boolean>, namesExcluded: string[], setupLevel: string) => IStatus;
 
   /**
    * Show all aliens that have been given out so far
    */
-  getAllGiven: () => Status;
+  getAllGiven: () => IStatus;
 
   /**
    * Keep choose # within 1 and max. Run when resetting alien list (# might have changed) and changing # to pick
@@ -46,27 +45,27 @@ export class Service {
   /**
    * Pick aliens randomly, if possible
    */
-  draw: (howManyToChoose: number, preventConflicts?: boolean) => Status;
+  draw: (howManyToChoose: number, preventConflicts?: boolean) => IStatus;
 
   /**
    * Hide all aliens (so return nothing to show
    */
-  hide: () => Status;
+  hide: () => IStatus;
 
   /**
    * Show current aliens if pass test
    */
-  show: () => Status;
+  show: () => IStatus;
 
   /**
    * Undo last draw, then draw again
    */
-  redo: (howManyToChoose: number, preventConflicts?: boolean) => Status;
+  redo: (howManyToChoose: number, preventConflicts?: boolean) => IStatus;
 
   /**
    * Get which actions are not allowed
    */
-  getDisabledActions: (howManyToChoose: number, numShown: number) => AllowedActions;
+  getDisabledActions: (howManyToChoose: number, numShown: number) => IAllowedActions;
 
   /**
    * Get number given out and size of pool

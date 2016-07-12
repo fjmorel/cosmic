@@ -4,7 +4,7 @@ export class Controller {
 	alien: Alien;
 	constructor($sce: ng.ISCEService) {
 		let alien = this.alien;
-		if (typeof alien.description === 'string')
+		if (typeof alien.description === "string")
 			alien.description = $sce.trustAsHtml(alien.description);
 	}
 }
