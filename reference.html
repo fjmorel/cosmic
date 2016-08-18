@@ -1,95 +1,77 @@
 ﻿<!DOCTYPE html>
-<html lang="en" ng-app="cc.reference" ng-strict-di>
+<html lang="en">
+
 <head>
-	<meta charset="utf-8">
-	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-	<title>Alien Reference - Companion for Cosmic Encounter</title>
-	<meta name="description" content="Reference page for aliens in Cosmic Encounter">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-
-	<!-- icon in the highest resolution we need it for -->
-	<link rel="shortcut icon" type="image/png" href="favicon.png" />
-	<!-- reuse same icon for Safari -->
-	<link rel="apple-touch-icon" href="icons/icon.png" />
-	<!-- multiple icons for IE -->
-
-	<meta name="msapplication-TileColor" content="#37387F" />
-	<meta name="msapplication-TileImage" content="icons/144.png" />
-
-	<meta name="application-name" content="Alien Reference - Companion for Cosmic Encounter" />
-	<meta name="apple-mobile-web-app-title" content="Cosmic Aliens" />
-
-	<link rel="stylesheet" type="text/css" href="css/angular-material.min.css" />
-	<link rel="stylesheet" type="text/css" href="css/cosmic-aliens.min.css" />
-	<style>
-		.hidden {
-			display: none;
-		}
-	</style>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Alien Reference - Cosmic Companion</title>
+  <meta name="description" content="Reference page for aliens in Cosmic Encounter">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- icon in the highest resolution we need it for -->
+  <link rel="shortcut icon" type="image/png" href="favicon.png" />
+  <!-- reuse same icon for Safari -->
+  <link rel="apple-touch-icon" href="icons/icon.png" />
+  <!-- multiple icons for IE -->
+  <meta name="msapplication-TileColor" content="#7071B5" />
+  <meta name="msapplication-TileImage" content="icons/144.png" />
+  <meta name="application-name" content="Alien Reference - Companion for Cosmic Encounter" />
+  <meta name="apple-mobile-web-app-title" content="Cosmic Aliens" />
+  <link rel="stylesheet" type="text/css" href="https://ajax.googleapis.com/ajax/libs/angular_material/1.0.9/angular-material.min.css"
+  />
+  <link rel="stylesheet" type="text/css" href="dist/styles.css" />
 </head>
-<body ng-controller="AlienReferenceController as Reference">
-	<section layout="row" flex ng-controller="NavDrawer">
-		<md-sidenav class="md-sidenav-left md-whiteframe-z2" md-component-id="left">
-			<md-toolbar class="md-tall">
-			</md-toolbar>
-			<md-content layout-padding layout="column" layout-align="start start">
-				<md-button href="index.html" md-list-item>Home</md-button>
-				<md-divider></md-divider>
-				<md-button href="generator.html">Alien Generator</md-button>
-				<md-button href="reference.html" ng-disabled="true">Alien Reference</md-button>
-				<md-button href="https://play.google.com/store/apps/details?id=net.fmorel.cosmicgenerator"><img src="icons/playstore_badge.png" /></md-button>
-			</md-content>
-		</md-sidenav>
-		<md-content>
-			<md-toolbar class="md-hue-2">
-				<div class="md-toolbar-tools">
-					<md-button class="md-icon-button" ng-click="open()" aria-label="Settings">
-						<ng-md-icon icon="menu" style="fill:#fff;"></ng-md-icon>
-					</md-button>
-					<h2>Alien Reference</h2>
-				</div>
-			</md-toolbar>
-			<h2 layout-padding>Settings</h2>
-			<md-content layout="row" layout-sm="column" layout-wrap>
-				<md-card md-theme="levels" flex>
-					<md-card-content>
-						<h4>Levels to include</h4>
-						<md-checkbox ng-change="Reference.change('complexities')" ng-model="complexities[level]" ng-repeat="(level, name) in ::['Green','Yellow','Red']" ng-class="'md-primary md-hue-'+(level+1)">{{::name}}</md-checkbox>
-					</md-card-content>
-				</md-card>
-				<md-card flex>
-					<md-card-content>
-						<h4>Games to include</h4>
-						<md-checkbox ng-change="Reference.change('game')" ng-model="games[game]" ng-repeat="game in ::['E', 'A', 'C', 'D', 'I', 'S']" class="md-primary">{{::game | gameName}}</md-checkbox>
-					</md-card-content>
-				</md-card>
-				<md-card flex>
-					<md-card-content>
-						<h4>Sort by</h4>
 
-					</md-card-content>
-				</md-card>
-			</md-content>
-
-			<div ng-repeat="gameGroup in alienGroups">
-				<h3 layout-padding>{{::gameGroup.value | gameName}}</h3>
-				<div ng-repeat="levelGroup in ::gameGroup.items">
-					<h4 layout-padding>{{::levelGroup.value | levelStars}}</h4>
-					<md-content layout="row" layout-sm="column" layout-wrap>
-						<alien-panel ng-repeat="alien in ::levelGroup.items | orderBy:orderPref" alien="::alien" flex flex-md="50" flex-lg="33" flex-gt-lg="25"></alien-panel>
-					</md-content>
-				</div>
-			</div>
-		</md-content>
-	</section>
-	<script src="js/angular.min.js"></script>
-	<script src="js/angular-aria.min.js"></script>
-	<script src="js/angular-animate.min.js"></script>
-	<script src="js/angular-material.min.js"></script>
-	<script src="js/ng-storage.min.js"></script>
-	<script src="js/material-icons.min.js"></script>
-	<script src="js/cosmic.min.js"></script>
-	<script src="js/cosmic-aliens.min.js"></script>
-	<script src="js/reference-app.min.js"></script>
+<body>
+  <noscript>
+    This page requires JavaScript to run.
+  </noscript>
+  <div ng-controller="NavDrawer as Drawer">
+    <cosmic-drawer page="'reference'"></cosmic-drawer>
+    <md-content ng-controller="AlienReference as Reference">
+      <cosmic-toolbar title="'Alien Reference'" drawer="Drawer"></cosmic-toolbar>
+      <md-content layout="row" layout-wrap>
+        <md-card flex="grow" flex-gt-xs="30">
+          <alien-level-options save="Reference.change" options="Reference.complexities"></alien-level-options>
+        </md-card>
+        <md-card flex="grow" flex-gt-xs="30">
+          <alien-game-options save="Reference.change" options="Reference.games"></alien-game-options>
+        </md-card>
+        <md-card flex="grow" flex-gt-xs="30">
+          <md-card-content>
+            <h4 class="md-title">Sort by</h4>
+            <ol>
+              <li>Game</li>
+              <li>Level</li>
+              <li>Name</li>
+            </ol>
+            <h4 class="md-title">Group by</h4>
+            <ol>
+              <li>Game</li>
+              <li>Level</li>
+            </ol>
+          </md-card-content>
+        </md-card>
+      </md-content>
+      <div ng-repeat="gameGroup in Reference.alienGroups">
+        <div ng-repeat="levelGroup in ::gameGroup.items">
+          <h3 layout-padding>{{::gameGroup.value | gameName}} - {{::levelGroup.value| levelName}} {{::levelGroup.value | levelStars}}</h3>
+          <md-content layout="row" layout-wrap>
+            <alien-panel ng-repeat="alien in ::levelGroup.items track by alien.name | orderBy:Reference.orderPref" data-item="::alien"
+              flex="grow" flex-gt-xs="50" flex-lg="33" flex-gt-lg="25"></alien-panel>
+          </md-content>
+        </div>
+      </div>
+    </md-content>
+  </div>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.7/angular.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.7/angular-aria.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.7/angular-animate.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/angular_material/1.0.9/angular-material.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-material-icons/0.7.1/angular-material-icons.min.js"></script>
+  <script src="dist/index.js"></script>
+  <script>
+    angular.bootstrap(document, ['aliens.reference'], { 'strictDi': true });
+  </script>
 </body>
+
 </html>

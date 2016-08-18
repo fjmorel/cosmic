@@ -1,135 +1,107 @@
 ﻿<!DOCTYPE html>
-<html lang="en" ng-app="GameGeneratorApp" ng-strict-di>
+<html lang="en">
+
 <head>
-	<meta charset="utf-8">
-	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-	<title>Alien Generator - Companion for Cosmic Encounter</title>
-	<meta name="description" content="Randomly assign aliens in Cosmic Encounter">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-
-	<!-- icon in the highest resolution we need it for -->
-	<link rel="shortcut icon" type="image/png" href="favicon.png" />
-	<!-- reuse same icon for Safari -->
-	<link rel="apple-touch-icon" href="icons/icon.png" />
-	<!-- multiple icons for IE -->
-
-	<meta name="msapplication-TileColor" content="#37387F" />
-	<meta name="msapplication-TileImage" content="icons/144.png" />
-
-	<meta name="application-name" content="Cosmic Generator" />
-	<meta name="apple-mobile-web-app-title" content="Cosmic" />
-
-	<link rel="stylesheet" type="text/css" href="css/angular-material.min.css" />
-	<link rel="stylesheet" type="text/css" href="css/cosmic-aliens.min.css" />
-	<style>
-		.hidden {
-			display: none;
-		}
-	</style>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Alien Generator - Cosmic Companion</title>
+  <meta name="description" content="Randomly assign aliens in Cosmic Encounter">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- icon in the highest resolution we need it for -->
+  <link rel="shortcut icon" type="image/png" href="favicon.png" />
+  <!-- reuse same icon for Safari -->
+  <link rel="apple-touch-icon" href="icons/icon.png" />
+  <!-- multiple icons for IE -->
+  <meta name="msapplication-TileColor" content="#7071B5" />
+  <meta name="msapplication-TileImage" content="icons/144.png" />
+  <meta name="application-name" content="Cosmic Generator" />
+  <meta name="apple-mobile-web-app-title" content="Cosmic" />
+  <link rel="stylesheet" type="text/css" href="https://ajax.googleapis.com/ajax/libs/angular_material/1.0.9/angular-material.min.css"
+  />
+  <link rel="stylesheet" type="text/css" href="dist/styles.css" />
 </head>
-<body ng-controller="GeneratorCtrl as ctrl">
-	<section layout="row" flex ng-controller="NavDrawer">
-		<md-sidenav class="md-sidenav-left md-whiteframe-z2" md-component-id="left">
-			<md-toolbar class="md-tall">
-			</md-toolbar>
-			<md-content layout-padding layout="column" layout-align="start start">
-				<md-button href="index.html" md-list-item>Home</md-button>
-				<md-divider></md-divider>
-				<md-button href="generator.html" ng-disabled="true">Alien Generator</md-button>
-				<md-button href="reference.html">Alien Reference</md-button>
-				<md-button href="https://play.google.com/store/apps/details?id=net.fmorel.cosmicgenerator"><img src="icons/playstore_badge.png" /></md-button>
-			</md-content>
-		</md-sidenav>
-		<md-content>
-			<md-toolbar class="md-hue-2">
-				<div class="md-toolbar-tools">
-					<md-button class="md-icon-button" ng-click="open()" aria-label="Settings">
-						<ng-md-icon icon="menu" style="fill:#fff;"></ng-md-icon>
-					</md-button>
-					<h2>Alien Generator</h2>
-				</div>
-			</md-toolbar>
-			<h2 layout-padding>Settings</h2>
-			<md-content layout="row" layout-sm="column" layout-wrap>
-				<div flex-sm="100" flex-md="50" flex-lg="25" flex-gt-lg="20">
-					<md-card md-theme="levels">
-						<md-card-content>
-							<h4>Levels to include</h4>
-							<md-checkbox ng-change="ctrl.saveSetting('complexities')" ng-model="complexities[level]" ng-repeat="(level, name) in ::['Green','Yellow','Red']" ng-class="'md-primary md-hue-'+(level+1)">{{::name}}</md-checkbox>
-						</md-card-content>
-					</md-card>
-				</div>
-				<div flex-sm="100" flex-md="50" flex-lg="25" flex-gt-lg="20">
-					<md-card>
-						<md-card-content>
-							<h4>Games to include</h4>
-							<md-checkbox ng-change="ctrl.saveSetting('game')" ng-model="settings.games[game]" ng-repeat="game in ::['E', 'A', 'C', 'D', 'I', 'S']" class="md-primary">{{::game | gameName}}</md-checkbox>
-						</md-card-content>
-					</md-card>
-				</div>
-				<div flex-sm="100" flex-md="50" flex-lg="25" flex-gt-lg="20">
-					<md-card>
-						<md-card-content>
-							<h4>Game setup</h4>
-							<md-radio-group ng-model="setupLevel" ng-change="ctrl.saveSetting('setupLevel')">
-								<md-radio-button value="none" class="md-primary">Remove none</md-radio-button>
-								<md-radio-button value="color" class="md-primary">Remove those requiring extra color</md-radio-button>
-								<md-radio-button value="all" class="md-primary">Remove all</md-radio-button>
-							</md-radio-group>
-						</md-card-content>
-					</md-card>
-				</div>
-				<div flex-sm="100" flex-md="50" flex-lg="25" flex-gt-lg="20">
-					<md-card>
-						<md-card-content>
-							<h4>Exclude by name</h4>
-							<md-select multiple ng-model="excluded" ng-change="ctrl.onExcludeChange()">
-								<md-select-label>{{namesExcluded.length? namesExcluded.length + ' removed' : 'Select names'}}</md-select-label>
-								<md-option ng-value="::alien" ng-repeat="alien in aliensAll">
-									{{::alien.name}}
-								</md-option>
-							</md-select>
-						</md-card-content>
-					</md-card>
-				</div>
-				<div flex>
-					<md-card>
-						<md-card-content>
-							<h4>How to choose</h4>
-							<md-input-container>
-								<label>Choices per player</label>
-								<input type="number" step="1" ng-model="settings.numToChoose" min="1" ng-change="ctrl.restrictNumToChoose()">
-							</md-input-container>
-							<md-checkbox class="md-primary" ng-model="settings.preventConflicts">Prevent conflicts (like Oracle vs. Magician)</md-checkbox>
-						</md-card-content>
-					</md-card>
-				</div>
-			</md-content>
-			<md-content layout-padding layout="column">
-				<h2>Generator</h2>
-				<div>
-					<md-button class="md-primary md-raised" ng-click="ctrl.pickAliens()" ng-disabled="numLeft() < settings.numToChoose">Draw</md-button>
-					<md-button class="md-accent md-raised" ng-click="ctrl.hide()" ng-class="{hidden:numCurrent() > 0 && aliensToShow.length <= 0}" ng-disabled="aliensToShow.length <= 0">Hide</md-button>
-					<md-button class="md-accent md-raised" ng-click="ctrl.show()" ng-class="{hidden:!(numCurrent() > 0 && aliensToShow.length <= 0)}" ng-disabled="numCurrent() <= 0">Show</md-button>
-					<md-button class="md-accent md-raised" ng-click="ctrl.redo();" ng-disabled="numCurrent() <= 0 || aliensToShow.length <= 0">Redo</md-button>
-					<md-button layout-align="end center" class="md-warn md-raised" id="reset" ng-click="ctrl.reset()" ng-disabled="numCurrent() <= 0 && numGiven() <= 0">Reset</md-button>
-				</div>
-				<p>{{numOut()}} of {{numOut()+numLeft()}} drawn. {{ctrl.state}}</p>
-			</md-content>
 
-			<md-content layout="row" layout-sm="column" layout-wrap>
-				<alien-panel ng-repeat="alien in aliensToShow | orderBy:'name'" alien="alien" flex flex-md="50" flex-lg="33" flex-gt-lg="25"></alien-panel>
-			</md-content>
-		</md-content>
-	</section>
-	<script src="js/angular.min.js"></script>
-	<script src="js/angular-aria.min.js"></script>
-	<script src="js/angular-animate.min.js"></script>
-	<script src="js/angular-material.min.js"></script>
-	<script src="js/ng-storage.min.js"></script>
-	<script src="js/material-icons.min.js"></script>
-	<script src="js/cosmic.min.js"></script>
-	<script src="js/cosmic-aliens.min.js"></script>
-	<script src="js/generator-app.min.js"></script>
+<body>
+  <noscript>
+    This page requires JavaScript to run.
+  </noscript>
+  <div ng-controller="NavDrawer as Drawer">
+    <cosmic-drawer page="'generator'"></cosmic-drawer>
+    <md-content ng-controller="AlienGenerator as Generator">
+      <!-- Header -->
+      <cosmic-toolbar title="'Alien Generator'" drawer="Drawer"></cosmic-toolbar>
+      <!-- Settings -->
+      <md-content layout="row" layout-wrap>
+        <md-card flex="100" flex-gt-xs="45" flex-md="30" flex-lg="10" flex-gt-lg="15">
+          <alien-level-options save="Generator.change" options="Generator.settings.complexities"></alien-level-options>
+        </md-card>
+        <md-card flex="100" flex-gt-xs="45" flex-md="30" flex-lg="15" flex-gt-lg="15">
+          <alien-game-options save="Generator.change" options="Generator.settings.games"></alien-game-options>
+        </md-card>
+        <md-card flex="100" flex-gt-xs="45" flex-md="30" flex-lg="20" flex-gt-lg="15">
+          <md-card-content>
+            <h4 class="md-title">Game setup</h4>
+            <md-radio-group ng-model="Generator.settings.setupLevel" ng-change="Generator.change()">
+              <md-radio-button value="none" class="md-primary">Remove none</md-radio-button>
+              <md-radio-button value="color" class="md-primary">Remove those requiring extra color</md-radio-button>
+              <md-radio-button value="all" class="md-primary">Remove all</md-radio-button>
+            </md-radio-group>
+          </md-card-content>
+        </md-card>
+        <md-card flex="100" flex-gt-xs="45" flex-lg="20" flex-gt-lg="15">
+          <md-card-content>
+            <h4 class="md-title">Exclude by name</h4>
+            <md-select multiple ng-model="Generator.settings.namesExcluded" ng-change="Generator.change()" placeholder="Select names">
+              <md-option ng-value="::name" ng-repeat="name in Generator.namesAll">{{::name}}</md-option>
+            </md-select>
+          </md-card-content>
+        </md-card>
+        <md-card flex="100" flex-gt-xs="45" flex-lg="25" flex-gt-lg="15">
+          <md-card-content>
+            <h4 class="md-title">How to choose</h4>
+            <md-input-container>
+              <label>Choices per player</label>
+              <input type="number" step="1" ng-model="Generator.settings.numToChoose" min="1" ng-change="Generator.restrictNumToChoose()">
+            </md-input-container>
+            <div>
+              <md-checkbox class="md-primary" ng-model="Generator.settings.preventConflicts">Prevent conflicts (like Oracle vs. Magician)</md-checkbox>
+            </div>
+          </md-card-content>
+        </md-card>
+      </md-content>
+      <!-- Actions -->
+      <md-toolbar class="" layout-wrap>
+        <div id="generator-actions" layout-wrap class="padded-action">
+          <md-button class="md-raised" ng-click="Generator.draw()" ng-disabled="Generator.disabled.draw">Draw</md-button>
+          <md-button class="md-accent md-raised" ng-click="Generator.hide()" ng-disabled="Generator.disabled.hide">
+            <ng-md-icon icon="visibility_off"></ng-md-icon> Hide</md-button>
+          <span flex></span>
+          <md-button class="md-accent md-raised" ng-click="Generator.show()" ng-disabled="Generator.disabled.show">
+            <ng-md-icon icon="visibility"></ng-md-icon> Show</md-button>
+          <md-button class="md-accent md-raised" ng-click="Generator.redo();" ng-disabled="Generator.disabled.redo">
+            <ng-md-icon icon="history"></ng-md-icon> Redo</md-button>
+          <md-button class="md-warn-theme md-primary md-raised" ng-click="Generator.reset()" ng-disabled="Generator.disabled.reset">
+            <ng-md-icon icon="replay"></ng-md-icon> Reset</md-button>
+        </div>
+      </md-toolbar>
+      <!-- State -->
+      <md-content layout-padding>{{Generator.status}} {{Generator.state}}</md-content>
+      <md-content layout="row" layout-wrap>
+        <alien-panel ng-repeat="alien in Generator.aliensToShow track by alien.name | orderBy:'name'" item="::alien" flex="100" flex-gt-xs="50"
+          flex-lg="33" flex-gt-lg="25"></alien-panel>
+      </md-content>
+
+    </md-content>
+  </div>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.7/angular.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.7/angular-aria.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.7/angular-animate.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/angular_material/1.0.9/angular-material.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-material-icons/0.7.1/angular-material-icons.min.js"></script>
+  <script src="dist/index.js"></script>
+  <script>
+    angular.bootstrap(document, ['aliens.generator'], { 'strictDi': true });
+  </script>
 </body>
+
 </html>

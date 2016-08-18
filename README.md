@@ -4,7 +4,7 @@ A utility to make picking aliens in Cosmic Encounter games easier. Can be found 
 
 ## Actions
 
-### Pick
+### Draw
 
 Will give out a number of choices based on the "# per player" option until it runs out.
 
@@ -27,3 +27,25 @@ That means the alien has Game Setup or conflicts with another alien. For details
 
 ###So much purple!
 I really like purple.
+
+##Credits
+	The copyrightable portions of Cosmic Encounter are © 2008 Fantasy Flight Publishing, Inc.
+	Cosmic Encounter is a registered trademark of Eon Products, Inc.
+
+##License
+	Copyright 2015 Frederic Morel
+
+    This file is part of Cosmic Companion.
+
+    Cosmic Companion is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Cosmic Companion is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Cosmic Companion.  If not, see <http://www.gnu.org/licenses/>.
