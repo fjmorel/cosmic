@@ -1,3 +1,5 @@
+export let Bindings = { title: "<", drawer: "<" };
+
 export let template = `
 <md-toolbar class ="md-hue-2">
   <div class ="md-toolbar-tools">

@@ -1,10 +1,11 @@
-/// <reference path="../../typings/project.d.ts" />
 export class Controller {
   open: () => void;
   constructor($mdSidenav: ng.material.ISidenavService) {
     this.open = function () { $mdSidenav("left").open(); };
   }
 }
+
+export let Bindings = { page: "<" };
 
 export let template = `
 <md-sidenav md-whiteframe="2" class ="md-sidenav-left" md-component-id="left">

@@ -1,0 +1,27 @@
+{
+	"compilerOptions": {
+    "allowJs": false,
+    "lib": [
+      "dom",
+      "es5",
+      "scripthost",
+      "es2015.promise"
+    ],
+    "noImplicitAny": true,
+    "noImplicitReturns": true,
+    "noImplicitThis": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUnusedLocals": true,
+    "pretty": true,
+    "removeComments": false,
+    "sourceMap": false,
+    "strictNullChecks": true,
+    "target": "es5"
+	},
+	"files": [
+		"./src/js/app.ts"
+	],
+	"exclude": [
+		"node_modules"
+	]
+}

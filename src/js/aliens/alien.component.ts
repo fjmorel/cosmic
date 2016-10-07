@@ -1,5 +1,4 @@
-/// <reference path="../../../typings/project.d.ts" />
-//Turn alien object into a panel with its information
+// turn alien object into a panel with its information
 export class Controller {
 	alien: Alien;
 	constructor($sce: ng.ISCEService) {
@@ -9,7 +8,9 @@ export class Controller {
 	}
 }
 
-//TODO: Add extra information (and update JSON file)
+export let Bindings = { alien: "<item" };
+
+// todo: Add extra information (and update JSON file)
 export let template = `
 <md-card>
 <md-card-content class ="alien-head">

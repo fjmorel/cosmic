@@ -1,9 +1,17 @@
-/// <reference path="tsd.d.ts" />
-interface Map<T> {
+/// <reference types="angular" />
+/// <reference types="angular-material" />
+/// <reference types="ngstorage" />
+/// <reference types="google.analytics" />
+
+declare var angular: angular.IAngularStatic;
+
+interface IMap<T> {
   [key: string]: T
 }
 
-interface GameNameFilter { (initial: string): string }
+type GameInitial = "E" | "A" | "C" | "D" | "I" | "S";
+
+interface GameNameFilter { (initial: GameInitial): string }
 interface LevelFilter { (lvl: number): string }
 
 interface GroupedItems {
@@ -54,5 +62,5 @@ interface IAlienService {
 	 * @param setup Which level of game setup to exclude from results 
 	 * @return Names of matching aliens
 	 */
-  getMatchingNames(levels: boolean[], games: Map<boolean>, exclude?: string[], setup?: string): string[]
+  getMatchingNames(levels: boolean[], games: IMap<boolean>, exclude?: string[], setup?: string): string[]
 }

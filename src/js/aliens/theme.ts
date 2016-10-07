@@ -1,5 +1,4 @@
-/// <reference path="../../../typings/project.d.ts" />
-//Themes for alien-related items
+// themes for alien-related items
 export default function Theme(ThemeProvider: ng.material.IThemingProvider) {
 	function createPalette(index: number, name: string, base: string, main: string): void {
 		ThemeProvider.definePalette(name, ThemeProvider.extendPalette(base, {

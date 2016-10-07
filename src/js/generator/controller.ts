@@ -1,11 +1,8 @@
-﻿/// <reference path="../../../typings/project.d.ts" />
-import * as Generator from "./generator.service";
-
-export { Service } from "./generator.service";
+﻿import { IAllowedActions, IStatus, Service } from "./service";
 
 interface IStorage extends ng.storage.IStorageService {
   complexities: boolean[];
-  games: Map<boolean>;
+  games: IMap<boolean>;
   namesExcluded: string[];
   setupLevel: string;
   numToChoose: number;
@@ -19,13 +16,13 @@ export class Controller {
   settings: IStorage;
   namesAll: string[];
 
-  //Output
-  status = "0 of 0 drawn.";
+  // output
+  status = "0 of 0 drawn. 0 redos.";
   state = "Loading aliens...";
   aliensToShow: Alien[] = [];
-  disabled: Generator.IAllowedActions = { draw: true, hide: true, show: true, redo: true, reset: true };
+  disabled: IAllowedActions = { draw: true, hide: true, show: true, redo: true, reset: true };
 
-  //Actions
+  // actions
   draw: () => void;
   hide: () => void;
   show: () => void;
@@ -34,8 +31,9 @@ export class Controller {
   restrictNumToChoose: () => void;
   change: () => void;
 
-  constructor($localStorage: IStorage, Generator: Generator.Service) {
+  constructor($localStorage: IStorage, Aliens: IAlienService) {
     let ctrl = this;
+    let Generator = new Service(Aliens);
 
     $localStorage.$default({
       complexities: [true, true, true],
@@ -47,7 +45,7 @@ export class Controller {
     });
     ctrl.settings = $localStorage;
 
-    function setState(newState: Generator.IStatus): void {
+    function setState(newState: IStatus): void {
       if (!newState) return;
       ctrl.state = newState.message;
       ctrl.aliensToShow = newState.aliens;
@@ -77,7 +75,7 @@ export class Controller {
       }
     };
 
-    //Keep choose # within 1 and max. Run when resetting alien list (# might have changed) and changing # to pick
+    // keep choose # within 1 and max. Run when resetting alien list (# might have changed) and changing # to pick
     ctrl.restrictNumToChoose = function (): void {
       ctrl.settings.numToChoose = Generator.getChooseLimit(ctrl.settings.numToChoose);
     };
@@ -87,7 +85,7 @@ export class Controller {
     ctrl.show = () => setState(Generator.show());
     ctrl.redo = () => setState(Generator.redo(ctrl.settings.numToChoose, ctrl.settings.preventConflicts));
 
-    //Init generator
+    // init generator
     Generator.init.then(function (names: string[]): void {
       ctrl.namesAll = names;
     }).then(resetGenerator);

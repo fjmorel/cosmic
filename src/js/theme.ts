@@ -1,5 +1,4 @@
-/// <reference path="../../typings/project.d.ts" />
-//Cosmic Theme
+// cosmic theme
 export default function Theme(ThemeProvider: ng.material.IThemingProvider) {
 	ThemeProvider.definePalette("cosmic-warn", ThemeProvider.extendPalette("red", {
 		"500": "c31b09",

@@ -1,3 +1,5 @@
+export let Bindings = { options: "=", save: "=" };
+
 export let Games = `
 <md-card-content>
 <h4 class ="md-title">Games to include</h4>
