@@ -23,9 +23,6 @@ const pageModuleDependencies = ["base", "aliens", "ngStorage", "ngAria", "ngMate
 angular.module("base", ["ngMaterial", "ngMdIcons"])
   .config(["$mdThemingProvider", BaseTheme])
 
-  .value("gameInitials", Filters.GameInitials)
-  .filter("gameName", Filters.InitialToGameName)
-
   .component("cosmicDrawer", {
     template: Drawer.template,
     bindings: Drawer.Bindings

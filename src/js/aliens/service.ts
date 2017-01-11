@@ -8,7 +8,7 @@ export default class Service implements IAlienService {
 			aliens: IMap<Alien> = {},
 			alien_names: string[] = [];
 
-		service.init = $http.get("data/aliens.json").then(function (result): string[] {
+		service.init = $http.get("data/aliens2.json").then(function (result): string[] {
 		(result.data as AlienJson).list.forEach(function (alien) {
 				aliens[alien.name] = alien;
 				alien_names.push(alien.name);

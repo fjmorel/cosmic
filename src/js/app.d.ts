@@ -6,38 +6,37 @@
 declare var angular: angular.IAngularStatic;
 
 interface IMap<T> {
-  [key: string]: T
+	[key: string]: T
 }
 
-type GameInitial = "E" | "A" | "C" | "D" | "I" | "S";
+type Games = "Encounter" | "Alliance" | "Conflict" | "Dominion" | "Incursion" | "Storm" | "Eons";
 
-interface GameNameFilter { (initial: GameInitial): string }
 interface LevelFilter { (lvl: number): string }
 
 interface GroupedItems {
-  value: string,
-  items: Object[]
+	value: string,
+	items: Object[]
 }
 interface GroupByFilter {
 	(list: Object[], fields: string[]): GroupedItems[]
 }
 
 interface Alien {
-  name: string,
-  game: string,
-  power: string,
-  level: number,
-  description: string,
-  setup: string,
+	name: string,
+	game: string,
+	power: string,
+	level: number,
+	description: string,
+	setup: string,
 
-  restriction?: string,
-  player?: string,
-  mandatory?: string,
-  phases?: string
+	restriction?: string,
+	player?: string,
+	mandatory?: string,
+	phases?: string
 }
 
 interface AlienJson extends ng.IHttpPromiseCallbackArg<{}> {
-  list: Alien[]
+	list: Alien[]
 }
 
 /**
@@ -48,12 +47,12 @@ interface IAlienService {
 	 * The .init() method is used to download the Alien data to enable the other methods afterwards.
 	 * @return Promise in order to run any callbacks after data has loaded.
 	 */
-  init: ng.IHttpPromise<string[]>,
+	init: ng.IHttpPromise<string[]>,
 	/**
 	 * The .get() method is used to get information about an alien by its name.
 	 * @return Information about alien
 	 */
-  get(name: string): Alien,
+	get(name: string): Alien,
 	/**
 	 * The .getMatchingNames() method is used to get the names of aliens that match given filters
 	 * @param levels Array of booleans for Green, Yellow, and Red levels.
@@ -62,5 +61,5 @@ interface IAlienService {
 	 * @param setup Which level of game setup to exclude from results 
 	 * @return Names of matching aliens
 	 */
-  getMatchingNames(levels: boolean[], games: IMap<boolean>, exclude?: string[], setup?: string): string[]
+	getMatchingNames(levels: boolean[], games: IMap<boolean>, exclude?: string[], setup?: string): string[]
 }

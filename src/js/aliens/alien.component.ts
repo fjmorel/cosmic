@@ -23,7 +23,7 @@ export let template = `
 	<p class ="md-subhead clear">{{::$ctrl.alien.power}}</p>
 </md-card-content>
 <md-card-footer class ="alien-bar alien-bg-{{::$ctrl.alien.level}}">
-	<span class ="alien-panel-game">C{{::$ctrl.alien.game}}</span>
+	<span class ="alien-panel-game">{{::$ctrl.alien.game}}</span>
 	<span class ="alien-panel-level">{{::$ctrl.alien.level | levelStars}}</span>
 	<span ng-if="::($ctrl.alien.setup || $ctrl.alien.restriction)">⚠</span>
 	<span class ="clear"></span>

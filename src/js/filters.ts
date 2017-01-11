@@ -1,9 +1,4 @@
 /**
- * Game initials
- */
-export let GameInitials: GameInitial[] = ["E", "A", "C", "D", "I", "S"];
-
-/**
  * Group objects by given array of fields
  */
 export let groupBy = (function () {
@@ -36,21 +31,6 @@ export let groupBy = (function () {
 	 */
 	return (list: Object[], fields: string[]) => groupItems(list, fields, 0);
 })();
-
-/**
- * Turn game initial into game name
- */
-export function InitialToGameName(): GameNameFilter {
-	let games: IMap<String> = {
-		E: "Encounter",
-		A: "Alliance",
-		C: "Conflict",
-		D: "Dominion",
-		I: "Incursion",
-		S: "Storm"
-	};
-	return initial => ("Cosmic " + games[initial]);
-}
 
 /**
  * Turn alien level into Bootstrap class name for colors
