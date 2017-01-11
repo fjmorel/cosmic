@@ -1,5 +1,8 @@
 ///<reference path="./app.d.ts" />
 
+import '../../node_modules/ngstorage/ngStorage.min.js';
+import '../css/cosmic.less';
+
 import BaseTheme from "./theme";
 import * as Drawer from "./nav.drawer";
 import * as Toolbar from "./nav.toolbar";

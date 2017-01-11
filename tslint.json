@@ -1,0 +1,55 @@
+{
+	"extends": "tslint:latest",
+	"rules": {
+		"eofline": false,
+		"indent": [
+			true,
+			"tabs"
+		],
+		"max-line-length": [
+			false
+		],
+		"no-any": true,
+		"no-default-export": true,
+		"no-reference": false,
+		"no-string-literal": false,
+		"object-literal-shorthand": false,
+		"one-line": [
+			true,
+			"check-catch",
+			"check-else",
+			"check-finally",
+			"check-open-brace",
+			"check-whitespace"
+		],
+		"only-arrow-functions": [
+			false
+		],
+		"object-literal-sort-keys": false,
+		"ordered-imports": [
+			false
+		],
+		"trailing-comma": [
+			false
+		],
+		"whitespace": [
+			false
+		],
+		"variable-name": [
+			false
+		],
+		"array-type": [
+			"array"
+		],
+		"arrow-parens": false
+	},
+	"jsRules": {
+		"object-literal-sort-keys": false,
+		"trailing-comma": [
+			false
+		],
+		"whitespace": [
+			false
+		]
+	}
+}
