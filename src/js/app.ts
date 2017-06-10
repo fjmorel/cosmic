@@ -6,7 +6,6 @@ import "../css/cosmic.less";
 import * as BaseTheme from "./theme";
 import * as Drawer from "./nav.drawer";
 import * as Toolbar from "./nav.toolbar";
-import * as Filters from "./filters";
 
 import * as AlienService from "./aliens/service";
 import * as AlienTheme from "./aliens/theme";
@@ -17,8 +16,6 @@ import * as OptionTemplates from "./aliens/options";
 
 // todo: testing
 // todo: use sessionstorage for current state (current, given, pool, etc)
-
-const pageModuleDependencies = ["base", "aliens", "ngStorage"];
 
 angular.module("base", ["ngMaterial", "ngMdIcons"])
 	.config(["$compileProvider", function($compileProvider: ng.ICompileProvider) {
@@ -45,9 +42,14 @@ angular.module("aliens", ["ngMaterial"])
 	.service("alienData", ["$http", AlienService.Service])
 	.config(["$mdThemingProvider", AlienTheme.Theme])
 
-	.filter("levelClass", Filters.LevelToClass)
-	.filter("levelStars", Filters.LevelToStars)
-	.filter("levelName", Filters.LevelToName)
+	.filter("levelStars", function(): LevelFilter {
+		const stars = ["★", "★★", "★★★"];
+		return lvl => stars[lvl];
+	})
+	.filter("levelName", function(): LevelFilter {
+		const names = ["Green", "Yellow", "Red"];
+		return lvl => names[lvl];
+	})
 
 	.component("alienPanel", {
 		bindings: AlienPanel.Bindings,
@@ -57,17 +59,13 @@ angular.module("aliens", ["ngMaterial"])
 	.component("alienLevelOptions", { bindings: OptionTemplates.Bindings, template: OptionTemplates.Levels })
 	.component("alienGameOptions", { bindings: OptionTemplates.Bindings, template: OptionTemplates.Games });
 
-angular.module("aliens.generator", pageModuleDependencies)
-	.config(generateModuleConfig("alien-gen-"))
-	.controller("AlienGenerator", ["$localStorage", "alienData", Generator.Controller]);
+generateModule("aliens.generator", Generator.Controller, "AlienGenerator", "alien-gen-");
+generateModule("aliens.reference", Reference.Controller, "AlienReference", "alien-ref-");
 
-angular.module("aliens.reference", pageModuleDependencies)
-	.config(generateModuleConfig("alien-ref-"))
-	.controller("AlienReference", ["$localStorage", "alienData", Reference.Controller]);
-
-function generateModuleConfig(name: string) {
-	return ["$compileProvider", "$localStorageProvider", function(compiler: ng.ICompileProvider, storage: ng.storage.IStorageProvider) {
-		compiler.debugInfoEnabled(false);
-		storage.setKeyPrefix(name);
-	}];
+function generateModule(name: string, controller: ng.IControllerConstructor, controllerAs: string, storagePrefix: string) {
+	angular.module(name, ["base", "aliens", "ngStorage"])
+		.config(["$localStorageProvider", function(storage: ng.storage.IStorageProvider) {
+			storage.setKeyPrefix(storagePrefix);
+		}])
+		.controller(controllerAs, ["$localStorage", "alienData", controller]);
 }

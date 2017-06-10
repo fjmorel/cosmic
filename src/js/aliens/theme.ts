@@ -8,6 +8,6 @@ export function Theme(ThemeProvider: ng.material.IThemingProvider) {
 		ThemeProvider.theme("alien" + index).primaryPalette(name).accentPalette("deep-purple");
 	}
 	createPalette(0, "alien-green", "green", "189247");
-	createPalette(1, "alien-yellow", "deep-orange", "c39c07");
+	createPalette(1, "alien-yellow", "yellow", "c39c07");
 	createPalette(2, "alien-red", "red", "c31b09");
 }

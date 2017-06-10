@@ -33,7 +33,7 @@ I really like purple.
 	Cosmic Encounter is a registered trademark of Eon Products, Inc.
 
 ##License
-	Copyright 2015 Frederic Morel
+	Copyright 2017 Frederic Morel
 
     This file is part of Cosmic Companion.
 
