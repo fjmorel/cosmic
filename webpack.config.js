@@ -2,36 +2,54 @@
 
 const UglifyJs = require("webpack/lib/optimize/UglifyJsPlugin");
 const ExtractTextPlugin = require("extract-text-webpack-plugin");
+const extractStyle = new ExtractTextPlugin("styles.css");
+const path = require("path");
 
 module.exports = {
-    entry: {
-        "index": "./src/js/app.ts"
-    },
-    output: {
-        filename: "[name].js",
-        path: "./dist/",
-    },
-    resolve: {
-        extensions: ["", ".webpack.js", ".web.js", ".ts", ".tsx", ".js"]
-    },
-		externals: { angular: "angular" },
-    module: {
-        loaders: [
-            // Compile .ts and .tsx files
-            { test: /\.tsx?$/, loader: "ts?silent=true" },
-            // Extract css files
-            { test: /\.css$/, loader: ExtractTextPlugin.extract("style", "css") },
-            // Extract less files
-            { test: /\.less$/, loader: ExtractTextPlugin.extract("style", "css!less") },
-            // Compile angular templates
-            { test: /\.html$/, loader: "ng-cache?name=[name]&-preserveLineBreaks&-conservativeCollapse" }
-        ]
-    },
-    plugins: [
-        new UglifyJs({ compress: { warnings: false } }),//, sourceMap: false
-        new ExtractTextPlugin("styles.css"),// Write out CSS bundle to its own file
-    ],
+	entry: {
+		"index": "./src/js/app.ts"
+	},
+	output: {
+		filename: "[name].js",
+		path: path.join(__dirname, "dist/"),
+	},
+	resolve: {
+		extensions: [".ts", ".tsx", ".js"]
+	},
+	externals: { angular: "angular" },
+	module: {
+		rules: [
+			// Compile styles
+			{ test: /\.less$/i, loader: extractStyle.extract(["css-loader", "less-loader"]) },
+			// Compile .ts and .tsx files
+			{ test: /\.tsx?$/, use: [{ loader: "ts-loader", options: { silent: true } }] },
+			// Compile angular templates
+			{
+				test: /\.html$/,
+				use: [{
+					loader: "ng-cache-loader",
+					options: {
+						name: "[name]",
+						minimizeOptions: { preserveLineBreaks: false }
+					}
+				}]
+			}
+		]
+	},
+	plugins: [extractStyle],
 
-    // Pretty terminal output
-    stats: { colors: true }
+	// Pretty terminal output
+	stats: {
+		cached: false,
+		children: false,
+		chunks: false,
+		chunkModules: false,
+		chunkOrigins: false,
+		colors: true,
+		hash: false,
+		maxModules: 0,
+		modules: false,
+		reasons: false,
+		source: false
+	}
 };

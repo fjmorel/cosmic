@@ -1,5 +1,5 @@
 // themes for alien-related items
-export default function Theme(ThemeProvider: ng.material.IThemingProvider) {
+export function Theme(ThemeProvider: ng.material.IThemingProvider) {
 	function createPalette(index: number, name: string, base: string, main: string): void {
 		ThemeProvider.definePalette(name, ThemeProvider.extendPalette(base, {
 			500: main,

@@ -1,8 +1,8 @@
 export class Controller {
-  open: () => void;
-  constructor($mdSidenav: ng.material.ISidenavService) {
-    this.open = function () { $mdSidenav("left").open(); };
-  }
+	public open: () => void;
+	constructor($mdSidenav: ng.material.ISidenavService) {
+		this.open = function() { $mdSidenav("left").open(); };
+	}
 }
 
 export let Bindings = { page: "<" };
@@ -22,7 +22,7 @@ export let template = `
 			<md-list-item><md-button href="reference.html" ng-disabled="$ctrl.page === 'reference'">Alien Reference</md-button></md-list-item>
 			<md-list-item>
 				<a href="https://play.google.com/store/apps/details?id=net.fmorel.cosmicgenerator">
-					<img src="icons/playstore_badge.png" />
+				<img src="icons/playstore_badge.png" />
 				</a>
 			</md-list-item>
 		</md-list>

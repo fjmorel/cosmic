@@ -1,14 +1,14 @@
 // turn alien object into a panel with its information
 export class Controller {
-	$onInit: () => void;
-	alien: Alien;
+	public $onInit: () => void;
+	public alien: Alien;
 	constructor($sce: ng.ISCEService) {
 		this.$onInit = () => {
-			let alien = this.alien;
-			if (alien && typeof alien.description === "string") {
+			const alien = this.alien;
+			if(alien && typeof alien.description === "string") {
 				alien.description = $sce.trustAsHtml(alien.description);
 			}
-		}
+		};
 	}
 }
 

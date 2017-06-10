@@ -13,14 +13,7 @@ type Games = "Encounter" | "Alliance" | "Conflict" | "Dominion" | "Incursion" | 
 
 interface LevelFilter { (lvl: number): string }
 
-interface GroupedItems {
-	value: string,
-	items: Object[]
-}
-interface GroupByFilter {
-	(list: Object[], fields: string[]): GroupedItems[]
-}
-
+/** All details about an alien */
 interface Alien {
 	name: string,
 	game: string,
@@ -35,31 +28,70 @@ interface Alien {
 	phases?: string
 }
 
-interface AlienJson extends ng.IHttpPromiseCallbackArg<{}> {
-	list: Alien[]
+declare namespace Alien {
+	/**
+	 * The AlienService takes care of downloading data about aliens and enables lookups by name or information.
+	 */
+	interface Service {
+		/**
+		 * Promise that returns once data is fetched
+		 */
+		init: ng.IHttpPromise<string[]>,
+		/**
+		 * Get information about an alien by its name.
+		 * @return Information about alien
+		 */
+		get(name: string): Alien,
+		/**
+		 * Get the names of aliens that match given filters
+		 * @param levels Array of booleans for Green, Yellow, and Red levels.
+		 * @param games Booleans mapped by the initials of base game and expansions
+		 * @param exclude Array of alien names to exclude from results
+		 * @param setup Which level of game setup to exclude from results 
+		 * @return Names of matching aliens
+		 */
+		getMatchingNames(levels: boolean[], games: IMap<boolean>, exclude?: string[], setup?: string): string[]
+	}
+
+	/** JSON format of alien data file */
+	interface Data extends ng.IHttpPromiseCallbackArg<{}> {
+		list: Alien[]
+	}
 }
 
-/**
- * The AlienService takes care of downloading data about aliens and enables lookups by name or information.
- */
-interface IAlienService {
-	/**
-	 * The .init() method is used to download the Alien data to enable the other methods afterwards.
-	 * @return Promise in order to run any callbacks after data has loaded.
-	 */
-	init: ng.IHttpPromise<string[]>,
-	/**
-	 * The .get() method is used to get information about an alien by its name.
-	 * @return Information about alien
-	 */
-	get(name: string): Alien,
-	/**
-	 * The .getMatchingNames() method is used to get the names of aliens that match given filters
-	 * @param levels Array of booleans for Green, Yellow, and Red levels.
-	 * @param games Booleans mapped by the initials of base game and expansions
-	 * @param exclude Array of alien names to exclude from results
-	 * @param setup Which level of game setup to exclude from results 
-	 * @return Names of matching aliens
-	 */
-	getMatchingNames(levels: boolean[], games: IMap<boolean>, exclude?: string[], setup?: string): string[]
+declare namespace Generator {
+	interface Status {
+		aliens: Alien[];
+		message: string;
+		limit?: number;
+	}
+	interface AllowedActions {
+		draw: boolean;
+		hide: boolean;
+		show: boolean;
+		redo: boolean;
+		reset: boolean;
+	}
+	interface Settings extends ng.storage.IStorageService {
+		complexities: boolean[];
+		games: IMap<boolean>;
+		namesExcluded: string[];
+		setupLevel: string;
+		numToChoose: number;
+		preventConflicts: boolean;
+	}
+}
+
+declare namespace Reference {
+	interface Settings extends ng.storage.IStorageService {
+		complexities: boolean[];
+		games: IMap<boolean>;
+		orderPref: string[];
+		groupPref: string[];
+	}
+
+	interface GroupedItems {
+		value: string;
+		items: Alien[] | GroupedItems[];
+	}
 }
