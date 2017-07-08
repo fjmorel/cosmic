@@ -5,9 +5,9 @@ export class Controller {
 	}
 }
 
-export let Bindings = { page: "<" };
+export const Bindings = { page: "<" };
 
-export let template = `
+export const template = `
 <md-sidenav md-whiteframe="2" class ="md-sidenav-left" md-component-id="left">
 	<md-toolbar class ="md-tall">
 		<div class ="md-toolbar-tools">

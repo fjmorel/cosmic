@@ -1,6 +1,6 @@
-export let Bindings = { options: "=", save: "=" };
+export const Bindings = { options: "=", save: "=" };
 
-export let Games = `
+export const Games = `
 <md-card-content>
 	<h4 class ="md-title">Games to include</h4>
 	<md-checkbox ng-change="$ctrl.save()" ng-model="$ctrl.options[game]" ng-repeat="game in ::['Encounter','Alliance','Conflict','Dominion','Eons','Incursion','Storm']"
@@ -8,7 +8,7 @@ export let Games = `
 </md-card-content>
 `;
 
-export let Levels = `
+export const Levels = `
 <md-card-content>
 	<h4 class ="md-title">Levels to include</h4>
 	<md-checkbox ng-change="$ctrl.save()" ng-model="$ctrl.options[level]" ng-repeat="(level, name) in ::['Green','Yellow','Red']"

@@ -1,6 +1,7 @@
 // jshint esversion: 6
+// Compiling to ES6 depends on UglifyJS support (and being ok with dropping IE11)
 
-const UglifyJs = require("webpack/lib/optimize/UglifyJsPlugin");
+const webpack = require('webpack');
 const ExtractTextPlugin = require("extract-text-webpack-plugin");
 const extractStyle = new ExtractTextPlugin("styles.css");
 const path = require("path");
@@ -22,21 +23,10 @@ module.exports = {
 			// Compile styles
 			{ test: /\.less$/i, loader: extractStyle.extract(["css-loader", "less-loader"]) },
 			// Compile .ts and .tsx files
-			{ test: /\.tsx?$/, use: [{ loader: "ts-loader", options: { silent: true } }] },
-			// Compile angular templates
-			{
-				test: /\.html$/,
-				use: [{
-					loader: "ng-cache-loader",
-					options: {
-						name: "[name]",
-						minimizeOptions: { preserveLineBreaks: false }
-					}
-				}]
-			}
+			{ test: /\.tsx?$/, use: [{ loader: "ts-loader", options: { silent: true } }] }
 		]
 	},
-	plugins: [extractStyle],
+	plugins: [extractStyle, new webpack.optimize.ModuleConcatenationPlugin()],
 
 	// Pretty terminal output
 	stats: {

@@ -3,9 +3,9 @@
  */
 export class Controller {
 	public complexities: boolean[];
-	public games: IMap<boolean>;
+	public games: Record<Games, boolean>;
 	public orderPref: string[];
-	public groupPref: string[];
+	public groupPref: (keyof Alien)[];
 	public alienGroups: Reference.GroupedItems[];
 	public change: () => void;
 
@@ -37,17 +37,15 @@ export class Controller {
 	}
 }
 
-/**
- * Group objects by given array of fields
- */
+/** Group objects by given array of fields */
 const groupBy = (function() {
 
-	function groupItems(list: Alien[], fields: string[], level: number): Reference.GroupedItems[] {
+	function groupItems(list: Alien[], fields: (keyof Alien)[], level: number): Reference.GroupedItems[] {
 		if(fields.length < 1) { return [{ value: "", items: list }]; }
 
 		// group objects by property
-		const grouped: IMap<Alien[]> = {};
-		const field = fields[level] as keyof Alien;
+		const grouped: Record<string, Alien[]> = {};
+		const field = fields[level];
 		list.forEach(function(item) {
 			const group = item[field]!;
 			grouped[group] = grouped[group] || [];
@@ -68,5 +66,5 @@ const groupBy = (function() {
 	/**
 	 * Group objects by given array of fields, starting at first level
 	 */
-	return (list: Alien[], fields: string[]) => groupItems(list, fields, 0);
+	return (list: Alien[], fields: (keyof Alien)[]) => groupItems(list, fields, 0);
 })();

@@ -4,15 +4,15 @@ export class Service implements Alien.Service {
 	/** Get alien from name */
 	public get: (name: string) => Alien;
 	/** Get names that match given properties */
-	public getMatchingNames: (levels: boolean[], games: IMap<boolean>, exclude?: string[], setup?: string) => string[];
+	public getMatchingNames: (levels: boolean[], games: Record<Games, boolean>, exclude?: string[], setup?: string) => string[];
 
 	constructor($http: ng.IHttpService) {
 		const service = this;
-		const aliens: IMap<Alien> = {};
+		const aliens: Record<string, Alien> = {};
 		const alien_names: string[] = [];
 
-		service.init = $http.get("data/aliens2.json").then(function(result): string[] {
-			(result.data as Alien.Data).list.forEach(function(alien) {
+		service.init = $http.get<Alien.Data>("data/aliens2.json").then(function(result): string[] {
+			result.data!.list.forEach((alien) => {
 				aliens[alien.name] = alien;
 				alien_names.push(alien.name);
 			});

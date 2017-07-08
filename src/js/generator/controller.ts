@@ -36,7 +36,7 @@ export class Controller {
 		});
 		ctrl.settings = $localStorage;
 
-		function setState(newState: Generator.Status): void {
+		function setState(newState: Generator.Status) {
 			if(!newState) { return; }
 			ctrl.state = newState.message;
 			ctrl.aliensToShow = newState.aliens;
@@ -47,7 +47,7 @@ export class Controller {
 			ctrl.disabled = Generator.getDisabledActions(ctrl.settings.numToChoose, ctrl.aliensToShow.length);
 		}
 
-		function resetGenerator(): void {
+		function resetGenerator() {
 			const opts = ctrl.settings;
 			setState(Generator.reset(opts.complexities, opts.games, opts.namesExcluded, opts.setupLevel));
 			ctrl.restrictNumToChoose();
@@ -56,7 +56,7 @@ export class Controller {
 		ctrl.change = resetGenerator;
 
 		let NOT_RESET = 0;
-		ctrl.reset = function(): void {
+		ctrl.reset = function() {
 			if(confirm("Reset list of aliens?")) { resetGenerator(); } else { NOT_RESET++; }
 
 			if(NOT_RESET > 2) {
@@ -66,7 +66,7 @@ export class Controller {
 		};
 
 		// keep choose # within 1 and max. Run when resetting alien list (# might have changed) and changing # to pick
-		ctrl.restrictNumToChoose = function(): void {
+		ctrl.restrictNumToChoose = function() {
 			ctrl.settings.numToChoose = Generator.getChooseLimit(ctrl.settings.numToChoose);
 		};
 
@@ -76,8 +76,6 @@ export class Controller {
 		ctrl.redo = () => setState(Generator.redo(ctrl.settings.numToChoose, ctrl.settings.preventConflicts));
 
 		// init generator
-		Generator.init.then(function(names: string[]): void {
-			ctrl.namesAll = names;
-		}).then(resetGenerator);
+		Generator.init.then(names => { ctrl.namesAll = names; }).then(resetGenerator);
 	}
 }

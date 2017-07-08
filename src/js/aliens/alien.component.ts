@@ -12,10 +12,10 @@ export class Controller {
 	}
 }
 
-export let Bindings = { alien: "<item" };
+export const Bindings = { alien: "<item" };
 
 // todo: Add extra information (and update JSON file)
-export let template = `
+export const template = `
 <md-card>
 <md-card-content class ="alien-head">
 	<md-button class ="md-alien{{::$ctrl.alien.level}}-theme md-raised md-primary" ng-click="$ctrl.opened = !$ctrl.opened">{{$ctrl.opened ? '-': '+'}}</md-button>

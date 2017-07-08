@@ -10,9 +10,11 @@
 			false
 		],
 		"no-any": true,
-		"no-default-export": true,
+		"no-default-export": false,
 		"no-reference": false,
 		"no-string-literal": false,
+		"no-object-literal-type-assertion": false,
+		"no-this-assignment": false,
 		"object-literal-shorthand": false,
 		"one-line": [
 			true,
@@ -43,14 +45,5 @@
 			"array"
 		],
 		"arrow-parens": false
-	},
-	"jsRules": {
-		"object-literal-sort-keys": false,
-		"trailing-comma": [
-			false
-		],
-		"whitespace": [
-			false
-		]
 	}
 }

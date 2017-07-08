@@ -8,7 +8,7 @@ export class Service {
 	/**
 	 * Determine list of possible choices based on selected options
 	 */
-	public reset: (complexities: boolean[], games: IMap<boolean>, namesExcluded: string[], setupLevel: string) => Status;
+	public reset: (complexities: boolean[], games: Record<Games, boolean>, namesExcluded: string[], setupLevel: string) => Status;
 
 	/**
 	 * Show all aliens that have been given out so far
@@ -72,9 +72,7 @@ export class Service {
 		// Number of times redo button has been used.
 		let numRedos = 0;
 
-		/**
-		 * Choose alien from pool
-		 */
+		/** Choose alien from pool */
 		function drawOne(preventConflicts = false): string | undefined {
 			// select name (return if wasn't able to select
 			const choice = Math.floor(Math.random() * pool.length);
@@ -95,17 +93,13 @@ export class Service {
 			return name;
 		}
 
-		/**
-		 * Move current to given and move on
-		 */
+		/** Move current to given and move on */
 		function makePickFinal() {
 			given = given.concat(current, restricted);
 			restricted = []; current = [];
 		}
 
-		/**
-		 * Move current selection back to pool
-		 */
+		/** Move current selection back to pool */
 		function undo() {
 			pool = pool.concat(current, restricted);
 			current = []; restricted = [];

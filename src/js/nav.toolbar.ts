@@ -1,6 +1,6 @@
-export let Bindings = { title: "<", drawer: "<" };
+export const Bindings = { title: "<", drawer: "<" };
 
-export let template = `
+export const template = `
 <md-toolbar class ="md-hue-2">
   <div class ="md-toolbar-tools">
     <md-button class ="md-icon-button" ng-click="$ctrl.drawer.open()" aria-label="Settings">

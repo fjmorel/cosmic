@@ -5,10 +5,6 @@
 
 declare var angular: angular.IAngularStatic;
 
-interface IMap<T> {
-	[key: string]: T
-}
-
 type Games = "Encounter" | "Alliance" | "Conflict" | "Dominion" | "Incursion" | "Storm" | "Eons";
 
 interface LevelFilter { (lvl: number): string }
@@ -16,7 +12,7 @@ interface LevelFilter { (lvl: number): string }
 /** All details about an alien */
 interface Alien {
 	name: string,
-	game: string,
+	game: Games,
 	power: string,
 	level: number,
 	description: string,
@@ -36,7 +32,7 @@ declare namespace Alien {
 		/**
 		 * Promise that returns once data is fetched
 		 */
-		init: ng.IHttpPromise<string[]>,
+		init: ng.IPromise<string[]>,
 		/**
 		 * Get information about an alien by its name.
 		 * @return Information about alien
@@ -50,7 +46,7 @@ declare namespace Alien {
 		 * @param setup Which level of game setup to exclude from results 
 		 * @return Names of matching aliens
 		 */
-		getMatchingNames(levels: boolean[], games: IMap<boolean>, exclude?: string[], setup?: string): string[]
+		getMatchingNames(levels: boolean[], games: Record<Games, boolean>, exclude?: string[], setup?: string): string[]
 	}
 
 	/** JSON format of alien data file */
@@ -74,7 +70,7 @@ declare namespace Generator {
 	}
 	interface Settings extends ng.storage.IStorageService {
 		complexities: boolean[];
-		games: IMap<boolean>;
+		games: Record<Games, boolean>;
 		namesExcluded: string[];
 		setupLevel: string;
 		numToChoose: number;
@@ -85,9 +81,9 @@ declare namespace Generator {
 declare namespace Reference {
 	interface Settings extends ng.storage.IStorageService {
 		complexities: boolean[];
-		games: IMap<boolean>;
+		games: Record<Games, boolean>;
 		orderPref: string[];
-		groupPref: string[];
+		groupPref: (keyof Alien)[];
 	}
 
 	interface GroupedItems {
