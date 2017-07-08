@@ -2,31 +2,42 @@
   "version": "1.0.0",
   "name": "fmorel-cosmic",
   "private": true,
+  "scripts": {
+    "build": "webpack -p -w"
+  },
+  "dependencies": {
+    "@angular/animations": "^4.2.6",
+    "@angular/cdk": "^2.0.0-beta.8",
+    "@angular/common": "~4.2.0",
+    "@angular/compiler": "~4.2.0",
+    "@angular/compiler-cli": "~4.2.0",
+    "@angular/core": "~4.2.0",
+    "@angular/forms": "~4.2.0",
+    "@angular/http": "~4.2.0",
+    "@angular/material": "^2.0.0-beta.8",
+    "@angular/platform-browser": "~4.2.0",
+    "@angular/platform-browser-dynamic": "~4.2.0",
+    "@angular/router": "~4.2.0",
+    "core-js": "^2.4.1",
+    "rxjs": "^5.0.1",
+    "zone.js": "^0.8.4"
+  },
   "devDependencies": {
-    "angular": "1.6.5",
-    "angular-aria": "1.6.5",
-    "angular-animate": "1.6.5",
-    "angular-messages":"1.6.5",
-    "angular-material": "1.1.4",
-    "angular-material-icons": "0.7.1",
-    "ngstorage": "0.3.11",
-
+    "angular2-template-loader": "0.6.2",
+    "awesome-typescript-loader": "3.2.1",
     "css-loader": "0.28.4",
     "extract-text-webpack-plugin": "2.1.2",
     "less": "2.7.2",
     "less-loader": "4.0.4",
+    "file-loader": "0.11.2",
+    "html-loader": "0.4.5",
+    "html-webpack-plugin": "2.29.0",
+    "null-loader": "^0.1.1",
+    "raw-loader": "^0.5.1",
     "style-loader": "0.18.2",
     "ts-loader": "2.2.2",
     "tslint": "5.5.0",
     "typescript": "2.4.1",
-    "webpack": "3.1.0",
-
-    "@types/ngstorage":"0.3.33",
-    "@types/angular":"1.6.25",
-    "@types/angular-material":"1.1.52",
-    "@types/google.analytics":"0.0.33"
-  },
-  "scripts": {
-    "build": "webpack -w -p"
+    "webpack": "3.1.0"
   }
 }

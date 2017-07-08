@@ -1,10 +1,3 @@
-/// <reference types="angular" />
-/// <reference types="angular-material" />
-/// <reference types="ngstorage" />
-/// <reference types="google.analytics" />
-
-declare var angular: angular.IAngularStatic;
-
 type Games = "Encounter" | "Alliance" | "Conflict" | "Dominion" | "Incursion" | "Storm" | "Eons";
 
 interface LevelFilter { (lvl: number): string }
@@ -32,7 +25,7 @@ declare namespace Alien {
 		/**
 		 * Promise that returns once data is fetched
 		 */
-		init: ng.IPromise<string[]>,
+		init: Promise<string[]>,
 		/**
 		 * Get information about an alien by its name.
 		 * @return Information about alien
@@ -50,7 +43,7 @@ declare namespace Alien {
 	}
 
 	/** JSON format of alien data file */
-	interface Data extends ng.IHttpPromiseCallbackArg<{}> {
+	interface Data {
 		list: Alien[]
 	}
 }
@@ -68,7 +61,7 @@ declare namespace Generator {
 		redo: boolean;
 		reset: boolean;
 	}
-	interface Settings extends ng.storage.IStorageService {
+	interface Settings {
 		complexities: boolean[];
 		games: Record<Games, boolean>;
 		namesExcluded: string[];
@@ -79,7 +72,7 @@ declare namespace Generator {
 }
 
 declare namespace Reference {
-	interface Settings extends ng.storage.IStorageService {
+	interface Settings {
 		complexities: boolean[];
 		games: Record<Games, boolean>;
 		orderPref: string[];
