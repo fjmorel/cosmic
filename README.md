@@ -17,22 +17,22 @@ Will put the current picks back in the pool and give out new ones. This is usefu
 ### Reset
 Resets list of aliens given out and to give out. Changing any of the Include/Exclude options will also reset the list.
 
-##Other Things to Note
+## Other Things to Note
 
-###Prevent Conflicts option
+### Prevent Conflicts option
 This one is permanently on to avoid games with conflicting aliens like the Oracle and Magician.
 
-###"!" badge on aliens
+### "!" badge on aliens
 That means the alien has Game Setup or conflicts with another alien. For details on any alien, click the "+" button.
 
-###So much purple!
+### So much purple!
 I really like purple.
 
-##Credits
+## Credits
 	The copyrightable portions of Cosmic Encounter are © 2008 Fantasy Flight Publishing, Inc.
 	Cosmic Encounter is a registered trademark of Eon Products, Inc.
 
-##License
+## License
 	Copyright 2017 Frederic Morel
 
     This file is part of Cosmic Companion.
