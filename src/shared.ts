@@ -10,3 +10,6 @@ import "@angular/router";
 
 // RxJS
 import "rxjs";
+
+// Theme and styling
+import "./css/cosmic.scss";

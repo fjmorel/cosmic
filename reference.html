@@ -16,62 +16,15 @@
   <meta name="msapplication-TileImage" content="icons/144.png" />
   <meta name="application-name" content="Alien Reference - Companion for Cosmic Encounter" />
   <meta name="apple-mobile-web-app-title" content="Cosmic Aliens" />
-  <link rel="stylesheet" type="text/css" href="https://ajax.googleapis.com/ajax/libs/angular_material/1.1.4/angular-material.min.css"
-  />
   <link rel="stylesheet" type="text/css" href="dist/styles.css" />
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>
 
-<body>
-  <noscript>
-    This page requires JavaScript to run.
-  </noscript>
-  <div ng-controller="NavDrawer as Drawer">
-    <cosmic-drawer page="'reference'"></cosmic-drawer>
-    <md-content ng-controller="AlienReference as Reference">
-      <cosmic-toolbar title="'Alien Reference'" drawer="Drawer"></cosmic-toolbar>
-      <md-content layout="row" layout-wrap>
-        <md-card flex="grow" flex-gt-xs="30">
-          <alien-level-options save="Reference.change" options="Reference.complexities"></alien-level-options>
-        </md-card>
-        <md-card flex="grow" flex-gt-xs="30">
-          <alien-game-options save="Reference.change" options="Reference.games"></alien-game-options>
-        </md-card>
-        <md-card flex="grow" flex-gt-xs="30">
-          <md-card-content>
-            <h4 class="md-title">Sort by</h4>
-            <ol>
-              <li>Game</li>
-              <li>Level</li>
-              <li>Name</li>
-            </ol>
-            <h4 class="md-title">Group by</h4>
-            <ol>
-              <li>Game</li>
-              <li>Level</li>
-            </ol>
-          </md-card-content>
-        </md-card>
-      </md-content>
-      <div ng-repeat="gameGroup in Reference.alienGroups">
-        <div ng-repeat="levelGroup in ::gameGroup.items">
-          <h3 layout-padding>{{::gameGroup.value}} - {{::levelGroup.value| levelName}} {{::levelGroup.value | levelStars}}</h3>
-          <md-content layout="row" layout-wrap>
-            <alien-panel ng-repeat="alien in ::levelGroup.items track by alien.name | orderBy:Reference.orderPref" data-item="::alien"
-              flex="grow" flex-gt-xs="50" flex-lg="33" flex-gt-lg="25"></alien-panel>
-          </md-content>
-        </div>
-      </div>
-    </md-content>
-  </div>
-  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.5/angular.min.js"></script>
-  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.5/angular-animate.min.js"></script>
-  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.5/angular-aria.min.js"></script>
-  <script src="https://ajax.googleapis.com/ajax/libs/angular_material/1.1.4/angular-material.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-material-icons/0.7.1/angular-material-icons.min.js"></script>
-  <script src="dist/index.js"></script>
-  <script>
-    angular.bootstrap(document, ['aliens.reference'], { 'strictDi': true });
-  </script>
+<body class="mat-app-background">
+  <aliens-reference-app>Loading...</aliens-reference-app>
+  <script src="dist/polyfills.js"></script>
+  <script src="dist/shared.js"></script>
+  <script src="dist/reference.js"></script>
 </body>
 
 </html>

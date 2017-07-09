@@ -9,8 +9,10 @@ const path = require("path");
 module.exports = {
   entry: {
     'polyfills': './src/polyfills.ts',
-    'vendor': './src/vendor.ts',
-    'app': './src/js/app.ts'
+    'shared': './src/shared.ts',
+    'home': './src/js/home/app.ts',
+    'reference': './src/js/reference/app.ts'
+    //'generator': './src/js/generator/app.ts'
   },
   output: {
     filename: "[name].js",
@@ -23,20 +25,14 @@ module.exports = {
   module: {
     rules: [
       // Compile styles
-      { test: /\.less$/i, loader: extractStyle.extract(["css-loader", "less-loader"]) },
+      { test: /\.scss$/i, loader: extractStyle.extract(["css-loader", "sass-loader"]) },
       // Compile .ts and .tsx files
-      { test: /\.tsx?$/, use: [{ loader: "ts-loader", options: { silent: true } }] },
-
-      { test: /\.html$/, loader: 'html-loader' },
-      {
-        test: /\.(png|jpe?g|gif|svg|woff|woff2|ttf|eot|ico)$/,
-        loader: 'file-loader?name=assets/[name].[hash].[ext]'
-      }
+      { test: /\.tsx?$/, use: [{ loader: "ts-loader", options: { silent: true } }] }
     ]
   },
   plugins: [
     extractStyle,
-    new webpack.optimize.ModuleConcatenationPlugin(),
+    // new webpack.optimize.ModuleConcatenationPlugin(),
     // Workaround for angular/angular#11580
     new webpack.ContextReplacementPlugin(
       // The (\\|\/) piece accounts for path separators in *nix and Windows
@@ -46,7 +42,7 @@ module.exports = {
     ),
 
     new webpack.optimize.CommonsChunkPlugin({
-      name: ['app', 'vendor', 'polyfills']
+      name: ['shared', 'polyfills']
     })
   ],
 

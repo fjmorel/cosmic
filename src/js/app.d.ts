@@ -1,9 +1,10 @@
+
 type Games = "Encounter" | "Alliance" | "Conflict" | "Dominion" | "Incursion" | "Storm" | "Eons";
 
 interface LevelFilter { (lvl: number): string }
 
 /** All details about an alien */
-interface Alien {
+type Alien = Readonly<{
 	name: string,
 	game: Games,
 	power: string,
@@ -15,7 +16,7 @@ interface Alien {
 	player?: string,
 	mandatory?: string,
 	phases?: string
-}
+}>
 
 declare namespace Alien {
 	/**
@@ -39,7 +40,7 @@ declare namespace Alien {
 		 * @param setup Which level of game setup to exclude from results 
 		 * @return Names of matching aliens
 		 */
-		getMatchingNames(levels: boolean[], games: Record<Games, boolean>, exclude?: string[], setup?: string): string[]
+		getMatchingNames(levels: boolean[], games: Games[], exclude?: string[], setup?: string): string[]
 	}
 
 	/** JSON format of alien data file */
