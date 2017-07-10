@@ -6,7 +6,7 @@ import "@angular/core";
 import "@angular/common";
 import "@angular/http";
 import "@angular/material";
-import "@angular/router";
+// import "@angular/router";
 
 // RxJS
 import "rxjs";

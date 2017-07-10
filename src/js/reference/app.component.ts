@@ -7,18 +7,7 @@ import { AlienService } from "../shared/alien.service";
 	md-sidenav-container { height: 100%; }
 		#container { display: flex; flex: auto; flex-wrap: wrap; align-content: stretch; padding:8px }
 		md-card-actions { text-align: right }
-		.groupHeader { margin: 16px 8px 8px;}
-		#aliens { display: flex; flex-wrap: wrap; align-items: stretch; }
-		#aliens > div { flex-basis: 25% }
-		@media (max-width: 992px) {
-			#aliens > div { flex-basis: 33% }
-		}
-		@media (max-width: 768px) {
-			#aliens > div { flex-basis: 50% }
-		}
-		@media (max-width: 576px) {
-			#aliens > div { flex-basis: 100% }
-		}
+		.mat-h2 { margin: 16px 8px 8px;}
 	`],
 	template: `
 <md-sidenav-container>
@@ -36,25 +25,23 @@ import { AlienService } from "../shared/alien.service";
 			<game-options (onSelected)="onSelectGame($event)"></game-options>
 			<level-options (onSelected)="onSelectLevel($event)"></level-options>
 			<md-card>
-				<md-card-content>
-					<md-card-title>Sort by</md-card-title>
-					<ol>
-						<li>Game</li>
-						<li>Level</li>
-						<li>Name</li>
-					</ol>
-					<md-card-title>Group by</md-card-title>
-					<ol>
-						<li>Game</li>
-						<li>Level</li>
-					</ol>
-				</md-card-content>
+				<md-card-title>Sort by</md-card-title>
+				<ol>
+					<li>Game</li>
+					<li>Level</li>
+					<li>Name</li>
+				</ol>
+				<md-card-title>Group by</md-card-title>
+				<ol>
+					<li>Game</li>
+					<li>Level</li>
+				</ol>
 			</md-card>
 		</div>
 		<div *ngFor="let gameGroup of alienGroups">
 			<div *ngFor="let levelGroup of gameGroup.items">
-				<h2 class="mat-h2 groupHeader">Cosmic {{gameGroup.value}} - {{levelGroup.value| levelName}} {{levelGroup.value | levelStars}}</h2>
-				<div id="aliens"><div *ngFor="let alien of levelGroup.items"><alien-card [alien]="alien"></alien-card></div></div>
+				<h2 class="mat-h2">Cosmic {{gameGroup.value}} - {{levelGroup.value| levelName}} {{levelGroup.value | levelStars}}</h2>
+				<alien-grid [aliens]="levelGroup.items"></alien-grid>
 			</div>
 		</div>
 	</div>
@@ -65,8 +52,8 @@ export class AppComponent implements OnInit {
 	public alienGroups: Reference.GroupedItems[];
 	public selectedGames: Games[] = [];
 	public selectedLevels: boolean[] = [];
-	public orderBy: (keyof Alien)[] = ["name"];
-	public groupBy: (keyof Alien)[] = ["game", "level"];
+	public orderBy: Alien.Properties = ["name"];
+	public groupBy: Alien.Properties = ["game", "level"];
 
 	constructor(private Aliens: AlienService) { }
 
@@ -92,7 +79,7 @@ export class AppComponent implements OnInit {
 /** Group objects by given array of fields */
 const groupBy = (function() {
 
-	function groupItems(list: Alien[], fields: (keyof Alien)[], level: number): Reference.GroupedItems[] {
+	function groupItems(list: Alien[], fields: Alien.Properties, level: number): Reference.GroupedItems[] {
 		if(fields.length < 1) { return [{ value: "", items: list }]; }
 
 		// group objects by property
@@ -115,8 +102,6 @@ const groupBy = (function() {
 		return result;
 	}
 
-	/**
-	 * Group objects by given array of fields, starting at first level
-	 */
-	return (list: Alien[], fields: (keyof Alien)[]) => groupItems(list, fields, 0);
+	/** Group objects by given array of fields, starting at first level */
+	return (list: Alien[], fields: Alien.Properties) => groupItems(list, fields, 0);
 })();

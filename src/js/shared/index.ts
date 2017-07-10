@@ -1,4 +1,5 @@
 export { AlienCardComponent } from "./alien.card.component";
+export { AlienGridComponent } from "./alien.grid.component";
 export { LevelNamePipe } from "./alien.levelname.pipe";
 export { LevelStarsPipe } from "./alien.levelstars.pipe";
 export { AlienService } from "./alien.service";

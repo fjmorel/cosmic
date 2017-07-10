@@ -1,4 +1,5 @@
 import { Component, Output, EventEmitter, OnInit } from "@angular/core";
+import { LocalStorageService } from "angular-2-local-storage";
 
 // todo: color checkboxes based on level
 @Component({
@@ -23,6 +24,13 @@ export class LevelOptionsComponent implements OnInit {
 	@Output() public onSelected = new EventEmitter<boolean[]>();
 	// todp: load settings from storage
 	public levels = [true, true, true];
-	public ngOnInit(): void { this.select(); }
-	private select() { this.onSelected.emit(this.levels.slice(0)); }
+	public constructor(private Storage: LocalStorageService) { }
+	public ngOnInit(): void {
+		this.levels = this.Storage.get<boolean[]>("levels") || [true, true, true];
+		this.select();
+	}
+	private select() {
+		this.Storage.set("levels", this.levels);
+		this.onSelected.emit(this.levels.slice(0));
+	}
 }

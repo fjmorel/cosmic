@@ -19,6 +19,8 @@ type Alien = Readonly<{
 }>
 
 declare namespace Alien {
+	type Properties = (keyof Alien)[];
+
 	/**
 	 * The AlienService takes care of downloading data about aliens and enables lookups by name or information.
 	 */
@@ -76,8 +78,8 @@ declare namespace Reference {
 	interface Settings {
 		complexities: boolean[];
 		games: Record<Games, boolean>;
-		orderPref: string[];
-		groupPref: (keyof Alien)[];
+		orderPref: Alien.Properties;
+		groupPref: Alien.Properties;
 	}
 
 	interface GroupedItems {
