@@ -12,7 +12,8 @@ import * as Mat from "@angular/material";
 
 import { LocalStorageModule } from "angular-2-local-storage";
 
-import { AlienReferencePage } from "./app.component";
+import { AlienGeneratorPage } from "./app.component";
+import { AlienGeneratorService } from "./generator.service";
 import * as Shared from "../shared";
 
 @NgModule({
@@ -20,18 +21,19 @@ import * as Shared from "../shared";
 		BrowserModule, NoopAnimationsModule,
 		FormsModule,
 		HttpModule,
-		LocalStorageModule.withConfig({ prefix: "alien-ref", storageType: "localStorage" }),
+		LocalStorageModule.withConfig({ prefix: "alien-gen", storageType: "localStorage" }),
+		Mat.MdInputModule, Mat.MdRadioModule, Mat.MdSelectModule,
 		Mat.MdToolbarModule, Mat.MdCardModule, Mat.MdCheckboxModule, Mat.MdListModule, Mat.MdButtonModule, Mat.MdCoreModule, Mat.StyleModule, Mat.MdSidenavModule, Mat.MdIconModule
 	],
 	declarations: [
-		AlienReferencePage,
+		AlienGeneratorPage,
 		Shared.CosmicDrawerComponent, Shared.GameOptionsComponent, Shared.LevelOptionsComponent, Shared.AlienCardComponent, Shared.AlienGridComponent,
 		Shared.LevelNamePipe, Shared.LevelStarsPipe
 	],
-	bootstrap: [AlienReferencePage],
-	providers: [Shared.AlienService]
+	bootstrap: [AlienGeneratorPage],
+	providers: [Shared.AlienService, AlienGeneratorService]
 })
-class AlienReferenceModule { }
+class AlienGeneratorModule { }
 
 enableProdMode();
-platformBrowserDynamic().bootstrapModule(AlienReferenceModule);
+platformBrowserDynamic().bootstrapModule(AlienGeneratorModule);

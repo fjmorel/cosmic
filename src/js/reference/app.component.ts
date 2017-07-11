@@ -48,7 +48,7 @@ import { AlienService } from "../shared/alien.service";
 </md-sidenav-container>
 `,
 })
-export class AppComponent implements OnInit {
+export class AlienReferencePage implements OnInit {
 	public alienGroups: Reference.GroupedItems[];
 	public selectedGames: Games[] = [];
 	public selectedLevels: boolean[] = [];

@@ -39,7 +39,7 @@ type ActionCard = Readonly<{
 </md-toolbar>
 `,
 })
-export class AppComponent {
+export class CosmicHomePage {
 	private cards: ActionCard[];
 	constructor() {
 		this.cards = [

@@ -11,8 +11,8 @@ module.exports = {
     'polyfills': './src/polyfills.ts',
     'shared': './src/shared.ts',
     'home': './src/js/home/app.ts',
-    'reference': './src/js/reference/app.ts'
-    //'generator': './src/js/generator/app.ts'
+    'reference': './src/js/reference/app.ts',
+    'generator': './src/js/generator/app.ts'
   },
   output: {
     filename: "[name].js",

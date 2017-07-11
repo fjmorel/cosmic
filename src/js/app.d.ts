@@ -1,7 +1,5 @@
-
 type Games = "Encounter" | "Alliance" | "Conflict" | "Dominion" | "Incursion" | "Storm" | "Eons";
 
-interface LevelFilter { (lvl: number): string }
 
 /** All details about an alien */
 type Alien = Readonly<{
@@ -21,30 +19,6 @@ type Alien = Readonly<{
 declare namespace Alien {
 	type Properties = (keyof Alien)[];
 
-	/**
-	 * The AlienService takes care of downloading data about aliens and enables lookups by name or information.
-	 */
-	interface Service {
-		/**
-		 * Promise that returns once data is fetched
-		 */
-		init: Promise<string[]>,
-		/**
-		 * Get information about an alien by its name.
-		 * @return Information about alien
-		 */
-		get(name: string): Alien,
-		/**
-		 * Get the names of aliens that match given filters
-		 * @param levels Array of booleans for Green, Yellow, and Red levels.
-		 * @param games Booleans mapped by the initials of base game and expansions
-		 * @param exclude Array of alien names to exclude from results
-		 * @param setup Which level of game setup to exclude from results 
-		 * @return Names of matching aliens
-		 */
-		getMatchingNames(levels: boolean[], games: Games[], exclude?: string[], setup?: string): string[]
-	}
-
 	/** JSON format of alien data file */
 	interface Data {
 		list: Alien[]
@@ -52,18 +26,13 @@ declare namespace Alien {
 }
 
 declare namespace Generator {
-	interface Status {
+	type Actions = "draw" | "hide" | "show" | "redo" | "reset";
+	type Status = {
 		aliens: Alien[];
 		message: string;
 		limit?: number;
-	}
-	interface AllowedActions {
-		draw: boolean;
-		hide: boolean;
-		show: boolean;
-		redo: boolean;
-		reset: boolean;
-	}
+	};
+
 	interface Settings {
 		complexities: boolean[];
 		games: Record<Games, boolean>;
@@ -82,7 +51,7 @@ declare namespace Reference {
 		groupPref: Alien.Properties;
 	}
 
-	interface GroupedItems {
+	type GroupedItems = {
 		value: string;
 		items: Alien[] | GroupedItems[];
 	}

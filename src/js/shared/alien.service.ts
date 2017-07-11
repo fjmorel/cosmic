@@ -5,7 +5,7 @@ import "rxjs/add/operator/map";
 import "rxjs/add/operator/toPromise";
 
 @Injectable()
-export class AlienService implements Alien.Service {/** Promise that returns once data is fetched */
+export class AlienService {/** Promise that returns once data is fetched */
 	public init: Promise<string[]>;
 	/** Get alien from name */
 	public get: (name: string) => Alien;

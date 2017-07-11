@@ -5,20 +5,20 @@ import { enableProdMode } from "@angular/core";
 
 import { NgModule } from "@angular/core";
 import { BrowserModule } from "@angular/platform-browser";
-import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
+import { NoopAnimationsModule } from "@angular/platform-browser/animations";
 import * as Mat from "@angular/material";
 
-import { AppComponent } from "./app.component";
+import { CosmicHomePage } from "./app.component";
 
 @NgModule({
 	imports: [
-		BrowserModule, BrowserAnimationsModule,
+		BrowserModule, NoopAnimationsModule,
 		Mat.MdToolbarModule, Mat.MdCardModule, Mat.MdButtonModule, Mat.MdCoreModule, Mat.StyleModule
 	],
-	declarations: [AppComponent],
-	bootstrap: [AppComponent]
+	declarations: [CosmicHomePage],
+	bootstrap: [CosmicHomePage]
 })
-class AppModule { }
+class CosmicHomeModule { }
 
 enableProdMode();
-platformBrowserDynamic().bootstrapModule(AppModule);
+platformBrowserDynamic().bootstrapModule(CosmicHomeModule);
