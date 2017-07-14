@@ -1,90 +1,61 @@
-import { Component, OnInit } from "@angular/core";
-import { AlienService } from "../shared/alien.service";
+import { Component } from "@angular/core";
+import { AlienService } from "../shared";
+import { LocalStorageService } from "angular-2-local-storage";
 
 @Component({
 	selector: "aliens-reference-app",
-	styles: [`
-	md-sidenav-container { height: 100%; }
-		#container { display: flex; flex: auto; flex-wrap: wrap; align-content: stretch; padding:8px }
-		md-card-actions { text-align: right }
-		.mat-h2 { margin: 16px 8px 8px;}
-	`],
-	template: `
-<md-sidenav-container>
-	<md-sidenav #leftnav>
-		<cosmic-drawer [page]="'reference'"></cosmic-drawer>
-	</md-sidenav>
-	<div id="content">
-		<md-toolbar class="mat-primary">
-			<button md-button (click)="leftnav.toggle()">
-				<md-icon>menu</md-icon>
-			</button>
-			<h1>Alien Reference</h1>
-		</md-toolbar>
-		<div id="container">
-			<game-options (onSelected)="onSelectGame($event)"></game-options>
-			<level-options (onSelected)="onSelectLevel($event)"></level-options>
-			<md-card>
-				<md-card-title>Sort by</md-card-title>
-				<ol>
-					<li>Game</li>
-					<li>Level</li>
-					<li>Name</li>
-				</ol>
-				<md-card-title>Group by</md-card-title>
-				<ol>
-					<li>Game</li>
-					<li>Level</li>
-				</ol>
-			</md-card>
-		</div>
-		<div *ngFor="let gameGroup of alienGroups">
-			<div *ngFor="let levelGroup of gameGroup.items">
-				<h2 class="mat-h2">Cosmic {{gameGroup.value}} - {{levelGroup.value| levelName}} {{levelGroup.value | levelStars}}</h2>
-				<alien-grid [aliens]="levelGroup.items"></alien-grid>
-			</div>
-		</div>
-	</div>
-</md-sidenav-container>
-`,
+	styles: [
+		"#container { display: flex; flex: auto; flex-wrap: wrap; align-content: stretch; }",
+		".mat-h2 { margin: 16px 8px 8px;}"
+	],
+	templateUrl: "./app.html"
 })
-export class AlienReferencePage implements OnInit {
-	public alienGroups: Reference.GroupedItems[];
-	public selectedGames: Games[] = [];
-	public selectedLevels: boolean[] = [];
-	public orderBy: Alien.Properties = ["name"];
-	public groupBy: Alien.Properties = ["game", "level"];
+export class AlienReferencePage implements Partial<Reference.Settings> {
+	public groups: Reference.GroupedItems[];
+	public games: GameSelection;
+	public levels: boolean[];
 
-	constructor(private Aliens: AlienService) { }
+	public onSelectGame: (newGames: GameSelection) => void;
+	public onSelectLevel: (newLevels: boolean[]) => void;
 
-	public ngOnInit(): void {
-		this.Aliens.init.then(() => { this.refresh(); });
-	}
-	public onSelectGame($event: Games[]) {
-		this.selectedGames = $event;
-		this.refresh();
-	}
-	public onSelectLevel($event: boolean[]) {
-		this.selectedLevels = $event;
-		this.refresh();
-	}
+	constructor(Aliens: AlienService, Storage: LocalStorageService) {
+		const ctrl = this;
 
-	private refresh() {
-		if(!this.Aliens) { return; }
-		const names = this.Aliens.getMatchingNames(this.selectedLevels, this.selectedGames);
-		this.alienGroups = groupBy(names.map(this.Aliens.get), this.groupBy);
+		// Set defaults
+		ctrl.levels = Storage.get("levels") || [true, true, true];
+		ctrl.games = Storage.get("games") || { Encounter: true };
+		const groupBy: Alien.Properties = ["game", "level"];
+		const orderBy: Alien.Properties = ["name"];
+
+		// Handle option changes
+		ctrl.onSelectGame = (newGames) => {
+			Storage.set("games", newGames);
+			ctrl.games = newGames;
+			refresh();
+		};
+		ctrl.onSelectLevel = (newLevels) => {
+			Storage.set("levels", newLevels);
+			ctrl.levels = newLevels;
+			refresh();
+		};
+
+		Aliens.init.subscribe(refresh);
+
+		function refresh() {
+			ctrl.groups = groupObjects(Aliens.getMatching(ctrl.levels, ctrl.games), groupBy, orderBy);
+		}
 	}
 }
 
 /** Group objects by given array of fields */
-const groupBy = (function() {
+const groupObjects = (function() {
 
-	function groupItems(list: Alien[], fields: Alien.Properties, level: number): Reference.GroupedItems[] {
-		if(fields.length < 1) { return [{ value: "", items: list }]; }
+	function groupItems(list: Alien[], gFields: Alien.Properties, sFields: Alien.Properties, level: number): Reference.GroupedItems[] {
+		if(gFields.length < 1) { return [{ value: "", items: list }]; }
 
 		// group objects by property
 		const grouped: Record<string, Alien[]> = {};
-		const field = fields[level];
+		const field = gFields[level];
 		list.forEach(function(item) {
 			const group = item[field]!;
 			grouped[group] = grouped[group] || [];
@@ -92,16 +63,17 @@ const groupBy = (function() {
 		});
 
 		// generate array with named groups
+		// todo sort using orderBy
 		let result: Reference.GroupedItems[] = Object.keys(grouped).sort().map(group => ({ value: group, items: grouped[group] }));
 
 		// if more fields to group by, go deeper
-		if(fields[level + 1]) {
-			result = result.map(group => ({ value: group.value, items: groupItems(group.items as Alien[], fields, level + 1) }));
+		if(gFields[level + 1]) {
+			result = result.map(group => ({ value: group.value, items: groupItems(group.items as Alien[], gFields, sFields, level + 1) }));
 		}
 
 		return result;
 	}
 
 	/** Group objects by given array of fields, starting at first level */
-	return (list: Alien[], fields: Alien.Properties) => groupItems(list, fields, 0);
+	return (list: Alien[], gFields: Alien.Properties, sFields: Alien.Properties) => groupItems(list, gFields, sFields, 0);
 })();

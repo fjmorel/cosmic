@@ -1,0 +1,49 @@
+<md-sidenav-container>
+	<md-sidenav #leftnav>
+		<cosmic-drawer [page]="'generator'"></cosmic-drawer>
+	</md-sidenav>
+	<div id="content">
+		<md-toolbar class="mat-primary">
+			<button md-button (click)="leftnav.toggle()">
+				<md-icon>menu</md-icon>
+			</button>
+			<h1>Game Generator</h1>
+		</md-toolbar>
+		<div id="container">
+			<game-options [games]="settings.games" (onSelected)="onSelectGame($event)"></game-options>
+			<level-options [levels]="settings.levels" (onSelected)="onSelectLevel($event)"></level-options>
+			<md-card>
+				<md-card-title>Game Setup</md-card-title>
+				<md-radio-group [(ngModel)]="settings.setupLevel" (change)="change()">
+					<md-radio-button value="" class="mat-primary">Remove none</md-radio-button>
+					<md-radio-button value="color" class="mat-primary">Remove those requiring extra color</md-radio-button>
+					<md-radio-button value="all" class="mat-primary">Remove all</md-radio-button>
+				</md-radio-group>
+			</md-card>
+			<md-card>
+				<md-card-title>Exclude by name</md-card-title>
+				<md-select multiple [(ngModel)]="settings.namesExcluded" (change)="change()" placeholder="Select names">
+					<md-option *ngFor="let name of namesAll" [value]="name">{{name}}</md-option>
+				</md-select>
+			</md-card>
+			<md-card>
+				<md-card-title>How to choose</md-card-title>
+				<md-input-container>
+					<input mdInput type="number" [(ngModel)]="settings.numToChoose" placeholder="Choices per player" step="1" min="1" (change)="restrictNumToChoose()">
+				</md-input-container>
+				<div>
+					<md-checkbox class="md-primary" (change)="saveSettings()" [(ngModel)]="settings.preventConflicts">Prevent conflicts (like Oracle vs. Magician)</md-checkbox>
+				</div>
+			</md-card>
+		</div>
+		<md-toolbar id="gen-actions">
+			<span class="space-right alien-0-theme"><button md-raised-button class="mat-accent" (click)="draw()" [disabled]="disabled.draw">Draw</button></span>
+			<span class=""><button md-raised-button class="mat-primary" (click)="hide()" [disabled]="disabled.hide"><md-icon>visibility_off</md-icon> Hide</button></span>
+			<span class="space-right"><button md-raised-button class="mat-primary" (click)="show()" [disabled]="disabled.show"><md-icon>visibility</md-icon> Show</button></span>
+			<span class="space-right alien-1-theme"><button md-raised-button class="mat-accent" (click)="redo();" [disabled]="disabled.redo"><md-icon>history</md-icon> Redo</button></span>
+			<span class="space-right alien-2-theme"><button md-raised-button class="mat-accent" (click)="reset()" [disabled]="disabled.reset"><md-icon>replay</md-icon> Reset</button></span>
+		</md-toolbar>
+		<p class="mat-body-1" id="gen-status">{{status}} {{state}}</p>
+		<alien-grid [aliens]="aliensToShow"></alien-grid>
+	</div>
+</md-sidenav-container>

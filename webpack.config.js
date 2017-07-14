@@ -27,20 +27,37 @@ module.exports = {
       // Compile styles
       { test: /\.scss$/i, loader: extractStyle.extract(["css-loader", "sass-loader"]) },
       // Compile .ts and .tsx files
-      { test: /\.tsx?$/, use: [{ loader: "ts-loader", options: { silent: true } }] }
+      {
+        test: /\.tsx?$/, use: [
+          { loader: "ts-loader", options: { silent: true } },
+          { loader: "angular2-template-loader" }
+        ]
+      },
+      /* Embed files. */
+      {
+        test: /\.(html)$/,
+        use: [
+          { loader: "raw-loader" },
+          {
+            loader: "html-minify-loader", options: {
+              empty: true,        // KEEP empty attributes
+              quotes: true,
+              dom: { // options of !(htmlparser2)[https://github.com/fb55/htmlparser2]
+                lowerCaseAttributeNames: false, // do not call .toLowerCase for each attribute name (Angular2 use camelCase attributes)
+              }
+            }
+          }
+        ]
+      },
     ]
   },
   plugins: [
     extractStyle,
     // new webpack.optimize.ModuleConcatenationPlugin(),
-    // Workaround for angular/angular#11580
     new webpack.ContextReplacementPlugin(
-      // The (\\|\/) piece accounts for path separators in *nix and Windows
       /angular(\\|\/)core(\\|\/)@angular/,
-      path.join(__dirname, "./src"), // location of your src
-      {} // a map of your routes
+      path.resolve(__dirname, './src')
     ),
-
     new webpack.optimize.CommonsChunkPlugin({
       name: ['shared', 'polyfills']
     })

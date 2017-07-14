@@ -12,8 +12,14 @@ import { CosmicHomePage } from "./app.component";
 
 @NgModule({
 	imports: [
-		BrowserModule, NoopAnimationsModule,
-		Mat.MdToolbarModule, Mat.MdCardModule, Mat.MdButtonModule, Mat.MdCoreModule, Mat.StyleModule
+		BrowserModule,
+		NoopAnimationsModule,
+		// Core
+		Mat.MdCoreModule,
+		Mat.MdToolbarModule,
+		Mat.MdCardModule,
+		Mat.MdButtonModule,
+		Mat.StyleModule,
 	],
 	declarations: [CosmicHomePage],
 	bootstrap: [CosmicHomePage]

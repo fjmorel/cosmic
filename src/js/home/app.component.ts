@@ -16,28 +16,10 @@ type ActionCard = Readonly<{
 	selector: "cosmic-app",
 	styles: [`
 		#container { display: flex; flex: auto; flex-wrap: wrap; align-content: stretch; padding:8px }
-		.mat-card { max-width: 300px; }
+		md-card { max-width: 300px; }
 		md-card-actions { text-align: right }
 	`],
-	template: `
-<md-toolbar class="mat-primary">
-	<h2>Cosmic Companion</h2>
-</md-toolbar>
-<div id="container">
-	<md-card *ngFor="let card of cards">
-		<md-card-title>{{card.title}}</md-card-title>
-		<md-card-content>
-			<p>{{card.text}}</p>
-		</md-card-content>
-		<md-card-actions>
-			<a href="{{card.link}}" class="mat-primary" md-raised-button>{{card.linkText}}</a>
-		</md-card-actions>
-	</md-card>
-</div>
-<md-toolbar class="mat-primary">
-	<a md-button class="mat-accent" href="//www.fmorel.net">Return home</a>
-</md-toolbar>
-`,
+	templateUrl: "./app.html"
 })
 export class CosmicHomePage {
 	private cards: ActionCard[];

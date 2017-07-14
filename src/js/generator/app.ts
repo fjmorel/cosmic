@@ -22,8 +22,19 @@ import * as Shared from "../shared";
 		FormsModule,
 		HttpModule,
 		LocalStorageModule.withConfig({ prefix: "alien-gen", storageType: "localStorage" }),
-		Mat.MdInputModule, Mat.MdRadioModule, Mat.MdSelectModule,
-		Mat.MdToolbarModule, Mat.MdCardModule, Mat.MdCheckboxModule, Mat.MdListModule, Mat.MdButtonModule, Mat.MdCoreModule, Mat.StyleModule, Mat.MdSidenavModule, Mat.MdIconModule
+		// Core
+		Mat.MdCoreModule,
+		Mat.MdToolbarModule,
+		Mat.MdCardModule,
+		Mat.MdButtonModule,
+		Mat.StyleModule,
+		// Reference and Generator
+		Mat.MdSidenavModule,
+		Mat.MdIconModule,
+		Mat.MdListModule,
+		Mat.MdRadioModule, Mat.MdCheckboxModule,
+		// Generator
+		Mat.MdInputModule, Mat.MdSelectModule
 	],
 	declarations: [
 		AlienGeneratorPage,

@@ -8,8 +8,9 @@ import "@angular/http";
 import "@angular/material";
 // import "@angular/router";
 
-// RxJS
+// Other libraries
 // import "rxjs";
+import "angular-2-local-storage";
 
 // Theme and styling
 import "./css/cosmic.scss";

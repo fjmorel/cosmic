@@ -21,7 +21,17 @@ import * as Shared from "../shared";
 		FormsModule,
 		HttpModule,
 		LocalStorageModule.withConfig({ prefix: "alien-ref", storageType: "localStorage" }),
-		Mat.MdToolbarModule, Mat.MdCardModule, Mat.MdCheckboxModule, Mat.MdListModule, Mat.MdButtonModule, Mat.MdCoreModule, Mat.StyleModule, Mat.MdSidenavModule, Mat.MdIconModule
+		// Core
+		Mat.MdCoreModule,
+		Mat.MdToolbarModule,
+		Mat.MdCardModule,
+		Mat.MdButtonModule,
+		Mat.StyleModule,
+		// Reference and Generator
+		Mat.MdSidenavModule,
+		Mat.MdIconModule,
+		Mat.MdListModule,
+		Mat.MdRadioModule, Mat.MdCheckboxModule
 	],
 	declarations: [
 		AlienReferencePage,

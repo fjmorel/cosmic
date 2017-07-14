@@ -1,0 +1,20 @@
+<md-card [ngClass]="'alien-'+alien.level+'-theme'">
+	<md-card-header>
+		<div md-card-avatar>
+			<button md-raised-button class="mat-accent" (click)="opened=!opened"><md-icon>{{opened ? 'remove': 'add'}}</md-icon></button>
+		</div>
+		<md-card-title class="alien-fg">{{alien.name}}</md-card-title>
+		<md-card-subtitle>{{alien.power}}</md-card-subtitle>
+	</md-card-header>
+	<md-card-footer>
+		<div class="alien-bar alien-bg">
+			<span>{{alien.game}}</span>
+			<span *ngIf="(alien.setup || alien.restriction)"><md-icon>warning</md-icon></span>
+			<span>{{alien.level | levelStars}}</span>
+		</div>
+		<div *ngIf="opened" class="desc" [innerHTML]="alien.description"></div>
+		<div *ngIf="opened && alien.player" class="alien-bar alien-bg"><span>{{alien.player}}</span></div>
+		<div *ngIf="opened && alien.mandatory" class="alien-bar alien-bg"><span>{{alien.mandatory}}</span></div>
+		<div *ngIf="opened && alien.phases" class="alien-bar alien-bg"><span>Phases: {{alien.phases.split(",").join(", ")}}</span></div>
+	</md-card-footer>
+</md-card>

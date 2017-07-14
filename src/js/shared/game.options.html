@@ -1,0 +1,8 @@
+<md-card>
+	<md-card-title>Games to include</md-card-title>
+	<md-list>
+		<md-list-item *ngFor="let game of names">
+			<md-checkbox class="mat-primary" (change)="select()" [(ngModel)]="games[game]">{{game}}</md-checkbox>
+		</md-list-item>
+	</md-list>
+</md-card>

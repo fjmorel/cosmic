@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { AlienService } from "../shared/alien.service";
+import { AlienService } from "../shared";
 
 type Status = Generator.Status;
 
@@ -7,8 +7,8 @@ type Status = Generator.Status;
 @Injectable()
 export class AlienGeneratorService {
 
-	/** Determine list of possible choices based on selected options */
-	public reset: (complexities: boolean[], games: Games[], namesExcluded: string[], setupLevel: string) => Status;
+	/** Reset list of possible choices and clear status */
+	public reset: (names: string[]) => Status;
 
 	/** Show all aliens that have been given out so far */
 	public getAllGiven: () => Status;
@@ -34,16 +34,8 @@ export class AlienGeneratorService {
 	/** Get number given out and size of pool */
 	public getStatus: () => string;
 
-	/** start Generator by getting alien names */
-	public init: Promise<string[]>;
-
 	constructor(Aliens: AlienService) {
 		const service = this;
-		service.init = Aliens.init;
-
-		function namesToAliens(names: string[]): Alien[] {
-			return names.sort().map(Aliens.get);
-		}
 
 		// current = currently drawn.
 		let current: string[] = [];
@@ -65,12 +57,14 @@ export class AlienGeneratorService {
 			current.push(name);
 
 			// if current choice has any restrictions, remove them from pool as well
-			const alien = Aliens.get(name);
-			if(preventConflicts && alien.restriction) {
-				const restrictions = alien.restriction.split(",");
-				for(let j = 0; j < restrictions.length; j++) {
-					const index = pool.indexOf(restrictions[j]);
-					if(index > -1) { restricted.push(pool.splice(index, 1)[0]); }
+			if(preventConflicts) {
+				const alien = Aliens.get(name);
+				if(alien.restriction) {
+					const restrictions = alien.restriction.split(",");
+					for(let j = 0; j < restrictions.length; j++) {
+						const index = pool.indexOf(restrictions[j]);
+						if(index > -1) { restricted.push(pool.splice(index, 1)[0]); }
+					}
 				}
 			}
 			// return selected name
@@ -89,8 +83,8 @@ export class AlienGeneratorService {
 			current = []; restricted = [];
 		}
 
-		service.reset = function(complexities, games, namesExcluded, setupLevel) {
-			pool = Aliens.getMatchingNames(complexities, games, namesExcluded, setupLevel);
+		service.reset = function(names: string[]) {
+			pool = names;
 			given = [];
 			current = [];
 			restricted = [];
@@ -100,7 +94,7 @@ export class AlienGeneratorService {
 
 		service.getAllGiven = function() {
 			makePickFinal();
-			return { aliens: namesToAliens(given), message: "Aliens given out so far:" };
+			return { aliens: given, message: "Aliens given out so far:" };
 		};
 
 		service.getChooseLimit = function(original) {
@@ -125,7 +119,7 @@ export class AlienGeneratorService {
 			}
 
 			// display
-			return { aliens: namesToAliens(current), message: "Choices:", limit: service.getChooseLimit(howManyToChoose) };
+			return { aliens: current, message: "Choices:", limit: service.getChooseLimit(howManyToChoose) };
 		};
 
 		service.hide = () => ({ aliens: [], message: "Choices hidden." });
@@ -138,7 +132,7 @@ export class AlienGeneratorService {
 			}
 
 			// if passed, then show aliens
-			return { aliens: namesToAliens(current), message: "Choices:" };
+			return { aliens: current, message: "Choices:" };
 		};
 
 		service.redo = function(howManyToChoose, preventConflicts = false) {
@@ -147,7 +141,7 @@ export class AlienGeneratorService {
 				numRedos++;
 				return service.draw(howManyToChoose, preventConflicts);
 			}
-			return { aliens: namesToAliens(current), message: "Choices:" };
+			return { aliens: current, message: "Choices:" };
 		};
 
 		service.getDisabledActions = function(howManyToChoose, numShown) {
