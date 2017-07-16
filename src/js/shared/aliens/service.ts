@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { Http } from "@angular/http";
+import { HttpClient } from "@angular/common/http";
 import { Observable } from "rxjs";
 
 import "rxjs/add/operator/map";
@@ -14,15 +14,14 @@ export class AlienService {/** Promise that returns once data is fetched */
 	/** Get aliens that match given properties */
 	public getMatching: (levels: boolean[], games: GameSelection, exclude?: string[], setup?: SetupLevel) => Alien[];
 
-	constructor(http: Http) {
+	constructor(http: HttpClient) {
 		const service = this;
 		const aliens: Record<string, Alien> = {};
 		const names: string[] = [];
 
-		service.init = http.get("data/aliens2.json")
+		service.init = http.get<Alien.Data>("data/aliens2.json")
 			.map(response => {
-				const list = (response.json() as Alien.Data).list;
-				list.forEach(alien => {
+				response.list.forEach(alien => {
 					aliens[alien.name] = alien;
 					names.push(alien.name);
 				});
