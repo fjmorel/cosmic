@@ -1,0 +1,36 @@
+<mat-sidenav-container>
+	<mat-sidenav #leftnav>
+		<cosmic-drawer [page]="'reference'"></cosmic-drawer>
+	</mat-sidenav>
+	<div>
+		<mat-toolbar class="mat-primary">
+			<button mat-button (click)="leftnav.toggle()">
+		<mat-icon>menu</mat-icon>
+	</button>&nbsp;
+			<h1>Alien Reference</h1>
+		</mat-toolbar>
+		<div id="container">
+			<game-options [games]="games" (onSelected)="onSelectGame($event)"></game-options>
+			<level-options [levels]="levels" (onSelected)="onSelectLevel($event)"></level-options>
+			<mat-card>
+				<mat-card-title>Sort by</mat-card-title>
+				<ol>
+					<li>Game</li>
+					<li>Level</li>
+					<li>Name</li>
+				</ol>
+				<mat-card-title>Group by</mat-card-title>
+				<ol>
+					<li>Game</li>
+					<li>Level</li>
+				</ol>
+			</mat-card>
+		</div>
+		<div *ngFor="let gGroup of groups">
+			<div *ngFor="let lGroup of gGroup.items">
+				<h2 class="mat-h2">Cosmic {{gGroup.value}} - {{lGroup.value| levelName}} {{lGroup.value | levelStars}}</h2>
+				<alien-grid [aliens]="lGroup.items"></alien-grid>
+			</div>
+		</div>
+	</div>
+</mat-sidenav-container>

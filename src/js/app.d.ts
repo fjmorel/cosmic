@@ -1,92 +1,59 @@
-/// <reference types="angular" />
-/// <reference types="angular-material" />
-/// <reference types="ngstorage" />
-/// <reference types="google.analytics" />
-
-declare var angular: angular.IAngularStatic;
-
 type Games = "Encounter" | "Alliance" | "Conflict" | "Dominion" | "Incursion" | "Storm" | "Eons";
-
-interface LevelFilter { (lvl: number): string }
+type SetupLevel = "" | "color" | "all";
 
 /** All details about an alien */
-interface Alien {
+type Alien = Readonly<{
 	name: string,
 	game: Games,
 	power: string,
-	level: number,
+	level: 0 | 1 | 2,
 	description: string,
-	setup: string,
+	setup: "cards" | "color" | "essence" | "planets" | "ships" | "tokens",
 
 	restriction?: string,
 	player?: string,
-	mandatory?: string,
+	mandatory?: "Mandatory" | "Optional" | "Varies",
 	phases?: string
-}
+}>
+
+type GameSelection = Partial<Record<Games, boolean>>;
 
 declare namespace Alien {
-	/**
-	 * The AlienService takes care of downloading data about aliens and enables lookups by name or information.
-	 */
-	interface Service {
-		/**
-		 * Promise that returns once data is fetched
-		 */
-		init: ng.IPromise<string[]>,
-		/**
-		 * Get information about an alien by its name.
-		 * @return Information about alien
-		 */
-		get(name: string): Alien,
-		/**
-		 * Get the names of aliens that match given filters
-		 * @param levels Array of booleans for Green, Yellow, and Red levels.
-		 * @param games Booleans mapped by the initials of base game and expansions
-		 * @param exclude Array of alien names to exclude from results
-		 * @param setup Which level of game setup to exclude from results 
-		 * @return Names of matching aliens
-		 */
-		getMatchingNames(levels: boolean[], games: Record<Games, boolean>, exclude?: string[], setup?: string): string[]
-	}
+	type Properties = (keyof Alien)[];
 
 	/** JSON format of alien data file */
-	interface Data extends ng.IHttpPromiseCallbackArg<{}> {
+	interface Data {
 		list: Alien[]
 	}
 }
 
 declare namespace Generator {
-	interface Status {
-		aliens: Alien[];
+	type Actions = "draw" | "hide" | "show" | "redo" | "reset";
+	type Status = {
+		aliens: string[];
 		message: string;
 		limit?: number;
-	}
-	interface AllowedActions {
-		draw: boolean;
-		hide: boolean;
-		show: boolean;
-		redo: boolean;
-		reset: boolean;
-	}
-	interface Settings extends ng.storage.IStorageService {
-		complexities: boolean[];
-		games: Record<Games, boolean>;
+	};
+
+	interface Settings {
+		levels: boolean[];
+		games: GameSelection;
 		namesExcluded: string[];
-		setupLevel: string;
+		setupLevel: SetupLevel;
 		numToChoose: number;
 		preventConflicts: boolean;
 	}
 }
 
 declare namespace Reference {
-	interface Settings extends ng.storage.IStorageService {
-		complexities: boolean[];
-		games: Record<Games, boolean>;
-		orderPref: string[];
-		groupPref: (keyof Alien)[];
+	interface Settings {
+		levels: boolean[];
+		games: GameSelection;
+		orderBy: Alien.Properties;
+		groupBy: Alien.Properties;
 	}
 
-	interface GroupedItems {
+	type GroupedItems = {
 		value: string;
 		items: Alien[] | GroupedItems[];
 	}

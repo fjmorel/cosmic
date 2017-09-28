@@ -10,12 +10,14 @@
     "sourceMap": false,
     "strict": true,
     "target": "ES5",
-    "module": "es2015"
-  },
-  "files": [
-    "./src/js/app.ts"
-  ],
-  "exclude": [
-    "node_modules"
-  ]
+    "module": "commonjs",
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "lib": [
+      "es2015",
+      "dom"
+    ],
+    "noImplicitAny": true,
+    "strictNullChecks": false
+  }
 }
