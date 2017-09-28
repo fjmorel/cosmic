@@ -3,22 +3,23 @@ export { CosmicDrawerComponent } from "./drawer.component";
 export { GameOptionsComponent } from "./game.options.component";
 
 import { NgModule } from "@angular/core";
-import * as Mat from "@angular/material";
+import * as Material from "@angular/material";
 
 const MATERIAL_MODULES = [
 	// Core
-	Mat.MdCoreModule,
-	Mat.MdToolbarModule,
-	Mat.MdCardModule,
-	Mat.MdButtonModule,
-	Mat.StyleModule,
+	Material.MatToolbarModule,
+	Material.MatCardModule,
+	Material.MatButtonModule,
+	Material.StyleModule,
 	// Reference and Generator
-	Mat.MdSidenavModule,
-	Mat.MdIconModule,
-	Mat.MdListModule,
-	Mat.MdRadioModule, Mat.MdCheckboxModule,
+	Material.MatSidenavModule,
+	Material.MatIconModule,
+	Material.MatListModule,
+	Material.MatRadioModule,
+	Material.MatCheckboxModule,
 	// Generator
-	Mat.MdInputModule, Mat.MdSelectModule
+	Material.MatInputModule,
+	Material.MatSelectModule
 ];
 
 @NgModule({

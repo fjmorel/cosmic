@@ -1,8 +1,8 @@
-<md-card>
-	<md-card-title>Levels to include</md-card-title>
-	<md-list>
-		<md-list-item [ngClass]="'alien-'+level+'-theme'" *ngFor="let level of [0,1,2]">
-			<md-checkbox class="mat-primary" (change)="select()" [(ngModel)]="levels[level]">{{level | levelName}}</md-checkbox>
-		</md-list-item>
-	</md-list>
-</md-card>
+<mat-card>
+	<mat-card-title>Levels to include</mat-card-title>
+	<mat-list>
+		<mat-list-item [ngClass]="'alien-'+level+'-theme'" *ngFor="let level of [0,1,2]">
+			<mat-checkbox class="mat-primary" (change)="select()" [(ngModel)]="levels[level]">{{level | levelName}}</mat-checkbox>
+		</mat-list-item>
+	</mat-list>
+</mat-card>

@@ -7,14 +7,14 @@ import { LocalStorageService } from "angular-2-local-storage";
 	selector: "aliens-generator-app",
 	styles: [`
 		#container { display: flex; flex: auto; flex-wrap: wrap; align-content: stretch; padding:8px }
-		md-radio-button { display: block; margin: 16px 0; }
+		mat-radio-button { display: block; margin: 16px 0; }
 		#gen-status { margin: 16px; }
 		.space-right { margin-right: 16px; }
 	`],
 	templateUrl: "./app.html"
 })
 export class AlienGeneratorPage implements OnInit {
-	public settings: Partial<Generator.Settings> = {};
+	public settings: Generator.Settings = { levels: [], games: {}, namesExcluded: [], setupLevel: "", numToChoose: 2, preventConflicts: true };
 	public disabled: Record<Generator.Actions, boolean> = { draw: true, hide: true, show: true, redo: true, reset: true };
 	public namesAll: string[];
 	public status: string;
@@ -27,7 +27,7 @@ export class AlienGeneratorPage implements OnInit {
 		this.Aliens.init.subscribe(names => {
 			this.namesAll = names;
 			this.settings = this.Storage.get("settings");
-			if(!this.settings) { this.settings = {}; }
+			if(!this.settings) { this.settings = {} as Generator.Settings; }
 			if(!this.settings.levels) { this.settings.levels = [true, true, true]; }
 			if(!this.settings.games) { this.settings.games = { Encounter: true }; }
 			if(!this.settings.namesExcluded) { this.settings.namesExcluded = []; }

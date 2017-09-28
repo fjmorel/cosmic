@@ -2,12 +2,9 @@
 import "@angular/core";
 import "@angular/platform-browser";
 import "@angular/platform-browser-dynamic";
-import "@angular/platform-browser/animations";
 import "@angular/common";
+// tslint:disable-next-line:no-submodule-imports
 import "@angular/common/http";
-// import "@angular/http";
-import "@angular/material";
-// import "@angular/router";
 
 // Other libraries
 // import "rxjs";

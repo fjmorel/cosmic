@@ -2,7 +2,7 @@ import { Component, Input, Output, EventEmitter } from "@angular/core";
 
 @Component({
 	selector: "level-options",
-	styles: ["md-list-item { height: 32px; }"],
+	styles: ["mat-list-item { height: 32px; }"],
 	templateUrl: "./leveloptions.html"
 })
 export class LevelOptionsComponent {

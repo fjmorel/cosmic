@@ -16,8 +16,8 @@ type ActionCard = Readonly<{
 	selector: "cosmic-app",
 	styles: [`
 		#container { display: flex; flex: auto; flex-wrap: wrap; align-content: stretch; padding:8px }
-		md-card { max-width: 300px; }
-		md-card-actions { text-align: right }
+		mat-card { max-width: 300px; }
+		mat-card-actions { text-align: right }
 	`],
 	templateUrl: "./app.html"
 })

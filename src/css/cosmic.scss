@@ -47,7 +47,7 @@ $alien-2-theme: mat-light-theme($cosmic-primary, $alien-2-palette);
 }
 
 // Stretch components so sidebar takes up whole screen height
-html, body, .mat-sidenav-container {
+html, body, .mat-drawer-container {
   margin: 0;
   width: 100%;
   height: 100%;

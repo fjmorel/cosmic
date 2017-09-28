@@ -1,30 +1,30 @@
-<md-sidenav-container>
-	<md-sidenav #leftnav>
+<mat-sidenav-container>
+	<mat-sidenav #leftnav>
 		<cosmic-drawer [page]="'reference'"></cosmic-drawer>
-	</md-sidenav>
+	</mat-sidenav>
 	<div>
-		<md-toolbar class="mat-primary">
-			<button md-button (click)="leftnav.toggle()">
-		<md-icon>menu</md-icon>
-	</button>
+		<mat-toolbar class="mat-primary">
+			<button mat-button (click)="leftnav.toggle()">
+		<mat-icon>menu</mat-icon>
+	</button>&nbsp;
 			<h1>Alien Reference</h1>
-		</md-toolbar>
+		</mat-toolbar>
 		<div id="container">
 			<game-options [games]="games" (onSelected)="onSelectGame($event)"></game-options>
 			<level-options [levels]="levels" (onSelected)="onSelectLevel($event)"></level-options>
-			<md-card>
-				<md-card-title>Sort by</md-card-title>
+			<mat-card>
+				<mat-card-title>Sort by</mat-card-title>
 				<ol>
 					<li>Game</li>
 					<li>Level</li>
 					<li>Name</li>
 				</ol>
-				<md-card-title>Group by</md-card-title>
+				<mat-card-title>Group by</mat-card-title>
 				<ol>
 					<li>Game</li>
 					<li>Level</li>
 				</ol>
-			</md-card>
+			</mat-card>
 		</div>
 		<div *ngFor="let gGroup of groups">
 			<div *ngFor="let lGroup of gGroup.items">
@@ -33,4 +33,4 @@
 			</div>
 		</div>
 	</div>
-</md-sidenav-container>
+</mat-sidenav-container>

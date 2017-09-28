@@ -1,7 +1,9 @@
 import { Injectable } from "@angular/core";
+// tslint:disable-next-line:no-submodule-imports
 import { HttpClient } from "@angular/common/http";
 import { Observable } from "rxjs";
 
+// tslint:disable-next-line:no-submodule-imports
 import "rxjs/add/operator/map";
 
 @Injectable()

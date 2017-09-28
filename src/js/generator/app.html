@@ -1,49 +1,49 @@
-<md-sidenav-container>
-	<md-sidenav #leftnav>
+<mat-sidenav-container>
+	<mat-sidenav #leftnav>
 		<cosmic-drawer [page]="'generator'"></cosmic-drawer>
-	</md-sidenav>
+	</mat-sidenav>
 	<div id="content">
-		<md-toolbar class="mat-primary">
-			<button md-button (click)="leftnav.toggle()">
-				<md-icon>menu</md-icon>
-			</button>
+		<mat-toolbar class="mat-primary">
+			<button mat-button (click)="leftnav.toggle()">
+				<mat-icon>menu</mat-icon>
+			</button>&nbsp;
 			<h1>Game Generator</h1>
-		</md-toolbar>
+		</mat-toolbar>
 		<div id="container">
 			<game-options [games]="settings.games" (onSelected)="onSelectGame($event)"></game-options>
 			<level-options [levels]="settings.levels" (onSelected)="onSelectLevel($event)"></level-options>
-			<md-card>
-				<md-card-title>Game Setup</md-card-title>
-				<md-radio-group [(ngModel)]="settings.setupLevel" (change)="change()">
-					<md-radio-button value="" class="mat-primary">Remove none</md-radio-button>
-					<md-radio-button value="color" class="mat-primary">Remove those requiring extra color</md-radio-button>
-					<md-radio-button value="all" class="mat-primary">Remove all</md-radio-button>
-				</md-radio-group>
-			</md-card>
-			<md-card>
-				<md-card-title>Exclude by name</md-card-title>
-				<md-select multiple [(ngModel)]="settings.namesExcluded" (change)="change()" placeholder="Select names">
-					<md-option *ngFor="let name of namesAll" [value]="name">{{name}}</md-option>
-				</md-select>
-			</md-card>
-			<md-card>
-				<md-card-title>How to choose</md-card-title>
-				<md-input-container>
-					<input mdInput type="number" [(ngModel)]="settings.numToChoose" placeholder="Choices per player" step="1" min="1" (change)="restrictNumToChoose()">
-				</md-input-container>
+			<mat-card>
+				<mat-card-title>Game Setup</mat-card-title>
+				<mat-radio-group [(ngModel)]="settings.setupLevel" (change)="change()">
+					<mat-radio-button value="" class="mat-primary">Remove none</mat-radio-button>
+					<mat-radio-button value="color" class="mat-primary">Remove those requiring extra color</mat-radio-button>
+					<mat-radio-button value="all" class="mat-primary">Remove all</mat-radio-button>
+				</mat-radio-group>
+			</mat-card>
+			<mat-card>
+				<mat-card-title>Exclude by name</mat-card-title>
+				<mat-select multiple [(ngModel)]="settings.namesExcluded" (change)="change()" placeholder="Select names">
+					<mat-option *ngFor="let name of namesAll" [value]="name">{{name}}</mat-option>
+				</mat-select>
+			</mat-card>
+			<mat-card>
+				<mat-card-title>How to choose</mat-card-title>
+				<mat-input-container>
+					<input matInput type="number" [(ngModel)]="settings.numToChoose" placeholder="Choices per player" step="1" min="1" (change)="restrictNumToChoose()">
+				</mat-input-container>
 				<div>
-					<md-checkbox class="md-primary" (change)="saveSettings()" [(ngModel)]="settings.preventConflicts">Prevent conflicts (like Oracle vs. Magician)</md-checkbox>
+					<mat-checkbox class="mat-primary" (change)="saveSettings()" [(ngModel)]="settings.preventConflicts">Prevent conflicts (like Oracle vs. Magician)</mat-checkbox>
 				</div>
-			</md-card>
+			</mat-card>
 		</div>
-		<md-toolbar id="gen-actions">
-			<span class="space-right alien-0-theme"><button md-raised-button class="mat-accent" (click)="draw()" [disabled]="disabled.draw">Draw</button></span>
-			<span class=""><button md-raised-button class="mat-primary" (click)="hide()" [disabled]="disabled.hide"><md-icon>visibility_off</md-icon> Hide</button></span>
-			<span class="space-right"><button md-raised-button class="mat-primary" (click)="show()" [disabled]="disabled.show"><md-icon>visibility</md-icon> Show</button></span>
-			<span class="space-right alien-1-theme"><button md-raised-button class="mat-accent" (click)="redo();" [disabled]="disabled.redo"><md-icon>history</md-icon> Redo</button></span>
-			<span class="space-right alien-2-theme"><button md-raised-button class="mat-accent" (click)="reset()" [disabled]="disabled.reset"><md-icon>replay</md-icon> Reset</button></span>
-		</md-toolbar>
+		<mat-toolbar id="gen-actions">
+			<span class="space-right alien-0-theme"><button mat-raised-button class="mat-accent" (click)="draw()" [disabled]="disabled.draw">Draw</button></span>
+			<span class=""><button mat-raised-button class="mat-primary" (click)="hide()" [disabled]="disabled.hide"><mat-icon>visibility_off</mat-icon>&nbsp;Hide</button></span>
+			<span class="space-right"><button mat-raised-button class="mat-primary" (click)="show()" [disabled]="disabled.show"><mat-icon>visibility</mat-icon>&nbsp;Show</button></span>
+			<span class="space-right alien-1-theme"><button mat-raised-button class="mat-accent" (click)="redo();" [disabled]="disabled.redo"><mat-icon>history</mat-icon>&nbsp;Redo</button></span>
+			<span class="space-right alien-2-theme"><button mat-raised-button class="mat-accent" (click)="reset()" [disabled]="disabled.reset"><mat-icon>replay</mat-icon>&nbsp;Reset</button></span>
+		</mat-toolbar>
 		<p class="mat-body-1" id="gen-status">{{status}} {{state}}</p>
 		<alien-grid [aliens]="aliensToShow"></alien-grid>
 	</div>
-</md-sidenav-container>
+</mat-sidenav-container>
