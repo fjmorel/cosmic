@@ -10,7 +10,6 @@ const MATERIAL_MODULES = [
 	Material.MatToolbarModule,
 	Material.MatCardModule,
 	Material.MatButtonModule,
-	Material.StyleModule,
 	// Reference and Generator
 	Material.MatSidenavModule,
 	Material.MatIconModule,

@@ -14,7 +14,6 @@ import { LocalStorageModule } from "angular-2-local-storage";
 
 import { AlienGeneratorPage } from "./app.component";
 import { AlienGeneratorService } from "./generator.service";
-import { NoConflictStyleCompatibilityMode } from "@angular/material";
 import * as Shared from "../shared";
 
 @NgModule({
@@ -23,7 +22,6 @@ import * as Shared from "../shared";
 		FormsModule,
 		HttpClientModule,
 		LocalStorageModule.withConfig({ prefix: "alien-gen", storageType: "localStorage" }),
-		NoConflictStyleCompatibilityMode,
 		Shared.ThemingModule
 	],
 	declarations: [

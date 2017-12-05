@@ -13,7 +13,6 @@ import { NoopAnimationsModule } from "@angular/platform-browser/animations";
 import { LocalStorageModule } from "angular-2-local-storage";
 
 import { AlienReferencePage } from "./app.component";
-import { NoConflictStyleCompatibilityMode } from "@angular/material";
 import * as Shared from "../shared";
 
 @NgModule({
@@ -22,7 +21,6 @@ import * as Shared from "../shared";
 		FormsModule,
 		HttpClientModule,
 		LocalStorageModule.withConfig({ prefix: "alien-ref", storageType: "localStorage" }),
-		NoConflictStyleCompatibilityMode,
 		Shared.ThemingModule
 	],
 	declarations: [
