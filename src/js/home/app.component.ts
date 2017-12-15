@@ -22,27 +22,24 @@ type ActionCard = Readonly<{
 	templateUrl: "./app.html"
 })
 export class CosmicHomePage {
-	private cards: ActionCard[];
-	constructor() {
-		this.cards = [
-			{
-				title: "Alien Generator",
-				text: "Let a random number generator give you choices to start a game of Cosmic Encounter.",
-				link: "generator.html",
-				linkText: "Use Generator"
-			},
-			{
-				title: "Alien Reference",
-				text: "Look up aliens by game and/or level for easy reference.",
-				link: "reference.html",
-				linkText: "View Reference"
-			},
-			{
-				title: "Android App",
-				text: "Companion for Cosmic Encounter is available on the Google Play Store, and includes both the Alien Generator and Reference tools",
-				link: "https://play.google.com/store/apps/details?id=net.fmorel.cosmicgenerator",
-				linkText: "Download from Google Play"
-			}
-		];
-	}
+	public cards: ActionCard[] = [
+		{
+			title: "Alien Generator",
+			text: "Let a random number generator give you choices to start a game of Cosmic Encounter.",
+			link: "generator.html",
+			linkText: "Use Generator"
+		},
+		{
+			title: "Alien Reference",
+			text: "Look up aliens by game and/or level for easy reference.",
+			link: "reference.html",
+			linkText: "View Reference"
+		},
+		{
+			title: "Android App",
+			text: "Companion for Cosmic Encounter is available on the Google Play Store, and includes both the Alien Generator and Reference tools",
+			link: "https://play.google.com/store/apps/details?id=net.fmorel.cosmicgenerator",
+			linkText: "Download from Google Play"
+		}
+	];
 }

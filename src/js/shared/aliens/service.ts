@@ -2,9 +2,8 @@ import { Injectable } from "@angular/core";
 // tslint:disable-next-line:no-submodule-imports
 import { HttpClient } from "@angular/common/http";
 import { Observable } from "rxjs";
-
 // tslint:disable-next-line:no-submodule-imports
-import "rxjs/add/operator/map";
+import { map } from "rxjs/operators/map";
 
 @Injectable()
 export class AlienService {/** Promise that returns once data is fetched */
@@ -21,15 +20,14 @@ export class AlienService {/** Promise that returns once data is fetched */
 		const aliens: Record<string, Alien> = {};
 		const names: string[] = [];
 
-		service.init = http.get<Alien.Data>("data/aliens2.json")
-			.map(response => {
-				response.list.forEach(alien => {
-					aliens[alien.name] = alien;
-					names.push(alien.name);
-				});
-				names.sort();
-				return names.slice(0);
+		service.init = http.get<Alien.Data>("data/aliens2.json").pipe(map(response => {
+			response.list.forEach(alien => {
+				aliens[alien.name] = alien;
+				names.push(alien.name);
 			});
+			names.sort();
+			return names.slice(0);
+		}));
 
 		service.get = name => aliens[name] || {} as Alien;
 		service.getMatchingNames = function(levels, games, exclude, setup) {

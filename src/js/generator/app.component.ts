@@ -6,8 +6,9 @@ import { LocalStorageService } from "angular-2-local-storage";
 @Component({
 	selector: "aliens-generator-app",
 	styles: [`
-		#container { display: flex; flex: auto; flex-wrap: wrap; align-content: stretch; padding:8px }
+		#container { display: flex; flex: auto; flex-wrap: wrap; align-content: stretch; }
 		mat-radio-button { display: block; margin: 16px 0; }
+		#gen-actions { padding: 0 8px; }
 		#gen-status { margin: 16px; }
 		.space-right { margin-right: 16px; }
 	`],

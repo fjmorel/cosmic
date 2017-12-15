@@ -37,11 +37,25 @@
 			</mat-card>
 		</div>
 		<mat-toolbar id="gen-actions">
-			<span class="space-right alien-0-theme"><button mat-raised-button class="mat-accent" (click)="draw()" [disabled]="disabled.draw">Draw</button></span>
-			<span class=""><button mat-raised-button class="mat-primary" (click)="hide()" [disabled]="disabled.hide"><mat-icon>visibility_off</mat-icon>&nbsp;Hide</button></span>
-			<span class="space-right"><button mat-raised-button class="mat-primary" (click)="show()" [disabled]="disabled.show"><mat-icon>visibility</mat-icon>&nbsp;Show</button></span>
-			<span class="space-right alien-1-theme"><button mat-raised-button class="mat-accent" (click)="redo();" [disabled]="disabled.redo"><mat-icon>history</mat-icon>&nbsp;Redo</button></span>
-			<span class="space-right alien-2-theme"><button mat-raised-button class="mat-accent" (click)="reset()" [disabled]="disabled.reset"><mat-icon>replay</mat-icon>&nbsp;Reset</button></span>
+			<span class="space-right alien-0-theme">
+				<button mat-raised-button class="mat-accent" (click)="draw()" [disabled]="disabled.draw">Draw</button>
+			</span>
+			<span class="">
+				<button mat-raised-button class="mat-primary" (click)="hide()" [disabled]="disabled.hide">
+					<mat-icon>visibility_off</mat-icon>&nbsp;Hide</button>
+			</span>
+			<span class="space-right">
+				<button mat-raised-button class="mat-primary" (click)="show()" [disabled]="disabled.show">
+					<mat-icon>visibility</mat-icon>&nbsp;Show</button>
+			</span>
+			<span class="space-right alien-1-theme">
+				<button mat-raised-button class="mat-accent" (click)="redo();" [disabled]="disabled.redo">
+					<mat-icon>history</mat-icon>&nbsp;Redo</button>
+			</span>
+			<span class="space-right alien-2-theme">
+				<button mat-raised-button class="mat-accent" (click)="reset()" [disabled]="disabled.reset">
+					<mat-icon>replay</mat-icon>&nbsp;Reset</button>
+			</span>
 		</mat-toolbar>
 		<p class="mat-body-1" id="gen-status">{{status}} {{state}}</p>
 		<alien-grid [aliens]="aliensToShow"></alien-grid>

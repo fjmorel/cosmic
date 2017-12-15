@@ -2,7 +2,7 @@ import { Component, Input, Output, EventEmitter } from "@angular/core";
 
 @Component({
 	selector: "game-options",
-	styles: ["mat-list-item { height: 32px; }"],
+	styles: [".mat-list-item { height: 32px !important; }"],
 	templateUrl: "./game.options.html"
 })
 export class GameOptionsComponent {

@@ -19,5 +19,8 @@
     ],
     "noImplicitAny": true,
     "strictNullChecks": false
+  },
+  "angularCompilerOptions": {
+    "preserveWhitespaces": false
   }
 }
