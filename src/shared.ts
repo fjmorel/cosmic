@@ -3,7 +3,6 @@ import "@angular/core";
 import "@angular/platform-browser";
 import "@angular/platform-browser-dynamic";
 import "@angular/common";
-// tslint:disable-next-line:no-submodule-imports
 import "@angular/common/http";
 
 // Other libraries

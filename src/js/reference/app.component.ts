@@ -24,8 +24,8 @@ export class AlienReferencePage implements Partial<Reference.Settings> {
 		// Set defaults
 		ctrl.levels = Storage.get("levels") || [true, true, true];
 		ctrl.games = Storage.get("games") || { Encounter: true };
-		const groupBy: Alien.Properties = ["game", "level"];
-		const orderBy: Alien.Properties = ["name"];
+
+		// todo: options for grouping/ordering
 
 		// Handle option changes
 		ctrl.onSelectGame = (newGames) => {
@@ -42,7 +42,7 @@ export class AlienReferencePage implements Partial<Reference.Settings> {
 		Aliens.init.subscribe(refresh);
 
 		function refresh() {
-			ctrl.groups = groupObjects(Aliens.getMatching(ctrl.levels, ctrl.games), groupBy, orderBy);
+			ctrl.groups = groupObjects(Aliens.getMatching(ctrl.levels, ctrl.games), ["game", "level"], ["name"]);
 		}
 	}
 }

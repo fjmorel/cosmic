@@ -13,6 +13,7 @@
 		"no-default-export": false,
 		"no-reference": false,
 		"no-string-literal": false,
+		"no-submodule-imports": false,
 		"no-object-literal-type-assertion": false,
 		"no-this-assignment": false,
 		"object-literal-shorthand": false,
@@ -41,9 +42,7 @@
 		"variable-name": [
 			false
 		],
-		"array-type": [
-			"array"
-		],
+		"array-type": false,
 		"arrow-parens": false
 	}
 }

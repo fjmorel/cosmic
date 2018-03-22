@@ -2,8 +2,9 @@ export * from "./aliens";
 export { CosmicDrawerComponent } from "./drawer.component";
 export { GameOptionsComponent } from "./game.options.component";
 
-import { NgModule } from "@angular/core";
+import { NgModule, enableProdMode } from "@angular/core";
 import * as Material from "@angular/material";
+import { platformBrowserDynamic } from "@angular/platform-browser-dynamic";
 
 const MATERIAL_MODULES = [
 	// Core
@@ -26,3 +27,9 @@ const MATERIAL_MODULES = [
 	exports: MATERIAL_MODULES
 })
 export class ThemingModule { }
+
+// tslint:disable-next-line:no-any
+export const startApp = (appNgModule: any) => {
+	enableProdMode();
+	platformBrowserDynamic().bootstrapModule(appNgModule);
+};

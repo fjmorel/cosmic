@@ -1,12 +1,11 @@
 import { Injectable } from "@angular/core";
-// tslint:disable-next-line:no-submodule-imports
 import { HttpClient } from "@angular/common/http";
 import { Observable } from "rxjs";
-// tslint:disable-next-line:no-submodule-imports
 import { map } from "rxjs/operators/map";
 
 @Injectable()
-export class AlienService {/** Promise that returns once data is fetched */
+export class AlienService {
+	/** Promise that returns once data is fetched */
 	public init: Observable<string[]>;
 	/** Get alien from name */
 	public get: (name: string) => Alien;

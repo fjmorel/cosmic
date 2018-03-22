@@ -1,13 +1,10 @@
 ///<reference path="../app.d.ts" />
 
-import { platformBrowserDynamic } from "@angular/platform-browser-dynamic";
-import { enableProdMode, NgModule } from "@angular/core";
+import { NgModule } from "@angular/core";
 
 import { BrowserModule } from "@angular/platform-browser";
 import { FormsModule } from "@angular/forms";
-// tslint:disable-next-line:no-submodule-imports
 import { HttpClientModule } from "@angular/common/http";
-// tslint:disable-next-line:no-submodule-imports
 import { NoopAnimationsModule } from "@angular/platform-browser/animations";
 
 import { LocalStorageModule } from "angular-2-local-storage";
@@ -35,5 +32,4 @@ import * as Shared from "../shared";
 })
 class AlienReferenceModule { }
 
-enableProdMode();
-platformBrowserDynamic().bootstrapModule(AlienReferenceModule);
+Shared.startApp(AlienReferenceModule);

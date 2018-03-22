@@ -9,7 +9,6 @@ const path = require("path");
 module.exports = {
   entry: {
     'polyfills': './src/polyfills.ts',
-    'shared': './src/shared.ts',
     'home': './src/js/home/app.ts',
     'reference': './src/js/reference/app.ts',
     'generator': './src/js/generator/app.ts'
@@ -19,9 +18,8 @@ module.exports = {
     path: path.join(__dirname, "docs/dist/"),
   },
   resolve: {
-    extensions: [".ts", ".tsx", ".js"]
+    extensions: [".ts", ".js"]
   },
-  externals: { angular: "angular" },
   module: {
     rules: [
       // Compile styles
@@ -30,39 +28,35 @@ module.exports = {
       {
         test: /\.tsx?$/, use: [
           { loader: "ts-loader", options: { silent: true } },
-          { loader: "angular2-template-loader" }
+          { loader: "angular2-template-loader" }// Change templateUrl to require("*.html")
         ]
       },
-      /* Embed files. */
+      // Embed HTML files
       {
         test: /\.(html)$/,
         use: [
           { loader: "raw-loader" },
-          {
-            loader: "html-minify-loader", options: {
-              empty: true,        // KEEP empty attributes
-              quotes: true,
-              dom: { // options of !(htmlparser2)[https://github.com/fb55/htmlparser2]
-                lowerCaseAttributeNames: false, // do not call .toLowerCase for each attribute name (Angular2 use camelCase attributes)
-              }
-            }
-          }
+          // html-loader messes up the output of templates for some reason
+          // { loader: "html-loader", options: { minimize: true, url: false } }
         ]
       },
     ]
   },
-  plugins: [
-    extractStyle,
-    // new webpack.optimize.ModuleConcatenationPlugin(),
-    new webpack.ContextReplacementPlugin(
-      /angular(\\|\/)core(\\|\/)@angular/,
-      path.resolve(__dirname, './src')
-    ),
-    new webpack.optimize.CommonsChunkPlugin({
-      name: ['shared', 'polyfills']
-    })
-  ],
-
+  optimization: {
+    concatenateModules: true,
+    splitChunks: {
+      chunks: "all",
+      minChunks: 1,
+      name: "shared"
+    }
+  },
+  performance: {
+    hints: false// Stop entry point / asset size warnings
+  },
+  plugins: [extractStyle],
+  watchOptions: {
+    ignored: /node_modules/
+  },
   // Pretty terminal output
   stats: {
     cached: false,
