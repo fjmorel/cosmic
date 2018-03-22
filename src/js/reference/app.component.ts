@@ -1,6 +1,8 @@
-import { Component } from "@angular/core";
+import { Component, OnInit } from "@angular/core";
 import { AlienService } from "../shared";
 import { LocalStorageService } from "angular-2-local-storage";
+
+// todo: options for grouping/ordering
 
 @Component({
 	selector: "aliens-reference-app",
@@ -10,70 +12,61 @@ import { LocalStorageService } from "angular-2-local-storage";
 	],
 	templateUrl: "./app.html"
 })
-export class AlienReferencePage implements Partial<Reference.Settings> {
-	public groups: Reference.GroupedItems[];
+export class AlienReferencePage implements OnInit, Reference.Settings {
+	public groups: GroupedItems<Alien>[];
 	public games: GameSelection;
 	public levels: boolean[];
 
-	public onSelectGame: (newGames: GameSelection) => void;
-	public onSelectLevel: (newLevels: boolean[]) => void;
+	constructor(private Aliens: AlienService, private Storage: LocalStorageService) { }
 
-	constructor(Aliens: AlienService, Storage: LocalStorageService) {
-		const ctrl = this;
-
+	public ngOnInit() {
 		// Set defaults
-		ctrl.levels = Storage.get("levels") || [true, true, true];
-		ctrl.games = Storage.get("games") || { Encounter: true };
+		this.levels = this.Storage.get("levels") || [true, true, true];
+		this.games = this.Storage.get("games") || { Encounter: true };
+		this.Aliens.init.subscribe(() => { this.refresh(); });
+	}
 
-		// todo: options for grouping/ordering
+	/** Handle game option change */
+	public onSelectGame(newGames: GameSelection) {
+		this.Storage.set("games", newGames);
+		this.games = newGames;
+		this.refresh();
+	}
 
-		// Handle option changes
-		ctrl.onSelectGame = (newGames) => {
-			Storage.set("games", newGames);
-			ctrl.games = newGames;
-			refresh();
-		};
-		ctrl.onSelectLevel = (newLevels) => {
-			Storage.set("levels", newLevels);
-			ctrl.levels = newLevels;
-			refresh();
-		};
+	/** Handle level option change */
+	public onSelectLevel(newLevels: boolean[]) {
+		this.Storage.set("levels", newLevels);
+		this.levels = newLevels;
+		this.refresh();
+	}
 
-		Aliens.init.subscribe(refresh);
-
-		function refresh() {
-			ctrl.groups = groupObjects(Aliens.getMatching(ctrl.levels, ctrl.games), ["game", "level"], ["name"]);
-		}
+	/** Refresh shown aliens based on settings */
+	private refresh() {
+		this.groups = groupItems(this.Aliens.getMatching(this.levels, this.games), ["game", "level"], ["name"]);
 	}
 }
 
 /** Group objects by given array of fields */
-const groupObjects = (function() {
+function groupItems(list: Alien[], gFields: Alien.Properties, sFields: Alien.Properties, level: number = 0): GroupedItems<Alien>[] {
+	if(gFields.length < 1) { return [{ value: "", items: list }]; }
 
-	function groupItems(list: Alien[], gFields: Alien.Properties, sFields: Alien.Properties, level: number): Reference.GroupedItems[] {
-		if(gFields.length < 1) { return [{ value: "", items: list }]; }
+	// group objects by property
+	const grouped: Record<string, Alien[]> = {};
+	const field = gFields[level];
+	list.forEach(function(item) {
+		const group = item[field]!;
+		grouped[group] = grouped[group] || [];
+		grouped[group].push(item);
+	});
 
-		// group objects by property
-		const grouped: Record<string, Alien[]> = {};
-		const field = gFields[level];
-		list.forEach(function(item) {
-			const group = item[field]!;
-			grouped[group] = grouped[group] || [];
-			grouped[group].push(item);
-		});
+	// generate array with named groups
+	// todo sort using orderBy
+	let result: GroupedItems<Alien>[] = Object.keys(grouped).sort().map(group => ({ value: group, items: grouped[group] }));
 
-		// generate array with named groups
-		// todo sort using orderBy
-		let result: Reference.GroupedItems[] = Object.keys(grouped).sort().map(group => ({ value: group, items: grouped[group] }));
-
-		// if more fields to group by, go deeper
-		if(gFields[level + 1]) {
-			result = result.map(group => ({ value: group.value, items: groupItems(group.items as Alien[], gFields, sFields, level + 1) }));
-		}
-
-		return result;
+	// if more fields to group by, go deeper
+	if(gFields[level + 1]) {
+		result = result.map(group => ({ value: group.value, items: groupItems(group.items as Alien[], gFields, sFields, level + 1) }));
 	}
 
-	/** Group objects by given array of fields, starting at first level */
-	return (list: Alien[], gFields: Alien.Properties, sFields: Alien.Properties) => groupItems(list, gFields, sFields, 0);
-})();
+	return result;
+}
