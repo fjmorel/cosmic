@@ -1,7 +1,7 @@
 import { Component, OnInit } from "@angular/core";
+import { LocalStorageService } from "angular-2-local-storage";
 import { AlienService } from "../shared";
 import { AlienGeneratorService } from "./generator.service";
-import { LocalStorageService } from "angular-2-local-storage";
 
 @Component({
 	selector: "aliens-generator-app",

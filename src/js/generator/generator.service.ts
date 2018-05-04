@@ -4,7 +4,11 @@ import { AlienService } from "../shared";
 type Status = Generator.Status;
 
 /** Manage aliens given, available, etc */
-@Injectable()
+@Injectable({
+	// we declare that this service should be created
+	// by the root application injector.
+	providedIn: "root",
+})
 export class AlienGeneratorService {
 
 	/** Reset list of possible choices and clear status */

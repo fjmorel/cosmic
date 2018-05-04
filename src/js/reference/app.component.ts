@@ -1,6 +1,6 @@
 import { Component, OnInit } from "@angular/core";
-import { AlienService } from "../shared";
 import { LocalStorageService } from "angular-2-local-storage";
+import { AlienService } from "../shared";
 
 // todo: options for grouping/ordering
 

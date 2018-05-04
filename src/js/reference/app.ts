@@ -27,8 +27,7 @@ import * as Shared from "../shared";
 		Shared.AlienCardComponent, Shared.AlienGridComponent,
 		Shared.LevelNamePipe, Shared.LevelStarsPipe
 	],
-	bootstrap: [AlienReferencePage],
-	providers: [Shared.AlienService]
+	bootstrap: [AlienReferencePage]
 })
 class AlienReferenceModule { }
 

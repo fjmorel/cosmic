@@ -1,13 +1,11 @@
 ///<reference path="../app.d.ts" />
 
 import { NgModule } from "@angular/core";
-
+import { MatButtonModule, MatCardModule, MatToolbarModule } from "@angular/material";
 import { BrowserModule } from "@angular/platform-browser";
 import { NoopAnimationsModule } from "@angular/platform-browser/animations";
-import { MatToolbarModule, MatCardModule, MatButtonModule } from "@angular/material";
-
-import { CosmicHomePage } from "./app.component";
 import { startApp } from "../shared";
+import { CosmicHomePage } from "./app.component";
 
 @NgModule({
 	imports: [

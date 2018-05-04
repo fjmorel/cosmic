@@ -9,11 +9,12 @@
     "removeComments": false,
     "sourceMap": false,
     "strict": true,
-    "target": "ES5",
+    "target": "es2016",
     "module": "commonjs",
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
     "lib": [
+      "es2016",
       "es2015",
       "dom"
     ],

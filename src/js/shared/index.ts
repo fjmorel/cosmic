@@ -1,10 +1,12 @@
-export * from "./aliens";
-export { CosmicDrawerComponent } from "./drawer.component";
-export { GameOptionsComponent } from "./game.options.component";
-
+// Theme and styling
 import { NgModule, enableProdMode } from "@angular/core";
 import * as Material from "@angular/material";
 import { platformBrowserDynamic } from "@angular/platform-browser-dynamic";
+import "../../css/cosmic.scss";
+
+export * from "./aliens";
+export { CosmicDrawerComponent } from "./drawer.component";
+export { GameOptionsComponent } from "./game.options.component";
 
 const MATERIAL_MODULES = [
 	// Core

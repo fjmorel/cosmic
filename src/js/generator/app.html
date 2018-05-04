@@ -28,9 +28,9 @@
 			</mat-card>
 			<mat-card>
 				<mat-card-title>How to choose</mat-card-title>
-				<mat-input-container>
+				<mat-form-field>
 					<input matInput type="number" [(ngModel)]="settings.numToChoose" placeholder="Choices per player" step="1" min="1" (change)="restrictNumToChoose()">
-				</mat-input-container>
+				</mat-form-field>
 				<div>
 					<mat-checkbox class="mat-primary" (change)="saveSettings()" [(ngModel)]="settings.preventConflicts">Prevent conflicts (like Oracle vs. Magician)</mat-checkbox>
 				</div>

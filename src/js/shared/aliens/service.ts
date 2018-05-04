@@ -1,9 +1,13 @@
-import { Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
+import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
-import { map } from "rxjs/operators/map";
+import { map } from "rxjs/operators";
 
-@Injectable()
+@Injectable({
+	// we declare that this service should be created
+	// by the root application injector.
+	providedIn: "root",
+})
 export class AlienService {
 	/** Promise that returns once data is fetched */
 	public init: Observable<string[]>;

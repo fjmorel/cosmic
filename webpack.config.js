@@ -1,9 +1,7 @@
 // jshint esversion: 6
-// Compiling to ES6 depends on UglifyJS support (and being ok with dropping IE11)
 
 const webpack = require('webpack');
-const ExtractTextPlugin = require("extract-text-webpack-plugin");
-const extractStyle = new ExtractTextPlugin("styles.css");
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const path = require("path");
 
 module.exports = {
@@ -18,12 +16,12 @@ module.exports = {
     path: path.join(__dirname, "docs/dist/"),
   },
   resolve: {
-    extensions: [".ts", ".js"]
+    extensions: [".ts", ".js", ".scss"]
   },
   module: {
     rules: [
-      // Compile styles
-      { test: /\.scss$/i, loader: extractStyle.extract(["css-loader", "sass-loader"]) },
+      // Compile .scss files and extract to separate .css file
+      { test: /\.scss$/i, use: [MiniCssExtractPlugin.loader, "css-loader", "sass-loader"] },
       // Compile .ts and .tsx files
       {
         test: /\.tsx?$/, use: [
@@ -50,25 +48,10 @@ module.exports = {
       name: "shared"
     }
   },
-  performance: {
-    hints: false// Stop entry point / asset size warnings
-  },
-  plugins: [extractStyle],
+  plugins: [
+    new MiniCssExtractPlugin({ filename: "styles.css", chunkFilename: "styles.css" })
+  ],
   watchOptions: {
     ignored: /node_modules/
-  },
-  // Pretty terminal output
-  stats: {
-    cached: false,
-    children: false,
-    chunks: false,
-    chunkModules: false,
-    chunkOrigins: false,
-    colors: true,
-    hash: false,
-    maxModules: 0,
-    modules: false,
-    reasons: false,
-    source: false
   }
 };
