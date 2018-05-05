@@ -1,0 +1,14 @@
+<mat-toolbar class="mat-primary">
+	<h2>Cosmic Companion</h2>
+</mat-toolbar>
+<mat-list>
+	<mat-list-item><a mat-button routerLink="/">Home</a></mat-list-item>
+	<mat-divider></mat-divider>
+	<mat-list-item><a mat-button routerLink="/generator" [disabled]="page === 'generator'">Alien Generator</a></mat-list-item>
+	<mat-list-item><a mat-button routerLink="/reference" [disabled]="page === 'reference'">Alien Reference</a></mat-list-item>
+	<mat-list-item>
+		<a href="https://play.google.com/store/apps/details?id=net.fmorel.cosmicgenerator">
+			<img src="icons/playstore_badge.png" />
+		</a>
+	</mat-list-item>
+</mat-list>
