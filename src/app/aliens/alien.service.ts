@@ -1,16 +1,13 @@
 
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
-
-import { map } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AlienService {
   /** Promise that returns once data is fetched */
-  public init: Observable<string[]>;
+  public init: Promise<string[]>;
   /** Get alien from name */
   public get: (name: string) => Alien;
   /** Get names that match given properties */
@@ -22,14 +19,15 @@ export class AlienService {
     const aliens: Record<string, Alien> = {};
     const names: string[] = [];
 
-    this.init = http.get<Alien.Data>('data/aliens2.json').pipe(map(response => {
+    // Convert to Promise so that .subscribe will not run this request again. Could be done with Rx.Subject or multicast?
+    this.init = http.get<Alien.Data>('data/aliens2.json').toPromise().then(response => {
       response.list.forEach(alien => {
         aliens[alien.name] = alien;
         names.push(alien.name);
       });
       names.sort();
       return names.slice(0);
-    }));
+    });
 
     // tslint:disable-next-line:no-object-literal-type-assertion
     this.get = name => aliens[name] || {} as Alien;

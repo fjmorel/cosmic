@@ -1,0 +1,6 @@
+:host { display: flex; flex-wrap: wrap; align-items: stretch; }
+:host > * { flex-basis: 25% }
+
+@media (max-width: 992px) { :host > * { flex-basis: 33% } }
+@media (max-width: 768px) { :host > * { flex-basis: 50% } }
+@media (max-width: 576px) { :host > * { flex-basis: 100% } }

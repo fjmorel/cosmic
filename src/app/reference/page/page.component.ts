@@ -7,10 +7,7 @@ const STORAGE_PREFIX = 'alien-ref';
 
 @Component({
   selector: 'alien-reference',
-  styles: [
-    '#container { display: flex; flex: auto; flex-wrap: wrap; align-content: stretch; }',
-    '.mat-h2 { margin: 16px 8px 8px;}',
-  ],
+  styleUrls: ['page.component.scss'],
   templateUrl: './page.component.html',
 })
 export class AlienReferencePageComponent implements OnInit, Reference.Settings {
@@ -24,7 +21,7 @@ export class AlienReferencePageComponent implements OnInit, Reference.Settings {
     // Set defaults
     this.levels = this.Storage.get(STORAGE_PREFIX + 'levels') || [true, true, true];
     this.games = this.Storage.get(STORAGE_PREFIX + 'games') || { Encounter: true };
-    this.Aliens.init.subscribe(() => { this.refresh(); });
+    this.Aliens.init.then(() => { this.refresh(); });
   }
 
   /** Handle game option change */

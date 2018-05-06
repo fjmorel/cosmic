@@ -7,13 +7,7 @@ const STORAGE_PREFIX = 'alien-gen';
 
 @Component({
   selector: 'alien-generator',
-  styles: [`
-		#container { display: flex; flex: auto; flex-wrap: wrap; align-content: stretch; }
-		mat-radio-button { display: block; margin: 16px 0; }
-		#gen-actions { padding: 0 8px; }
-		#gen-status { margin: 16px; }
-		.space-right { margin-right: 16px; }
-	`],
+  styleUrls: ['page.component.scss'],
   templateUrl: './page.component.html',
 })
 export class AlienGeneratorPageComponent implements OnInit {
@@ -27,7 +21,7 @@ export class AlienGeneratorPageComponent implements OnInit {
 
   constructor(private Aliens: AlienService, private Generator: AlienGeneratorService, private Storage: LocalStorageService) { }
   public ngOnInit(): void {
-    this.Aliens.init.subscribe(names => {
+    this.Aliens.init.then(names => {
       this.namesAll = names;
       this.settings = this.Storage.get(STORAGE_PREFIX + 'settings');
       // tslint:disable-next-line:no-object-literal-type-assertion

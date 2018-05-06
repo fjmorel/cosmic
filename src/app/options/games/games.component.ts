@@ -2,9 +2,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 
 @Component({
   selector: 'cosmic-game-options',
-  styles: [
-    '.mat-list-item { height: 32px !important; }',
-  ],
+  styleUrls: ['games.component.scss'],
   templateUrl: './games.component.html',
 })
 export class GameOptionsComponent {
