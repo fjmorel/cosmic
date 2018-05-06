@@ -28,7 +28,7 @@ export class AlienReferencePageComponent implements OnInit {
     // Set defaults
     this.levels = this.Storage.get(STORAGE_PREFIX + 'levels') || [true, true, true];
     this.games = this.Storage.get(STORAGE_PREFIX + 'games') || { [Game.Encounter]: true };
-    this.Aliens.init.then(() => { this.refresh(); });
+    this.Aliens.init.subscribe(() => { this.refresh(); });
   }
 
   /** Handle game option change */

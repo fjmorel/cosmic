@@ -1,13 +1,12 @@
-
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
+import { map, shareReplay } from 'rxjs/operators';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable({ providedIn: 'root' })
 export class AlienService {
   /** Promise that returns once data is fetched */
-  public init: Promise<string[]>;
+  public init: Observable<string[]>;
   /** Get alien from name */
   public get: (name: string) => Alien;
   /** Get names that match given properties */
@@ -19,15 +18,14 @@ export class AlienService {
     const aliens: Record<string, Alien> = {};
     const names: string[] = [];
 
-    // Convert to Promise so that .subscribe will not run this request again. Could be done with Rx.Subject or multicast?
-    this.init = http.get<Alien.Data>('data/aliens2.json').toPromise().then(response => {
+    this.init = http.get<Alien.Data>('data/aliens2.json').pipe(map(response => {
       response.list.forEach(alien => {
         aliens[alien.name] = alien;
         names.push(alien.name);
       });
       names.sort();
       return names.slice(0);
-    });
+    }), shareReplay());
 
     this.get = name => aliens[name];
     this.getMatchingNames = (levels, games, exclude, setup) => {
