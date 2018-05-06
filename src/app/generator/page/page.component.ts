@@ -2,6 +2,19 @@ import { Component, OnInit } from '@angular/core';
 import { LocalStorageService } from 'angular-2-local-storage';
 import { AlienService } from '../../aliens/alien.service';
 
+/** Possible actions in Generator */
+type Actions = 'draw' | 'hide' | 'show' | 'redo' | 'reset';
+
+/** Generator settings */
+interface ISettings {
+  levels: boolean[];
+  games: GameSelection;
+  namesExcluded: string[];
+  setupLevel: SetupLevel;
+  numToChoose: number;
+  preventConflicts: boolean;
+}
+
 const STORAGE_PREFIX = 'alien-gen';
 
 @Component({
@@ -28,14 +41,22 @@ export class AlienGeneratorPageComponent implements OnInit {
   public redo: () => void;
 
   /** Get which actions are not allowed */
-  public getDisabledActions: (howManyToChoose: number, numShown: number) => Record<Generator.Actions, boolean>;
+  public getDisabledActions: (howManyToChoose: number, numShown: number) => Record<Actions, boolean>;
 
   /** Get number given out and size of pool */
   public getStatus: () => string;
 
-  public settings: Generator.Settings = { levels: [], games: {}, namesExcluded: [], setupLevel: '', numToChoose: 2, preventConflicts: true };
+  /** Start with defaults, then assign in ngOnInit */
+  public settings: ISettings = {
+    levels: [true, true, true],
+    games: { [Game.Encounter]: true },
+    namesExcluded: [],
+    setupLevel: SetupLevel.NoSetup,
+    numToChoose: 2,
+    preventConflicts: true,
+  };
   /** Which actions are disabled */
-  public disabled: Record<Generator.Actions, boolean> = { draw: true, hide: true, show: true, redo: true, reset: true };
+  public disabled: Record<Actions, boolean> = { draw: true, hide: true, show: true, redo: true, reset: true };
 
   /** Names of all aliens, for Exclude by name */
   public namesAll: string[];
@@ -117,11 +138,11 @@ export class AlienGeneratorPageComponent implements OnInit {
       // if unable to pick desired number, undo
       if(current.length < this.settings.numToChoose) {
         undo();
-        this.setState({ aliens: [], message: 'Not enough potential aliens left.' + (this.settings.preventConflicts ? ' It\'s possible that the "Prevent conflicts" option is preventing me from displaying remaining aliens.' : '') });
+        this.setState([], 'Not enough potential aliens left.' + (this.settings.preventConflicts ? ' It\'s possible that the "Prevent conflicts" option is preventing me from displaying remaining aliens.' : ''));
       } else {
 
         // display
-        this.setState({ aliens: current, message: 'Choices:', limit: this.getChooseLimit(this.settings.numToChoose) });
+        this.setState(current, 'Choices:', this.getChooseLimit(this.settings.numToChoose));
       }
     };
 
@@ -129,10 +150,10 @@ export class AlienGeneratorPageComponent implements OnInit {
       // ask for initial of one of the aliens before reshowing them
       const initials = current.map(e => e[0].toLowerCase());
       if(initials.indexOf((prompt('Enter the first initial of one of the aliens you were given, then click OK.') || '').toLowerCase()) < 0) {
-        this.setState({ aliens: [], message: 'Wrong letter.' });
+        this.setState([], 'Wrong letter.');
       } else {
         // if passed, then show aliens
-        this.setState({ aliens: current, message: 'Choices:' });
+        this.setState(current, 'Choices: ');
       }
     };
 
@@ -141,8 +162,6 @@ export class AlienGeneratorPageComponent implements OnInit {
         undo();
         numRedos++;
         this.draw();
-      } else {
-        this.setState({ aliens: current, message: 'Choices:' });
       }
     };
 
@@ -173,7 +192,7 @@ export class AlienGeneratorPageComponent implements OnInit {
         restricted = [];
         numRedos = 0;
         this.restrictNumToChoose();
-        this.setState({ aliens: [], message: 'List reset.' });
+        this.setState([], 'List reset.');
       }
     };
     this.reset = () => {
@@ -181,7 +200,7 @@ export class AlienGeneratorPageComponent implements OnInit {
 
       if(this.NOT_RESET > 2) {
         makePickFinal();
-        this.setState({ aliens: given, message: 'Aliens given out so far:' });
+        this.setState(given, 'Aliens given out so far:');
         this.NOT_RESET = 0;
       }
     };
@@ -190,21 +209,19 @@ export class AlienGeneratorPageComponent implements OnInit {
   public ngOnInit(): void {
     this.Aliens.init.then(names => {
       this.namesAll = names;
-      this.settings = this.Storage.get(STORAGE_PREFIX + 'settings');
-      // tslint:disable-next-line:no-object-literal-type-assertion
-      if(!this.settings) { this.settings = {} as Generator.Settings; }
-      if(!this.settings.levels) { this.settings.levels = [true, true, true]; }
-      if(!this.settings.games) { this.settings.games = { Encounter: true }; }
-      if(!this.settings.namesExcluded) { this.settings.namesExcluded = []; }
-      if(!this.settings.setupLevel) { this.settings.setupLevel = ''; }
-      if(!this.settings.numToChoose) { this.settings.numToChoose = 2; }
-      if(this.settings.preventConflicts === undefined) { this.settings.preventConflicts = true; }
+      const loaded: Partial<ISettings> = this.Storage.get(STORAGE_PREFIX + 'settings');
+      if(loaded.levels) { this.settings.levels = loaded.levels; }
+      if(loaded.games) { this.settings.games = loaded.games; }
+      if(loaded.namesExcluded) { this.settings.namesExcluded = loaded.namesExcluded; }
+      if(loaded.setupLevel) { this.settings.setupLevel = loaded.setupLevel; }
+      if(loaded.numToChoose) { this.settings.numToChoose = loaded.numToChoose; }
+      if(loaded.preventConflicts !== undefined) { this.settings.preventConflicts = loaded.preventConflicts; }
       this.change();
     });
   }
 
   /** Hide all aliens but don't actually change lists */
-  public hide = () => this.setState({ aliens: [], message: 'Choices hidden.' });
+  public hide = () => this.setState([], 'Choices hidden.');
 
   /** keep choose # within 1 and max. Run when resetting alien list (# might have changed) and changing # to pick */
   public restrictNumToChoose = () => {
@@ -230,13 +247,16 @@ export class AlienGeneratorPageComponent implements OnInit {
     this.Storage.set(STORAGE_PREFIX + 'settings', this.settings);
   }
 
-  private setState(newState: Generator.Status) {
-    if(!newState) { return; }
-    this.state = newState.message;
-    this.aliensToShow = newState.aliens.map(e => this.Aliens.get(e));
-    if(newState.limit) {
-      this.settings.numToChoose = newState.limit;
-    }
+  /**
+   * Update Generator state
+   * @param aliens Aliens to display
+   * @param message Message to display (errors, # of draws/redos)
+   * @param limit Max draw limit
+   */
+  private setState(aliens: string[], message: string, limit?: number) {
+    this.state = message;
+    this.aliensToShow = aliens.map(e => this.Aliens.get(e));
+    if(limit) { this.settings.numToChoose = limit; }
     this.status = this.getStatus();
     this.disabled = this.getDisabledActions(this.settings.numToChoose, this.aliensToShow.length);
   }

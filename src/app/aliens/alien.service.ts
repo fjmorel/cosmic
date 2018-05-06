@@ -29,8 +29,7 @@ export class AlienService {
       return names.slice(0);
     });
 
-    // tslint:disable-next-line:no-object-literal-type-assertion
-    this.get = name => aliens[name] || {} as Alien;
+    this.get = name => aliens[name];
     this.getMatchingNames = (levels, games, exclude, setup) => {
       // remove wrong game/level
       let filteredNames = names.filter(name => levels[aliens[name].level] && games[aliens[name].game]);

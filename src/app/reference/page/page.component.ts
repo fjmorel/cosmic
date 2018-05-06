@@ -2,6 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { LocalStorageService } from 'angular-2-local-storage';
 import { AlienService } from '../../aliens/alien.service';
 
+interface IGroupedItems<T> {
+  value: string;
+  items: T[] | Array<IGroupedItems<T>>;
+}
+
 // todo: options for grouping/ordering
 const STORAGE_PREFIX = 'alien-ref';
 
@@ -10,17 +15,19 @@ const STORAGE_PREFIX = 'alien-ref';
   styleUrls: ['page.component.scss'],
   templateUrl: './page.component.html',
 })
-export class AlienReferencePageComponent implements OnInit, Reference.Settings {
-  public groups: Array<GroupedItems<Alien>>;
+export class AlienReferencePageComponent implements OnInit {
+  public groups: Array<IGroupedItems<Alien>>;
   public games: GameSelection;
   public levels: boolean[];
+  // orderBy: Alien.MandatoryProperties;
+  // groupBy: Alien.MandatoryProperties;
 
   constructor(private Aliens: AlienService, private Storage: LocalStorageService) { }
 
   public ngOnInit() {
     // Set defaults
     this.levels = this.Storage.get(STORAGE_PREFIX + 'levels') || [true, true, true];
-    this.games = this.Storage.get(STORAGE_PREFIX + 'games') || { Encounter: true };
+    this.games = this.Storage.get(STORAGE_PREFIX + 'games') || { [Game.Encounter]: true };
     this.Aliens.init.then(() => { this.refresh(); });
   }
 
@@ -45,21 +52,20 @@ export class AlienReferencePageComponent implements OnInit, Reference.Settings {
 }
 
 /** Group objects by given array of fields */
-function groupItems(list: Alien[], gFields: Alien.Properties, sFields: Alien.Properties, level: number = 0): Array<GroupedItems<Alien>> {
+function groupItems(list: Alien[], gFields: Alien.MandatoryProperties, sFields: Alien.MandatoryProperties, level: number = 0): Array<IGroupedItems<Alien>> {
   if(gFields.length < 1) { return [{ value: '', items: list }]; }
 
   // group objects by property
   const grouped: Record<string, Alien[]> = {};
   const field = gFields[level];
   list.forEach((item) => {
-    // tslint:disable-next-line:no-non-null-assertion
-    const group = item[field]!;
+    const group = item[field];
     grouped[group] = grouped[group] || [];
     grouped[group].push(item);
   });
 
   // generate array with named groups
-  let result: Array<GroupedItems<Alien>> = Object.keys(grouped).sort().map(group => ({ value: group, items: grouped[group] }));
+  let result: Array<IGroupedItems<Alien>> = Object.keys(grouped).sort().map(group => ({ value: group, items: grouped[group] }));
 
   // if more fields to group by, go deeper
   if(gFields[level + 1]) {

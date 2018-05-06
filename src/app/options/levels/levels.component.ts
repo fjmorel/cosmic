@@ -6,8 +6,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
   templateUrl: './levels.component.html',
 })
 export class LevelOptionsComponent {
-  // tslint:disable-next-line:no-output-on-prefix
-  @Output() public onSelected = new EventEmitter<boolean[]>();
+  @Output() public change = new EventEmitter<boolean[]>();
   @Input() public levels: boolean[];
-  public select() { this.onSelected.emit(this.levels.slice(0)); }
+  public select() { this.change.emit(this.levels.slice(0)); }
 }

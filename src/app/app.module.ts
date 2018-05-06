@@ -1,3 +1,6 @@
+// tslint:disable-next-line:no-reference
+/// <reference path="./index.d.ts" />
+
 // todo: testing of components
 import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';

@@ -6,11 +6,15 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
   templateUrl: './games.component.html',
 })
 export class GameOptionsComponent {
-  // tslint:disable-next-line:no-output-on-prefix
-  @Output() public onSelected = new EventEmitter<GameSelection>();
+  @Output() public change = new EventEmitter<GameSelection>();
   @Input() public games: GameSelection = {};
-  public names: Game[] = ['Encounter', 'Alliance', 'Conflict', 'Dominion', 'Eons', 'Incursion', 'Storm'];
+  public names: Game[] = [
+    Game.Encounter, Game.Alliance,
+    Game.Conflict, Game.Dominion,
+    Game.Eons, Game.Incursion,
+    Game.Storm,
+  ];
 
-  public select() { this.onSelected.emit(this.games); }
+  public select() { this.change.emit(this.games); }
 
 }

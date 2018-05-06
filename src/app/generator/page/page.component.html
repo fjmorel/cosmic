@@ -10,8 +10,8 @@
       <h1>Game Generator</h1>
     </mat-toolbar>
     <div id="container">
-      <cosmic-game-options [games]="settings.games" (onSelected)="onSelectGame($event)"></cosmic-game-options>
-      <alien-level-options [levels]="settings.levels" (onSelected)="onSelectLevel($event)"></alien-level-options>
+      <cosmic-game-options [games]="settings.games" (change)="onSelectGame($event)"></cosmic-game-options>
+      <alien-level-options [levels]="settings.levels" (change)="onSelectLevel($event)"></alien-level-options>
       <mat-card>
         <mat-card-title>Game Setup</mat-card-title>
         <mat-radio-group [(ngModel)]="settings.setupLevel" (change)="change()">
