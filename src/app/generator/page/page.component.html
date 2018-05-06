@@ -22,9 +22,11 @@
       </mat-card>
       <mat-card>
         <mat-card-title>Exclude by name</mat-card-title>
-        <mat-select multiple [(ngModel)]="settings.namesExcluded" (change)="change()" placeholder="Select names">
-          <mat-option *ngFor="let name of namesAll" [value]="name">{{name}}</mat-option>
-        </mat-select>
+        <mat-form-field>
+          <mat-select multiple [(ngModel)]="settings.namesExcluded" (selectionChange)="change()" placeholder="Select names">
+            <mat-option *ngFor="let name of namesAll" [value]="name">{{name}}</mat-option>
+          </mat-select>
+        </mat-form-field>
       </mat-card>
       <mat-card>
         <mat-card-title>How to choose</mat-card-title>

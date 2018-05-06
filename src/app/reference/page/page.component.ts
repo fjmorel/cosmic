@@ -59,7 +59,6 @@ function groupItems(list: Alien[], gFields: Alien.Properties, sFields: Alien.Pro
   });
 
   // generate array with named groups
-  // todo sort using orderBy
   let result: Array<GroupedItems<Alien>> = Object.keys(grouped).sort().map(group => ({ value: group, items: grouped[group] }));
 
   // if more fields to group by, go deeper
