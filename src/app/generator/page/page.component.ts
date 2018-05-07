@@ -207,7 +207,7 @@ export class AlienGeneratorPageComponent implements OnInit {
   }
 
   public ngOnInit(): void {
-    this.Aliens.init.subscribe(names => {
+    this.Aliens.init$.subscribe(names => {
       this.namesAll = names;
       const loaded: Partial<ISettings> = this.Storage.get(STORAGE_PREFIX + 'settings');
       if(loaded.levels) { this.settings.levels = loaded.levels; }

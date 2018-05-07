@@ -1,0 +1,32 @@
+<div *ngFor="let alien of aliens">
+	<mat-card [ngClass]="'alien-'+alien.level+'-theme'">
+		<mat-card-header>
+			<div mat-card-avatar>
+				<button mat-raised-button class="mat-accent" (click)="opened[alien.name]=!opened[alien.name]">
+					<mat-icon>{{opened[alien.name] ? 'remove': 'add'}}</mat-icon>
+				</button>
+			</div>
+			<mat-card-title class="alien-fg">{{alien.name}}</mat-card-title>
+			<mat-card-subtitle>{{alien.power}}</mat-card-subtitle>
+		</mat-card-header>
+		<mat-card-footer>
+			<div class="bar alien-bg">
+				<span>{{alien.game}}</span>
+				<span *ngIf="(alien.setup || alien.restriction)">
+					<mat-icon>warning</mat-icon>
+				</span>
+				<span>{{alien.level | levelStars}}</span>
+			</div>
+			<div *ngIf="opened[alien.name]" class="desc" [innerHTML]="alien.description"></div>
+			<div *ngIf="opened[alien.name] && alien.player" class="bar alien-bg">
+				<span>{{alien.player}}</span>
+			</div>
+			<div *ngIf="opened[alien.name] && alien.mandatory" class="bar alien-bg">
+				<span>{{alien.mandatory}}</span>
+			</div>
+			<div *ngIf="opened[alien.name] && alien.phases" class="bar alien-bg">
+				<span>Phases: {{alien.phases.split(",").join(", ")}}</span>
+			</div>
+		</mat-card-footer>
+	</mat-card>
+</div>

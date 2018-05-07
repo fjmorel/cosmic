@@ -10,7 +10,6 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import * as Material from '@angular/material';
 import { LocalStorageModule } from 'angular-2-local-storage';
-import { AlienCardComponent } from './aliens/card/card.component';
 import { AlienGridComponent } from './aliens/grid/grid.component';
 import { DrawerComponent } from './drawer/drawer.component';
 import { GameOptionsComponent } from './options/games/games.component';
@@ -56,7 +55,6 @@ const MATERIAL_MODULES = [
     LevelOptionsComponent,
     GameOptionsComponent,
 
-    AlienCardComponent,
     AlienGridComponent,
   ],
   imports: [

@@ -1,6 +1,94 @@
-:host { display: flex; flex-wrap: wrap; align-items: stretch; }
-:host > * { flex-basis: 25% }
+:host {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: stretch;
+    &>* {
+        flex-basis: 25%;
+    }
+}
 
-@media (max-width: 992px) { :host > * { flex-basis: 33% } }
-@media (max-width: 768px) { :host > * { flex-basis: 50% } }
-@media (max-width: 576px) { :host > * { flex-basis: 100% } }
+@media (max-width: 992px) {
+    :host>* {
+        flex-basis: 33%;
+    }
+}
+
+@media (max-width: 768px) {
+    :host>* {
+        flex-basis: 50%;
+    }
+}
+
+@media (max-width: 576px) {
+    :host>* {
+        flex-basis: 100%;
+    }
+}
+
+$margin: 8px;
+
+mat-card {
+    padding: 0;
+}
+
+mat-card-title {
+    font-weight: bold;
+    margin: {
+        left: -$margin;
+        right: -$margin;
+    }
+}
+
+mat-card-subtitle {
+    font-weight: normal;
+    margin: {
+        left: -$margin;
+        right: -$margin;
+    }
+}
+
+mat-icon {
+    width: 2*$margin;
+    height: 2*$margin;
+    font-size: 2*$margin;
+}
+
+mat-card-header {
+    justify-content: space-between;
+    padding: 2*$margin 2*$margin 0 2*$margin;
+}
+
+.mat-card-header-text {
+    margin: 0;
+}
+
+[mat-card-avatar] {
+    order: 2;
+    width: inherit;
+}
+
+[mat-raised-button] {
+    min-width: 0;
+    line-height: 24px;
+    padding: 0 $margin;
+}
+
+mat-card-footer {
+    margin: 0;
+}
+
+.bar {
+    display: flex;
+    justify-content: space-between;
+    font-size: smaller;
+    color: #fff;
+    &>span {
+        margin: $margin 2*$margin;
+    }
+}
+
+.desc {
+    font-family: "EB Garamond", serif;
+    background: #ddd;
+    padding: $margin 2*$margin;
+}

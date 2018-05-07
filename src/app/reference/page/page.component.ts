@@ -28,7 +28,7 @@ export class AlienReferencePageComponent implements OnInit {
     // Set defaults
     this.levels = this.Storage.get(STORAGE_PREFIX + 'levels') || [true, true, true];
     this.games = this.Storage.get(STORAGE_PREFIX + 'games') || { [Game.Encounter]: true };
-    this.Aliens.init.subscribe(() => { this.refresh(); });
+    this.Aliens.init$.subscribe(() => { this.refresh(); });
   }
 
   /** Handle game option change */
@@ -47,7 +47,7 @@ export class AlienReferencePageComponent implements OnInit {
 
   /** Refresh shown aliens based on settings */
   private refresh() {
-    this.groups = groupItems(this.Aliens.getMatching(this.levels, this.games), ['game', 'level'], ['name']);
+    this.groups = groupItems(this.Aliens.getMatchingNames(this.levels, this.games).map(this.Aliens.get), ['game', 'level'], ['name']);
   }
 }
 

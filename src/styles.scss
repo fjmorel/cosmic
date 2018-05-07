@@ -54,7 +54,7 @@ html, body, .mat-drawer-container {
 }
 
 // Separate cards
-.mat-card { margin: 8px; }
+mat-card { margin: 8px; }
 
 // Allow small buttons (for +/- on Aliens, hamburger)
 .mat-button, .mat-raised-button { min-width: 0 !important; }
