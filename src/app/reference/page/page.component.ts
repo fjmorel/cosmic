@@ -12,7 +12,6 @@ const STORAGE_PREFIX = 'alien-ref';
 
 @Component({
   selector: 'alien-reference',
-  styleUrls: ['page.component.scss'],
   templateUrl: './page.component.html',
 })
 export class AlienReferencePageComponent implements OnInit {

@@ -2,7 +2,6 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 
 @Component({
   selector: 'alien-level-options',
-  styleUrls: ['levels.component.scss'],
   templateUrl: './levels.component.html',
 })
 export class LevelOptionsComponent {

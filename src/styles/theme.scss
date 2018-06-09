@@ -1,0 +1,47 @@
+@import '~@angular/material/theming';
+
+$level0: #189247;
+$level1: #c39c07;
+$level2: #c31b09;
+
+// Include the common styles for Angular Material.
+@include mat-core();
+
+// Define the palettes for your theme using the Material Design palettes available in palette.scss
+// (imported above). For each palette, you can optionally specify a default, lighter, and darker
+// hue.
+$cosmic-primary: mat-palette($mat-deep-purple);
+$cosmic-accent: mat-palette($mat-deep-purple);
+
+$alien-0-palette: map-merge(mat-palette($mat-green, 900), (default: $level0));
+$alien-1-palette: map-merge(mat-palette($mat-deep-orange, 900), (default: $level1));
+$alien-2-palette: map-merge(mat-palette($mat-red, 900), (default: $level2));
+
+// Create the theme object (a Sass map containing all of the palettes).
+$cosmic-theme: mat-light-theme($cosmic-primary, $cosmic-accent);
+$alien-0-theme: mat-light-theme($cosmic-primary, $alien-0-palette);
+$alien-1-theme: mat-light-theme($cosmic-primary, $alien-1-palette);
+$alien-2-theme: mat-light-theme($cosmic-primary, $alien-2-palette);
+
+// Include theme styles for core
+@include angular-material-theme($cosmic-theme);
+
+// Include theme styles for different alien levels (checkboxes, buttons, background/foreground color)
+.alien-0-theme {
+  .alien-bg { background: $level0; }
+  .alien-fg { color: $level0; }
+  @include mat-button-theme($alien-0-theme);
+  @include mat-checkbox-theme($alien-0-theme);
+}
+.alien-1-theme {
+  .alien-bg { background: $level1; }
+  .alien-fg { color: $level1; }
+  @include mat-button-theme($alien-1-theme);
+  @include mat-checkbox-theme($alien-1-theme);
+}
+.alien-2-theme {
+  .alien-bg { background: $level2; }
+  .alien-fg { color: $level2; }
+  @include mat-button-theme($alien-2-theme);
+  @include mat-checkbox-theme($alien-2-theme);
+}

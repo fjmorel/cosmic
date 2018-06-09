@@ -2,14 +2,14 @@
 	<mat-sidenav #leftnav>
 		<cosmic-drawer></cosmic-drawer>
 	</mat-sidenav>
-	<div id="content">
+	<div>
 		<mat-toolbar class="mat-primary">
 			<button mat-button (click)="leftnav.toggle()">
 				<mat-icon>menu</mat-icon>
 			</button>&nbsp;
 			<h1>Alien Reference</h1>
 		</mat-toolbar>
-		<div id="container">
+		<div id="ref-options">
 			<cosmic-game-options [games]="games" (change)="onSelectGame($event)"></cosmic-game-options>
 			<alien-level-options [levels]="levels" (change)="onSelectLevel($event)"></alien-level-options>
 			<mat-card>
@@ -26,7 +26,7 @@
 				</ol>
 			</mat-card>
 		</div>
-		<div *ngFor="let gGroup of groups">
+		<div id="ref-output" *ngFor="let gGroup of groups">
 			<div *ngFor="let lGroup of gGroup.items">
 				<h2 class="mat-h2">Cosmic {{gGroup.value}} - {{lGroup.value| levelName}} {{lGroup.value | levelStars}}</h2>
 				<alien-grid [aliens]="lGroup.items"></alien-grid>

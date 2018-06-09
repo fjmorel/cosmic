@@ -1,0 +1,13 @@
+#home-cards {
+  display: flex;
+  flex: auto;
+  flex-wrap: wrap;
+  align-content: stretch;
+  padding: 8px;
+  mat-card {
+    max-width: 300px;
+  }
+  mat-card-actions {
+    text-align: right
+  }
+}

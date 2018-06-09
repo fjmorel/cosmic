@@ -2,14 +2,14 @@
   <mat-sidenav #leftnav>
     <cosmic-drawer></cosmic-drawer>
   </mat-sidenav>
-  <div id="content">
+  <div>
     <mat-toolbar class="mat-primary">
       <button mat-button (click)="leftnav.toggle()">
         <mat-icon>menu</mat-icon>
       </button>&nbsp;
       <h1>Game Generator</h1>
     </mat-toolbar>
-    <div id="container">
+    <div id="gen-options">
       <cosmic-game-options [games]="settings.games" (change)="onSelectGame($event)"></cosmic-game-options>
       <alien-level-options [levels]="settings.levels" (change)="onSelectLevel($event)"></alien-level-options>
       <mat-card>

@@ -42,13 +42,14 @@
                 }
               ],
               "optimization": true,
+              "baseHref": "./",
               "outputHashing": "all",
               "sourceMap": false,
               "extractCss": true,
               "namedChunks": false,
               "aot": true,
               "extractLicenses": true,
-              "vendorChunk": false,
+              "vendorChunk": true,
               "buildOptimizer": true
             }
           }
@@ -56,6 +57,7 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
+            "aot": true,
             "browserTarget": "cosmic-ng:build"
           },
           "configurations": {

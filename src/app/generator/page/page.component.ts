@@ -19,7 +19,6 @@ const STORAGE_PREFIX = 'alien-gen';
 
 @Component({
   selector: 'alien-generator',
-  styleUrls: ['page.component.scss'],
   templateUrl: './page.component.html',
 })
 export class AlienGeneratorPageComponent implements OnInit {

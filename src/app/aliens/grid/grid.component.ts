@@ -2,7 +2,6 @@ import { Component, Input } from '@angular/core';
 
 @Component({
   selector: 'alien-grid',
-  styleUrls: ['grid.component.scss'],
   templateUrl: 'grid.component.html',
 })
 export class AlienGridComponent {

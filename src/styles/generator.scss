@@ -1,0 +1,21 @@
+#gen-options {
+  display: flex;
+  flex: auto;
+  flex-wrap: wrap;
+  align-content: stretch;
+  mat-radio-button {
+    display: block;
+    margin: 16px 0;
+  }
+}
+
+#gen-actions {
+  padding: 0 8px;
+  .space-right {
+    margin-right: 16px;
+  }
+}
+
+#gen-status {
+  margin: 16px;
+}
