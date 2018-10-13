@@ -208,13 +208,15 @@ export class AlienGeneratorPageComponent implements OnInit {
   public ngOnInit(): void {
     this.Aliens.init$.subscribe(names => {
       this.namesAll = names;
-      const loaded: Partial<ISettings> = this.Storage.get(STORAGE_PREFIX + 'settings');
-      if(loaded.levels) { this.settings.levels = loaded.levels; }
-      if(loaded.games) { this.settings.games = loaded.games; }
-      if(loaded.namesExcluded) { this.settings.namesExcluded = loaded.namesExcluded; }
-      if(loaded.setupLevel) { this.settings.setupLevel = loaded.setupLevel; }
-      if(loaded.numToChoose) { this.settings.numToChoose = loaded.numToChoose; }
-      if(loaded.preventConflicts !== undefined) { this.settings.preventConflicts = loaded.preventConflicts; }
+      const loaded = this.Storage.get<Partial<ISettings>>(STORAGE_PREFIX + 'settings');
+      if(loaded) {// Null on first load
+        if(loaded.levels) { this.settings.levels = loaded.levels; }
+        if(loaded.games) { this.settings.games = loaded.games; }
+        if(loaded.namesExcluded) { this.settings.namesExcluded = loaded.namesExcluded; }
+        if(loaded.setupLevel) { this.settings.setupLevel = loaded.setupLevel; }
+        if(loaded.numToChoose) { this.settings.numToChoose = loaded.numToChoose; }
+        if(loaded.preventConflicts !== undefined) { this.settings.preventConflicts = loaded.preventConflicts; }
+      }
       this.change();
     });
   }
