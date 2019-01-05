@@ -2,6 +2,7 @@
   "compileOnSave": false,
   "compilerOptions": {
     "forceConsistentCasingInFileNames": true,
+    "importHelpers": true,
     "noFallthroughCasesInSwitch": true,
     "noImplicitAny": true,
     "noImplicitReturns": true,
