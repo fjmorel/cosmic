@@ -1,6 +1,8 @@
-import { Component, OnInit } from '@angular/core';
-import { LocalStorageService } from 'angular-2-local-storage';
+import { Component, Inject, OnInit } from '@angular/core';
+import { LOCAL_STORAGE, StorageService } from 'ngx-webstorage-service';
 import { AlienService } from '../../aliens/alien.service';
+
+const STORAGE_PREFIX = 'cosmic.alien-ref';
 
 interface IGroupedItems<T> {
   value: string;
@@ -8,7 +10,6 @@ interface IGroupedItems<T> {
 }
 
 // todo: options for grouping/ordering
-const STORAGE_PREFIX = 'alien-ref';
 
 @Component({
   selector: 'alien-reference',
@@ -21,7 +22,7 @@ export class AlienReferencePageComponent implements OnInit {
   // orderBy: Alien.MandatoryProperties;
   // groupBy: Alien.MandatoryProperties;
 
-  constructor(private Aliens: AlienService, private Storage: LocalStorageService) { }
+  constructor(private Aliens: AlienService, @Inject(LOCAL_STORAGE) private Storage: StorageService) { }
 
   public ngOnInit() {
     // Set defaults

@@ -9,7 +9,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import * as Material from '@angular/material';
-import { LocalStorageModule } from 'angular-2-local-storage';
+import { StorageServiceModule } from 'ngx-webstorage-service';
 import { AlienGridComponent } from './aliens/grid/grid.component';
 import { DrawerComponent } from './drawer/drawer.component';
 import { GameOptionsComponent } from './options/games/games.component';
@@ -63,7 +63,7 @@ const MATERIAL_MODULES = [
     FormsModule,
     HttpClientModule,
 
-    LocalStorageModule.withConfig({ prefix: 'cosmic', storageType: 'localStorage' }),
+    StorageServiceModule,
     AppRoutingModule,
     ...MATERIAL_MODULES,
   ],

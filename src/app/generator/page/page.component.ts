@@ -1,6 +1,8 @@
-import { Component, OnInit } from '@angular/core';
-import { LocalStorageService } from 'angular-2-local-storage';
+import { Component, Inject, OnInit } from '@angular/core';
+import { LOCAL_STORAGE, StorageService } from 'ngx-webstorage-service';
 import { AlienService } from '../../aliens/alien.service';
+
+const STORAGE_PREFIX = 'cosmic.alien-gen';
 
 /** Possible actions in Generator */
 type Actions = 'draw' | 'hide' | 'show' | 'redo' | 'reset';
@@ -14,8 +16,6 @@ interface ISettings {
   numToChoose: number;
   preventConflicts: boolean;
 }
-
-const STORAGE_PREFIX = 'alien-gen';
 
 @Component({
   selector: 'alien-generator',
@@ -69,7 +69,7 @@ export class AlienGeneratorPageComponent implements OnInit {
   /** How many times Reset has been clicked, without Resetting */
   private NOT_RESET = 0;
 
-  constructor(private Aliens: AlienService, private Storage: LocalStorageService) {
+  constructor(private Aliens: AlienService, @Inject(LOCAL_STORAGE) private Storage: StorageService) {
 
     // current = currently drawn.
     let current: string[] = [];
@@ -208,7 +208,7 @@ export class AlienGeneratorPageComponent implements OnInit {
   public ngOnInit(): void {
     this.Aliens.init$.subscribe(names => {
       this.namesAll = names;
-      const loaded = this.Storage.get<Partial<ISettings>>(STORAGE_PREFIX + 'settings');
+      const loaded = this.Storage.get(STORAGE_PREFIX + 'settings') as Partial<ISettings>;
       if(loaded) {// Null on first load
         if(loaded.levels) { this.settings.levels = loaded.levels; }
         if(loaded.games) { this.settings.games = loaded.games; }
