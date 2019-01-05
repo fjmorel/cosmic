@@ -83,11 +83,13 @@
               {
                 "input": "node_modules/@angular/material/prebuilt-themes/indigo-pink.css"
               },
-              "styles.scss"
+              "src/styles.scss"
             ],
             "scripts": [],
             "assets": [
               "src/favicon.png",
+              "src/generator.html",
+              "src/reference.html",
               "src/icons",
               "src/data"
             ]

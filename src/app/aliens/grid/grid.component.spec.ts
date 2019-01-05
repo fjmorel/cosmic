@@ -1,7 +1,12 @@
 
+import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
+import { LevelStarsPipe } from '../../pipes/levelstars.pipe';
 import { AlienGridComponent } from './grid.component';
+
+let levelStarsStub: Partial<LevelStarsPipe>;
+levelStarsStub = { transform: (level: number) => ['★', '★★', '★★★'][level] };
 
 describe('AlienGridComponent', () => {
   let component: AlienGridComponent;
@@ -9,7 +14,9 @@ describe('AlienGridComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [AlienGridComponent],
+      declarations: [AlienGridComponent, LevelStarsPipe],
+      providers: [{ provide: LevelStarsPipe, useValue: levelStarsStub }],
+      schemas: [NO_ERRORS_SCHEMA],
     })
       .compileComponents();
   }));
