@@ -10,6 +10,10 @@
     "noUnusedParameters": true,
     "strictNullChecks": false,
     "strict": true,
+    "noEmitHelpers": true,
+    "noImplicitThis": true,
+    "strictBindCallApply": true,
+    //"strictPropertyInitialization": true,
     "baseUrl": "./",
     "outDir": "./dist/out-tsc",
     "sourceMap": true,
@@ -17,13 +21,17 @@
     "moduleResolution": "node",
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
-    "target": "es5",
+    "target": "ES2019",
     "typeRoots": [
       "node_modules/@types"
     ],
     "lib": [
-      "es2017",
+      "ES2019",
       "dom"
     ]
-  }
+  },
+  "files": [
+    "src/main.ts",
+    "src/polyfills.ts"
+  ]
 }

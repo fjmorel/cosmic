@@ -132,5 +132,8 @@
       }
     }
   },
-  "defaultProject": "cosmic-ng"
+  "defaultProject": "cosmic-ng",
+  "cli": {
+    "analytics": "c819208e-e3e3-4f51-a7d8-6f5a731557f0"
+  }
 }
