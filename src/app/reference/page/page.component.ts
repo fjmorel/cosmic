@@ -1,6 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { LOCAL_STORAGE, StorageService } from 'ngx-webstorage-service';
 import { AlienService } from '../../aliens/alien.service';
+import { Alien, GameSelection, Game } from '../../types';
 
 const STORAGE_PREFIX = 'cosmic.alien-ref';
 

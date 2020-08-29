@@ -1,5 +1,5 @@
 /** Game names */
-declare const enum Game {
+export const enum Game {
 	Encounter = 'Encounter',
 	Alliance = 'Alliance',
 	Conflict = 'Conflict',
@@ -10,14 +10,14 @@ declare const enum Game {
 }
 
 /** What kind of setup to filter */
-declare const enum SetupLevel {
+export const enum SetupLevel {
 	NoSetup = '',
 	RequiresExtraColor = 'color',
 	AnySetup = 'all'
 }
 
 /** Different kinds of game setup */
-declare const enum SetupType {
+export const enum SetupType {
 	NoSetup = '',
 	HasExtraCards = 'cards',
 	RequiresExtraColor = 'color',
@@ -28,7 +28,7 @@ declare const enum SetupType {
 }
 
 /** Whether using a power is required */
-declare const enum Requirement {
+export const enum Requirement {
 	Optional = 'Optional',
 	Mandatory = 'Mandatory',
 	Varies = 'Varies'
@@ -45,7 +45,7 @@ type BasicAlien = Readonly<{
 }>;
 
 /** All details about an alien */
-type Alien = BasicAlien & Readonly<{
+export type Alien = BasicAlien & Readonly<{
 	restriction?: string,
 	player?: string,
 	mandatory?: Requirement,
@@ -53,17 +53,17 @@ type Alien = BasicAlien & Readonly<{
 }>
 
 /** Whether games are selected */
-type GameSelection = Partial<Record<Game, boolean>>;
+export type GameSelection = Partial<Record<Game, boolean>>;
 
-declare namespace Alien {
+export namespace Alien {
 	/** Properties that all aliens have */
-	type MandatoryProperties = Array<keyof BasicAlien>;
+	export type MandatoryProperties = Array<keyof BasicAlien>;
 
 	/** Properties that I've only transcribed for some aliens */
-	type Properties = Array<keyof Alien>;
+	export type Properties = Array<keyof Alien>;
 
 	/** JSON format of alien data file */
-	interface Data {
+	export interface Data {
 		list: Alien[]
 	}
 }

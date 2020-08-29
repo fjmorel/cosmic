@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map, retry, shareReplay } from 'rxjs/operators';
+import { Alien, GameSelection, SetupLevel, SetupType } from '../types';
 
 @Injectable({ providedIn: 'root' })
 export class AlienService {
