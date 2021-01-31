@@ -5,8 +5,7 @@ import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { LevelStarsPipe } from '../../pipes/levelstars.pipe';
 import { AlienGridComponent } from './grid.component';
 
-let levelStarsStub: Partial<LevelStarsPipe>;
-levelStarsStub = { transform: (level: number) => ['★', '★★', '★★★'][level] };
+const levelStarsStub: Partial<LevelStarsPipe> = { transform: (level: number) => ['★', '★★', '★★★'][level] };
 
 describe('AlienGridComponent', () => {
   let component: AlienGridComponent;

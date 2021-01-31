@@ -12,8 +12,7 @@ describe('GameOptionsComponent', () => {
     TestBed.configureTestingModule({
       declarations: [ GameOptionsComponent ],
       schemas: [NO_ERRORS_SCHEMA],
-    })
-    .compileComponents();
+    }).compileComponents();
   }));
 
   beforeEach(() => {

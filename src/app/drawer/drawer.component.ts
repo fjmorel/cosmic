@@ -7,7 +7,7 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class DrawerComponent {
   public page: string;
-  constructor(private route: ActivatedRoute) {
+  public constructor(private route: ActivatedRoute) {
     this.route.url.subscribe(url => {
       this.page = url[0].path;
     });

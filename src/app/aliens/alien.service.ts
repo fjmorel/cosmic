@@ -13,7 +13,7 @@ export class AlienService {
   /** Get names that match given properties */
   public getMatchingNames: (levels: boolean[], games: GameSelection, exclude?: string[], setup?: SetupLevel) => string[];
 
-  constructor(http: HttpClient) {
+  public constructor(http: HttpClient) {
     const aliens: Record<string, Alien> = {};
     const names: string[] = [];
 
@@ -31,16 +31,14 @@ export class AlienService {
     );
 
     this.get = name => aliens[name];
-    this.getMatchingNames = (levels, games, exclude, setup) => {
-      return names.filter(name => {
-        const alien = aliens[name];
-        // Matches level and game
-        return levels[alien.level] && games[alien.game] &&
-          // No exclude by name, or not in exclude list
-          (!exclude || !exclude.length || exclude.indexOf(name) < 0) &&
-          // No setup restriction or no alien setup or (only restrict color and alien setup is not color)
-          (!setup || !alien.setup || (setup === SetupLevel.RequiresExtraColor && alien.setup !== SetupType.RequiresExtraColor));
-      });
-    };
+    this.getMatchingNames = (levels, games, exclude, setup) => names.filter(name => {
+      const alien = aliens[name];
+      // Matches level and game
+      return levels[alien.level] && games[alien.game] &&
+        // No exclude by name, or not in exclude list
+        (!exclude || !exclude.length || exclude.indexOf(name) < 0) &&
+        // No setup restriction or no alien setup or (only restrict color and alien setup is not color)
+        (!setup || !alien.setup || (setup === SetupLevel.RequiresExtraColor && alien.setup !== SetupType.RequiresExtraColor));
+    });
   }
 }

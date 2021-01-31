@@ -46,6 +46,10 @@ export class AlienGeneratorPageComponent implements OnInit {
   /** Get number given out and size of pool */
   public getStatus: () => string;
 
+  public undo: () => void;
+  public drawOne: (preventConflicts?: boolean) => string | void;
+  public makePickFinal: () => void;
+
   /** Start with defaults, then assign in ngOnInit */
   public settings: ISettings = {
     levels: [true, true, true],
@@ -70,7 +74,7 @@ export class AlienGeneratorPageComponent implements OnInit {
   /** How many times Reset has been clicked, without Resetting */
   private NOT_RESET = 0;
 
-  constructor(private Aliens: AlienService, @Inject(LOCAL_STORAGE) private Storage: StorageService) {
+  public constructor(private Aliens: AlienService, @Inject(LOCAL_STORAGE) private Storage: StorageService) {
 
     // current = currently drawn.
     let current: string[] = [];
@@ -84,7 +88,7 @@ export class AlienGeneratorPageComponent implements OnInit {
     let numRedos = 0;
 
     /** Choose alien from pool */
-    function drawOne(preventConflicts = false): string | void {
+    this.drawOne = (preventConflicts = false): string | void => {
       // select name (return if wasn't able to select
       const choice = Math.floor(Math.random() * pool.length);
       if(!pool[choice]) { return; }
@@ -103,21 +107,21 @@ export class AlienGeneratorPageComponent implements OnInit {
       }
       // return selected name
       return name;
-    }
+    };
 
     /** Move current to given and move on */
-    function makePickFinal() {
+    this.makePickFinal = () => {
       given.push(...current, ...restricted);
       restricted = [];
       current = [];
-    }
+    };
 
     /** Move current selection back to pool */
-    function undo() {
+    this.undo = () => {
       pool.push(...current, ...restricted);
       restricted = [];
       current = [];
-    }
+    };
 
     this.getChooseLimit = original => {
       let numToGive = original;
@@ -129,15 +133,15 @@ export class AlienGeneratorPageComponent implements OnInit {
 
     this.draw = () => {
       // this.settings.numToChoose, this.settings.preventConflicts
-      makePickFinal();
+      this.makePickFinal();
       for(let i = 0; i < this.settings.numToChoose; i++) {
-        const name = drawOne(this.settings.preventConflicts);
+        const name = this.drawOne(this.settings.preventConflicts);
         if(!name) { break; }
       }
 
       // if unable to pick desired number, undo
       if(current.length < this.settings.numToChoose) {
-        undo();
+        this.undo();
         this.setState([], 'Not enough potential aliens left.' + (this.settings.preventConflicts ? ' It\'s possible that the "Prevent conflicts" option is preventing me from displaying remaining aliens.' : ''));
       } else {
 
@@ -159,7 +163,7 @@ export class AlienGeneratorPageComponent implements OnInit {
 
     this.redo = () => {
       if(confirm('Redo?')) {
-        undo();
+        this.undo();
         numRedos++;
         this.draw();
       }
@@ -199,7 +203,7 @@ export class AlienGeneratorPageComponent implements OnInit {
       if(confirm('Reset list of aliens?')) { this.change(); } else { this.NOT_RESET++; }
 
       if(this.NOT_RESET > 2) {
-        makePickFinal();
+        this.makePickFinal();
         this.setState(given, 'Aliens given out so far:');
         this.NOT_RESET = 0;
       }
@@ -226,7 +230,7 @@ export class AlienGeneratorPageComponent implements OnInit {
   public hide = () => this.setState([], 'Choices hidden.');
 
   /** keep choose # within 1 and max. Run when resetting alien list (# might have changed) and changing # to pick */
-  public restrictNumToChoose = () => {
+  public restrictNumToChoose() {
     this.settings.numToChoose = this.getChooseLimit(this.settings.numToChoose);
     this.saveSettings();
   }
@@ -251,6 +255,7 @@ export class AlienGeneratorPageComponent implements OnInit {
 
   /**
    * Update Generator state
+   *
    * @param aliens Aliens to display
    * @param message Message to display (errors, # of draws/redos)
    * @param limit Max draw limit

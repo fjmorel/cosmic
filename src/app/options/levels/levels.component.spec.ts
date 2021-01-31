@@ -5,8 +5,7 @@ import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { LevelNamePipe } from '../../pipes/levelname.pipe';
 import { LevelOptionsComponent } from './levels.component';
 
-let levelNamesStub: Partial<LevelNamePipe>;
-levelNamesStub = { transform: (level) => ['Green', 'Yellow', 'Red'][level] };
+const levelNamesStub: Partial<LevelNamePipe> = { transform: (level) => ['Green', 'Yellow', 'Red'][level] };
 
 describe('LevelOptionsComponent', () => {
   let component: LevelOptionsComponent;

@@ -8,11 +8,8 @@ import { LevelNamePipe } from '../../pipes/levelname.pipe';
 import { LevelStarsPipe } from '../../pipes/levelstars.pipe';
 import { AlienReferencePageComponent } from './page.component';
 
-let levelStarsStub: Partial<LevelStarsPipe>;
-levelStarsStub = { transform: (level: number) => ['★', '★★', '★★★'][level] };
-
-let levelNamesStub: Partial<LevelNamePipe>;
-levelNamesStub = { transform: (level: number) => ['Green', 'Yellow', 'Red'][level] };
+const levelStarsStub: Partial<LevelStarsPipe> = { transform: (level: number) => ['★', '★★', '★★★'][level] };
+const levelNamesStub: Partial<LevelNamePipe> = { transform: (level: number) => ['Green', 'Yellow', 'Red'][level] };
 
 describe('AlienReferencePageComponent', () => {
   let component: AlienReferencePageComponent;
