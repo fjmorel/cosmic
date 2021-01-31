@@ -1,6 +1,6 @@
 
 import { NO_ERRORS_SCHEMA } from '@angular/core';
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { LevelNamePipe } from '../../pipes/levelname.pipe';
 import { LevelOptionsComponent } from './levels.component';
@@ -12,7 +12,7 @@ describe('LevelOptionsComponent', () => {
   let component: LevelOptionsComponent;
   let fixture: ComponentFixture<LevelOptionsComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [LevelOptionsComponent, LevelNamePipe],
       providers: [

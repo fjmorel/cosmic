@@ -1,7 +1,7 @@
 
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { StorageServiceModule } from 'ngx-webstorage-service';
 
 import { AlienGeneratorPageComponent } from './page.component';
@@ -10,7 +10,7 @@ describe('AlienGeneratorPageComponent', () => {
   let component: AlienGeneratorPageComponent;
   let fixture: ComponentFixture<AlienGeneratorPageComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [HttpClientTestingModule, StorageServiceModule],
       declarations: [AlienGeneratorPageComponent],

@@ -1,7 +1,7 @@
 
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { StorageServiceModule } from 'ngx-webstorage-service';
 
 import { LevelNamePipe } from '../../pipes/levelname.pipe';
@@ -18,7 +18,7 @@ describe('AlienReferencePageComponent', () => {
   let component: AlienReferencePageComponent;
   let fixture: ComponentFixture<AlienReferencePageComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [HttpClientTestingModule, StorageServiceModule],
       declarations: [AlienReferencePageComponent, LevelStarsPipe, LevelNamePipe],
