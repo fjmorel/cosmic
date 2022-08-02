@@ -57,21 +57,25 @@
               "aot": true,
               "extractLicenses": true,
               "buildOptimizer": true
-            }
+            },
+            "development": {}
           },
-          "defaultConfiguration": ""
+          "defaultConfiguration": "production"
         },
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "aot": true,
-            "browserTarget": "cosmic-ng:build"
+            "aot": true
           },
           "configurations": {
             "production": {
               "browserTarget": "cosmic-ng:build:production"
+            },
+            "development": {
+              "browserTarget": "cosmic-ng:build:development"
             }
-          }
+          },
+          "defaultConfiguration": "development"
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
@@ -123,7 +127,8 @@
           "options": {
             "protractorConfig": "e2e/protractor.conf.js",
             "devServerTarget": "cosmic-ng:serve"
-          }
+          },
+          "configurations": {}
         },
         "lint": {
           "builder": "@angular-eslint/builder:lint",
