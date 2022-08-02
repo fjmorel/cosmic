@@ -12,7 +12,7 @@ export class GameOptionsComponent {
     Game.Encounter, Game.Alliance,
     Game.Conflict, Game.Dominion,
     Game.Eons, Game.Incursion,
-    Game.Storm,
+    Game.Storm, Game.Odyssey,
   ];
 
   public select() { this.change.emit(this.games); }

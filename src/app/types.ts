@@ -7,6 +7,7 @@ export const enum Game {
   Incursion = 'Incursion',
   Storm = 'Storm',
   Eons = 'Eons',
+  Odyssey = 'Odyssey',
 }
 
 /** What kind of setup to filter */
