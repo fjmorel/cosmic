@@ -64,8 +64,7 @@
         },
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
-          "options": {
-          },
+          "options": {},
           "configurations": {
             "production": {
               "browserTarget": "cosmic-ng:build:production"
@@ -141,7 +140,6 @@
       }
     }
   },
-  "defaultProject": "cosmic-ng",
   "cli": {
     "analytics": "c819208e-e3e3-4f51-a7d8-6f5a731557f0"
   }
