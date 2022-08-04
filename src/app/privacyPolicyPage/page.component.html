@@ -1,0 +1,14 @@
+<mat-sidenav-container>
+	<mat-sidenav #leftnav>
+		<cosmic-drawer></cosmic-drawer>
+	</mat-sidenav>
+	<div>
+		<mat-toolbar class="mat-primary">
+			<button mat-button (click)="leftnav.toggle()">
+				<mat-icon>menu</mat-icon>
+			</button>&nbsp;
+			<h1>Cosmic Companion Privacy Policy</h1>
+		</mat-toolbar>
+    <p class="mat-body">I collect no data from this app. The only metadata I see is what Google collects and makes available in the Play Console to track app crashes and installation base.</p>
+	</div>
+</mat-sidenav-container>

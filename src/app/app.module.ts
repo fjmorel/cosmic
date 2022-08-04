@@ -29,6 +29,7 @@ import { AppRoutingModule } from './app.routing.module';
 import { AlienGeneratorPageComponent } from './generator/page/page.component';
 import { CosmicHomePageComponent } from './home/page/page.component';
 import { AlienReferencePageComponent } from './reference/page/page.component';
+import { AndroidPrivacyPolicyPage } from './privacyPolicyPage/page.component';
 
 @NgModule({
   declarations: [
@@ -36,6 +37,7 @@ import { AlienReferencePageComponent } from './reference/page/page.component';
     CosmicHomePageComponent,
     AlienGeneratorPageComponent,
     AlienReferencePageComponent,
+    AndroidPrivacyPolicyPage,
 
     DrawerComponent,
 
