@@ -46,3 +46,12 @@ $alien-2-theme: mat.define-light-theme($cosmic-primary, $alien-2-palette);
   @include mat.button-theme($alien-2-theme);
   @include mat.checkbox-theme($alien-2-theme);
 }
+.alien-power {
+  padding: 4px;
+  border-radius: 4px;
+  margin-left: -4px;
+}
+.alien-alternate {
+  background-color: #333;
+  color: #fff;
+}

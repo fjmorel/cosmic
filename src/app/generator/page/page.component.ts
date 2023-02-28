@@ -9,7 +9,7 @@ const STORAGE_PREFIX = 'cosmic.alien-gen';
 type Actions = 'draw' | 'hide' | 'show' | 'redo' | 'reset';
 
 /** Generator settings */
-interface ISettings {
+export interface ISettings {
   levels: boolean[];
   games: GameSelection;
   namesExcluded: string[];
@@ -97,7 +97,7 @@ export class AlienGeneratorPageComponent implements OnInit {
 
       // if current choice has any restrictions, remove them from pool as well
       if(preventConflicts) {
-        const alien = Aliens.get(name);
+        const alien = Aliens.get(name, this.settings.games);
         if(alien.restriction) {
           for(const restriction of alien.restriction.split(',')) {
             const index = pool.indexOf(restriction);
@@ -262,7 +262,7 @@ export class AlienGeneratorPageComponent implements OnInit {
    */
   private setState(aliens: string[], message: string, limit?: number) {
     this.state = message;
-    this.aliensToShow = aliens.map(e => this.Aliens.get(e));
+    this.aliensToShow = aliens.map(e => this.Aliens.get(e, this.settings.games));
     if(limit) { this.settings.numToChoose = limit; }
     this.status = this.getStatus();
     this.disabled = this.getDisabledActions(this.settings.numToChoose, this.aliensToShow.length);

@@ -8,13 +8,21 @@ import { GameSelection, Game } from '../../types';
 export class GameOptionsComponent {
   @Output() public change = new EventEmitter<GameSelection>();
   @Input() public games: GameSelection = {};
+  readonly GameEnum = Game;
   public names: Game[] = [
     Game.Encounter, Game.Alliance,
     Game.Conflict, Game.Dominion,
     Game.Eons, Game.Incursion,
     Game.Storm, Game.Odyssey,
+    Game.OdysseyAlternate,
   ];
 
-  public select() { this.change.emit(this.games); }
+  public select() {
+    // Deselect the alternate timeline if Odyssey is not selected
+    if(!this.games[Game.Odyssey]) {
+      this.games[Game.OdysseyAlternate] = false;
+    }
+    this.change.emit(this.games);
+  }
 
 }
