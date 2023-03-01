@@ -1,5 +1,5 @@
 /** Game names */
-export const enum Game {
+export enum Game {
   Encounter = 'Encounter',
   Alliance = 'Alliance',
   Conflict = 'Conflict',
@@ -8,6 +8,7 @@ export const enum Game {
   Storm = 'Storm',
   Eons = 'Eons',
   Odyssey = 'Odyssey',
+  OdysseyAlternate = 'Odyssey (Alternate Timeline)',
 }
 
 /** What kind of setup to filter */
@@ -36,22 +37,25 @@ export const enum Requirement {
 }
 
 /** Details that I've transcribed for all aliens */
-type BasicAlien = Readonly<{
+export type AlienDescriptor = Readonly<{
   name: string;
   game: Game;
-  power: string;
   level: 0 | 1 | 2;
-  description: string;
-  setup: SetupType;
+  powers: AlienPower[]
 }>;
 
-/** All details about an alien */
-export type Alien = BasicAlien & Readonly<{
+type AlienPower = Readonly<{
+  summary: string;
+  description: string;
+  setup: SetupType;
   restriction?: string;
   player?: string;
   mandatory?: Requirement;
   phases?: string;
+  alternate?: boolean;
 }>;
+
+export type Alien = Omit<AlienDescriptor, 'powers'> & AlienPower;
 
 /** Whether games are selected */
 export type GameSelection = Partial<Record<Game, boolean>>;
@@ -59,13 +63,13 @@ export type GameSelection = Partial<Record<Game, boolean>>;
 // eslint-disable-next-line @typescript-eslint/no-namespace
 export namespace Alien {
   /** Properties that all aliens have */
-  export type MandatoryProperties = (keyof BasicAlien)[];
+  export type MandatoryProperties = (keyof Omit<AlienDescriptor, 'powers'>)[];
 
   /** Properties that I've only transcribed for some aliens */
   export type Properties = (keyof Alien)[];
 
   /** JSON format of alien data file */
   export interface Data {
-    list: Alien[];
+    list: AlienDescriptor[];
   }
 }

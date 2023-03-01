@@ -44,6 +44,6 @@ export class AlienReferencePageComponent implements OnInit {
 
   /** Refresh shown aliens based on settings */
   private refresh() {
-    this.groups = groupItems(this.Aliens.getMatchingNames(this.levels, this.games).map(this.Aliens.get), ['game', 'level'], ['name']);
+    this.groups = groupItems(this.Aliens.getMatchingNames(this.levels, this.games).map((value) => this.Aliens.get(value, this.games)), ['game', 'level'], ['name']);
   }
 }

@@ -7,7 +7,7 @@
 				</button>
 			</div>
 			<mat-card-title class="alien-fg">{{alien.name}}</mat-card-title>
-			<mat-card-subtitle>{{alien.power}}</mat-card-subtitle>
+			<mat-card-subtitle class="alien-power" [ngClass]="{ 'alien-alternate': alien.alternate }">{{alien.summary}}</mat-card-subtitle>
 		</mat-card-header>
 		<mat-card-footer>
 			<div class="bar alien-bg">
