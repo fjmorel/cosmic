@@ -3285,9 +3285,16 @@
     },
     {
       "name": "Demon",
-      "game": "Odyssey",
+      "game": "Encounter",
       "level": 1,
       "powers": [
+        {
+          "summary": "Possesses others' hands",
+          "description": "<strong>You have the power to Possess.</strong> As a main player, before allies are invited, you <strong><em>may use</em></strong> this power to take possession of the hand of any other player except your opponent. Place those cards facedown on this sheet. They are not part of your hand, but you may use cards from here as though they were in your hand. If a card played from this sheet would return to your hand after use, return it to its previous owner instead. At the end of the encounter, return any cards remaining on this sheet to their previous owner.",
+          "player": "Main Player Only",
+          "mandatory": "Optional",
+          "phases": "Alliance"
+        },
         {
           "summary": "Dominates allies' ships",
           "description": "<strong>You have the power to Dominate.</strong> If you are not a main player or ally, after encounter cards are selected but before they are revealed, you <strong><em>may use</em></strong> this power to discard an attack card from your hand. After encounter cards are revealed, if your card is lower than both revealed attack cards, each main player sends one of your ships to the warp from any of your colonies.<br/>If your card is higher than a main player's revealed attack card, you may \"dominate\" ships of that player's allies. After the outcome is determined, you may take up to four of your ships from one of your colonies and use them to replace any of those allies' ships in the encounter on a one-for-one basis before those ships land on the planet or their owners gain rewards. Dominated ships are captured and placed on this sheet. Then, the encounter is completed normally.<br/><br/>After you draw a new hand, send all ships on this sheet to the warp and gain one reward for each player whose ships were on your sheet.",
