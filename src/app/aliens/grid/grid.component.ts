@@ -1,9 +1,9 @@
-import { Component, Input } from '@angular/core';
-import { Alien } from '../../types';
+import { Component, Input } from "@angular/core";
+import { Alien } from "../../../data/types";
 
 @Component({
-  selector: 'alien-grid',
-  templateUrl: 'grid.component.html',
+  selector: "alien-grid",
+  templateUrl: "grid.component.html",
 })
 export class AlienGridComponent {
   /** List of aliens to display */

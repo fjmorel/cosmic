@@ -1,20 +1,25 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { GameSelection, Game } from '../../types';
+import { Component, EventEmitter, Input, Output } from "@angular/core";
+import { GameSelection, Game } from "../../../data/types";
 
 @Component({
-  selector: 'cosmic-game-options',
-  templateUrl: './games.component.html',
+  selector: "cosmic-game-options",
+  templateUrl: "./games.component.html",
 })
 export class GameOptionsComponent {
   @Output() public change = new EventEmitter<GameSelection>();
   @Input() public games: GameSelection = {};
   public names: Game[] = [
-    Game.Encounter, Game.Alliance,
-    Game.Conflict, Game.Dominion,
-    Game.Eons, Game.Incursion,
-    Game.Storm, Game.Odyssey,
+    Game.Encounter,
+    Game.Alliance,
+    Game.Conflict,
+    Game.Dominion,
+    Game.Eons,
+    Game.Incursion,
+    Game.Storm,
+    Game.Odyssey,
   ];
 
-  public select() { this.change.emit(this.games); }
-
+  public select() {
+    this.change.emit(this.games);
+  }
 }

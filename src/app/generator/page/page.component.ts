@@ -1,12 +1,12 @@
-import { Component, Inject, OnInit } from '@angular/core';
-import { LOCAL_STORAGE, StorageService } from 'ngx-webstorage-service';
-import { AlienService } from '../../aliens/alien.service';
-import { Alien, GameSelection, SetupLevel, Game } from '../../types';
+import { Component, Inject, OnInit } from "@angular/core";
+import { LOCAL_STORAGE, StorageService } from "ngx-webstorage-service";
+import { AlienService } from "../../../data/aliens";
+import { Alien, GameSelection, SetupLevel, Game } from "../../../data/types";
 
-const STORAGE_PREFIX = 'cosmic.alien-gen';
+const STORAGE_PREFIX = "cosmic.alien-gen";
 
 /** Possible actions in Generator */
-type Actions = 'draw' | 'hide' | 'show' | 'redo' | 'reset';
+type Actions = "draw" | "hide" | "show" | "redo" | "reset";
 
 /** Generator settings */
 interface ISettings {
@@ -19,11 +19,10 @@ interface ISettings {
 }
 
 @Component({
-  selector: 'alien-generator',
-  templateUrl: './page.component.html',
+  selector: "alien-generator",
+  templateUrl: "./page.component.html",
 })
 export class AlienGeneratorPageComponent implements OnInit {
-
   public reset: () => void;
   /** Reset list of possible choices and clear status */
   public change: () => void;
@@ -41,7 +40,10 @@ export class AlienGeneratorPageComponent implements OnInit {
   public redo: () => void;
 
   /** Get which actions are not allowed */
-  public getDisabledActions: (howManyToChoose: number, numShown: number) => Record<Actions, boolean>;
+  public getDisabledActions: (
+    howManyToChoose: number,
+    numShown: number,
+  ) => Record<Actions, boolean>;
 
   /** Get number given out and size of pool */
   public getStatus: () => string;
@@ -60,7 +62,13 @@ export class AlienGeneratorPageComponent implements OnInit {
     preventConflicts: true,
   };
   /** Which actions are disabled */
-  public disabled: Record<Actions, boolean> = { draw: true, hide: true, show: true, redo: true, reset: true };
+  public disabled: Record<Actions, boolean> = {
+    draw: true,
+    hide: true,
+    show: true,
+    redo: true,
+    reset: true,
+  };
 
   /** Names of all aliens, for Exclude by name */
   public namesAll: string[];
@@ -74,8 +82,10 @@ export class AlienGeneratorPageComponent implements OnInit {
   /** How many times Reset has been clicked, without Resetting */
   private NOT_RESET = 0;
 
-  public constructor(private Aliens: AlienService, @Inject(LOCAL_STORAGE) private Storage: StorageService) {
-
+  public constructor(
+    private Aliens: AlienService,
+    @Inject(LOCAL_STORAGE) private Storage: StorageService,
+  ) {
     // current = currently drawn.
     let current: string[] = [];
     // given = previously given/restricted.
@@ -91,17 +101,21 @@ export class AlienGeneratorPageComponent implements OnInit {
     this.drawOne = (preventConflicts = false): string | void => {
       // select name (return if wasn't able to select
       const choice = Math.floor(Math.random() * pool.length);
-      if(!pool[choice]) { return; }
+      if (!pool[choice]) {
+        return;
+      }
       const name = pool.splice(choice, 1)[0];
       current.push(name);
 
       // if current choice has any restrictions, remove them from pool as well
-      if(preventConflicts) {
+      if (preventConflicts) {
         const alien = Aliens.get(name);
-        if(alien.restriction) {
-          for(const restriction of alien.restriction.split(',')) {
+        if (alien.restriction) {
+          for (const restriction of alien.restriction.split(",")) {
             const index = pool.indexOf(restriction);
-            if(index > -1) { restricted.push(pool.splice(index, 1)[0]); }
+            if (index > -1) {
+              restricted.push(pool.splice(index, 1)[0]);
+            }
           }
         }
       }
@@ -123,46 +137,69 @@ export class AlienGeneratorPageComponent implements OnInit {
       current = [];
     };
 
-    this.getChooseLimit = original => {
+    this.getChooseLimit = (original) => {
       let numToGive = original;
       const max = pool.length;
-      if(max > 0 && numToGive > max) { numToGive = max; }
-      if(numToGive < 1) { numToGive = 1; }
+      if (max > 0 && numToGive > max) {
+        numToGive = max;
+      }
+      if (numToGive < 1) {
+        numToGive = 1;
+      }
       return numToGive;
     };
 
     this.draw = () => {
       // this.settings.numToChoose, this.settings.preventConflicts
       this.makePickFinal();
-      for(let i = 0; i < this.settings.numToChoose; i++) {
+      for (let i = 0; i < this.settings.numToChoose; i++) {
         const name = this.drawOne(this.settings.preventConflicts);
-        if(!name) { break; }
+        if (!name) {
+          break;
+        }
       }
 
       // if unable to pick desired number, undo
-      if(current.length < this.settings.numToChoose) {
+      if (current.length < this.settings.numToChoose) {
         this.undo();
-        this.setState([], 'Not enough potential aliens left.' + (this.settings.preventConflicts ? ' It\'s possible that the "Prevent conflicts" option is preventing me from displaying remaining aliens.' : ''));
+        this.setState(
+          [],
+          "Not enough potential aliens left." +
+            (this.settings.preventConflicts
+              ? ' It\'s possible that the "Prevent conflicts" option is preventing me from displaying remaining aliens.'
+              : ""),
+        );
       } else {
-
         // display
-        this.setState(current, 'Choices:', this.getChooseLimit(this.settings.numToChoose));
+        this.setState(
+          current,
+          "Choices:",
+          this.getChooseLimit(this.settings.numToChoose),
+        );
       }
     };
 
     this.show = () => {
       // ask for initial of one of the aliens before reshowing them
-      const initials = current.map(e => e[0].toLowerCase());
-      if(initials.indexOf((prompt('Enter the first initial of one of the aliens you were given, then click OK.') || '').toLowerCase()) < 0) {
-        this.setState([], 'Wrong letter.');
+      const initials = current.map((e) => e[0].toLowerCase());
+      if (
+        initials.indexOf(
+          (
+            prompt(
+              "Enter the first initial of one of the aliens you were given, then click OK.",
+            ) || ""
+          ).toLowerCase(),
+        ) < 0
+      ) {
+        this.setState([], "Wrong letter.");
       } else {
         // if passed, then show aliens
-        this.setState(current, 'Choices: ');
+        this.setState(current, "Choices: ");
       }
     };
 
     this.redo = () => {
-      if(confirm('Redo?')) {
+      if (confirm("Redo?")) {
         this.undo();
         numRedos++;
         this.draw();
@@ -170,16 +207,23 @@ export class AlienGeneratorPageComponent implements OnInit {
     };
 
     this.getDisabledActions = (howManyToChoose, numShown) => ({
-      draw: (pool.length < howManyToChoose),
-      hide: (numShown < 1),
+      draw: pool.length < howManyToChoose,
+      hide: numShown < 1,
       show: !(current.length > 0 && numShown < 1),
-      redo: (current.length <= 0 || numShown <= 0),
-      reset: (current.length <= 0 && given.length <= 0),
+      redo: current.length <= 0 || numShown <= 0,
+      reset: current.length <= 0 && given.length <= 0,
     });
 
     this.getStatus = () => {
       const numGiven = current.length + given.length + restricted.length;
-      return numGiven + ' of ' + (numGiven + pool.length) + ' drawn. ' + numRedos + ' redos so far.';
+      return (
+        numGiven +
+        " of " +
+        (numGiven + pool.length) +
+        " drawn. " +
+        numRedos +
+        " redos so far."
+      );
     };
 
     /**
@@ -188,46 +232,70 @@ export class AlienGeneratorPageComponent implements OnInit {
      * restrictNumToChoose takes care of saving settings
      */
     this.change = () => {
-      if(this.settings) {
-        const names = this.Aliens.getMatchingNames(this.settings.levels, this.settings.games, this.settings.namesExcluded, this.settings.setupLevel);
+      if (this.settings) {
+        const names = this.Aliens.getMatchingNames(
+          this.settings.levels,
+          this.settings.games,
+          this.settings.namesExcluded,
+          this.settings.setupLevel,
+        );
         pool = names;
         given = [];
         current = [];
         restricted = [];
         numRedos = 0;
         this.restrictNumToChoose();
-        this.setState([], 'List reset.');
+        this.setState([], "List reset.");
       }
     };
     this.reset = () => {
-      if(confirm('Reset list of aliens?')) { this.change(); } else { this.NOT_RESET++; }
+      if (confirm("Reset list of aliens?")) {
+        this.change();
+      } else {
+        this.NOT_RESET++;
+      }
 
-      if(this.NOT_RESET > 2) {
+      if (this.NOT_RESET > 2) {
         this.makePickFinal();
-        this.setState(given, 'Aliens given out so far:');
+        this.setState(given, "Aliens given out so far:");
         this.NOT_RESET = 0;
       }
     };
   }
 
   public ngOnInit(): void {
-    this.Aliens.init$.subscribe(names => {
+    this.Aliens.init$.subscribe((names) => {
       this.namesAll = names;
-      const loaded = this.Storage.get(STORAGE_PREFIX + 'settings') as Partial<ISettings>;
-      if(loaded) {// Null on first load
-        if(loaded.levels) { this.settings.levels = loaded.levels; }
-        if(loaded.games) { this.settings.games = loaded.games; }
-        if(loaded.namesExcluded) { this.settings.namesExcluded = loaded.namesExcluded; }
-        if(loaded.setupLevel) { this.settings.setupLevel = loaded.setupLevel; }
-        if(loaded.numToChoose) { this.settings.numToChoose = loaded.numToChoose; }
-        if(loaded.preventConflicts !== undefined) { this.settings.preventConflicts = loaded.preventConflicts; }
+      const loaded = this.Storage.get(
+        STORAGE_PREFIX + "settings",
+      ) as Partial<ISettings>;
+      if (loaded) {
+        // Null on first load
+        if (loaded.levels) {
+          this.settings.levels = loaded.levels;
+        }
+        if (loaded.games) {
+          this.settings.games = loaded.games;
+        }
+        if (loaded.namesExcluded) {
+          this.settings.namesExcluded = loaded.namesExcluded;
+        }
+        if (loaded.setupLevel) {
+          this.settings.setupLevel = loaded.setupLevel;
+        }
+        if (loaded.numToChoose) {
+          this.settings.numToChoose = loaded.numToChoose;
+        }
+        if (loaded.preventConflicts !== undefined) {
+          this.settings.preventConflicts = loaded.preventConflicts;
+        }
       }
       this.change();
     });
   }
 
   /** Hide all aliens but don't actually change lists */
-  public hide = () => this.setState([], 'Choices hidden.');
+  public hide = () => this.setState([], "Choices hidden.");
 
   /** keep choose # within 1 and max. Run when resetting alien list (# might have changed) and changing # to pick */
   public restrictNumToChoose() {
@@ -250,7 +318,7 @@ export class AlienGeneratorPageComponent implements OnInit {
    * Called directly from controller when change should not reset Generator
    */
   public saveSettings() {
-    this.Storage.set(STORAGE_PREFIX + 'settings', this.settings);
+    this.Storage.set(STORAGE_PREFIX + "settings", this.settings);
   }
 
   /**
@@ -262,9 +330,14 @@ export class AlienGeneratorPageComponent implements OnInit {
    */
   private setState(aliens: string[], message: string, limit?: number) {
     this.state = message;
-    this.aliensToShow = aliens.map(e => this.Aliens.get(e));
-    if(limit) { this.settings.numToChoose = limit; }
+    this.aliensToShow = aliens.map((e) => this.Aliens.get(e));
+    if (limit) {
+      this.settings.numToChoose = limit;
+    }
     this.status = this.getStatus();
-    this.disabled = this.getDisabledActions(this.settings.numToChoose, this.aliensToShow.length);
+    this.disabled = this.getDisabledActions(
+      this.settings.numToChoose,
+      this.aliensToShow.length,
+    );
   }
 }
