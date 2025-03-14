@@ -5,32 +5,29 @@
     "importHelpers": true,
     "noFallthroughCasesInSwitch": true,
     "noImplicitAny": true,
-    "noImplicitReturns": true,
+    "noImplicitReturns": false,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    "strictNullChecks": false,
+    "strictNullChecks": true,
     "strict": true,
     "noEmitHelpers": true,
     "noImplicitThis": true,
     "strictBindCallApply": true,
-    //"strictPropertyInitialization": true,
+    "strictPropertyInitialization": true,
     "baseUrl": "./",
     "outDir": "./dist/out-tsc",
     "sourceMap": true,
     "declaration": false,
-    "moduleResolution": "node",
-    "experimentalDecorators": true,
-    "target": "es2020",
-    "typeRoots": [
-      "node_modules/@types"
-    ],
-    "lib": [
-      "ES2019",
-      "dom"
-    ]
+		"erasableSyntaxOnly": true,
+		"verbatimModuleSyntax": true,
+    "moduleResolution": "bundler",
+		"resolveJsonModule": true,
+		"isolatedModules": true,
+		"jsx": "preserve",
+		"incremental": true,
+		"target": "ES2024",
+		"lib": ["dom", "dom.iterable", "esnext"]
   },
-  "files": [
-    "src/main.ts",
-    "src/polyfills.ts"
-  ]
+	"include": ["**/*.ts", "**/*.tsx"],
+	"exclude": ["node_modules"]
 }
