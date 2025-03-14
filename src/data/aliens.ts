@@ -7,6 +7,7 @@ export function useAliens() {
     queryFn: async () => {
       const response = await fetch("data/aliens2.json", { method: "GET" });
       const json = await response.json();
+      console.log(json);
       return json as Alien.Data;
     },
     placeholderData: {
@@ -16,9 +17,11 @@ export function useAliens() {
 
   const aliens: Record<string, Alien> = {};
   const names: string[] = [];
-  for (const alien of data!.list) {
-    aliens[alien.name] = alien;
-    names.push(alien.name);
+  if (data) {
+    for (const alien of data!.list) {
+      aliens[alien.name] = alien;
+      names.push(alien.name);
+    }
   }
 
   return { aliens, names };

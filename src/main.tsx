@@ -7,6 +7,8 @@ import { routeTree } from "./routeTree.gen";
 import { colors } from "./data/levels";
 import { deepOrange, deepPurple, green, grey, red } from "@mui/material/colors";
 
+// todo: localstorage of game/level options and other state
+
 const theme = createTheme({
   palette: {
     mode: "dark",

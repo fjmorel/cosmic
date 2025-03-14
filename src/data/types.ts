@@ -59,10 +59,10 @@ export type GameSelection = Partial<Record<Game, boolean>>;
 
 export namespace Alien {
   /** Properties that all aliens have */
-  export type MandatoryProperties = (keyof BasicAlien)[];
+  export type MandatoryProperties = keyof BasicAlien;
 
   /** Properties that I've only transcribed for some aliens */
-  export type Properties = (keyof Alien)[];
+  export type Properties = keyof Alien;
 
   /** JSON format of alien data file */
   export interface Data {

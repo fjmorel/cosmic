@@ -8,7 +8,8 @@ export type GroupedItems<T> = {
 /** Group objects by given array of fields */
 export function groupItems(
   list: Alien[],
-  gFields: Alien.MandatoryProperties,
+  gFields: Alien.MandatoryProperties[],
+  sFields: Alien.MandatoryProperties[],
   level: number = 0,
 ): GroupedItems<Alien>[] {
   if (gFields.length < 1) {
@@ -25,6 +26,7 @@ export function groupItems(
   });
 
   // generate array with named groups
+  // todo: sort by sFields
   let result: GroupedItems<Alien>[] = Object.keys(grouped)
     .sort()
     .map((group) => ({ value: group, items: grouped[group] }));
@@ -33,7 +35,7 @@ export function groupItems(
   if (gFields[level + 1]) {
     result = result.map((group) => ({
       value: group.value,
-      items: groupItems(group.items as Alien[], gFields, level + 1),
+      items: groupItems(group.items as Alien[], gFields, sFields, level + 1),
     }));
   }
 
