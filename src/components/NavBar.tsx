@@ -12,13 +12,16 @@ export default function NavBar() {
     <RouterButton key="home" to="/" title="Home" />,
     <RouterButton key="generator" to="/generator" title="Game Generator" />,
     <RouterButton key="reference" to="/reference" title="Alien Reference" />,
-    <a href="https://play.google.com/store/apps/details?id=net.fmorel.cosmicgenerator">
+    <a
+      key="play-store"
+      href="https://play.google.com/store/apps/details?id=net.fmorel.cosmicgenerator"
+    >
       <img src="../icons/playstore_badge.png" />
     </a>,
   ];
 
-  let currentPageName = pages.find((x) => x.props.to === location.pathname)!
-    .props.title as string;
+  let currentPageName = pages.find((x) => x.props.to === location.pathname)
+    ?.props.title;
   if (currentPageName === "Home") currentPageName = "Cosmic Companion";
 
   //todo: figure out drawer?
@@ -44,7 +47,7 @@ export default function NavBar() {
             anchorEl={pageMenu.anchor}
             anchorOrigin={{
               vertical: "top",
-              horizontal: "right",
+              horizontal: "left",
             }}
             keepMounted
             transformOrigin={{
