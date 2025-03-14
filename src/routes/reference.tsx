@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { AlienGrid } from "@/components/AlienGrid";
 import { GameOptions } from "@/components/GameOptions";
 import { LevelOptions } from "@/components/LevelOptions";
@@ -29,10 +30,10 @@ function ReferencePage() {
         <LevelOptions />
       </Grid2>
       {groups.map((gGroup) => (
-        <Stack>
+        <Stack key={gGroup.value}>
           {gGroup.items.map((lGroup) => {
             return (
-              <Stack>
+              <Stack key={(lGroup as any).value}>
                 <Typography>
                   Cosmic {gGroup.value} - {getLevelColor((lGroup as any).value)}{" "}
                   {getLevelStars((lGroup as any).value)}

@@ -1,9 +1,5 @@
-import { Component, Inject, OnInit } from "@angular/core";
-import { LOCAL_STORAGE, StorageService } from "ngx-webstorage-service";
-import { AlienService } from "../../../data/aliens";
-import { Alien, GameSelection, SetupLevel, Game } from "../../../data/types";
-
-const STORAGE_PREFIX = "cosmic.alien-gen";
+import { Game, SetupLevel, type Alien, type GameSelection } from "@/data/types";
+import { getMatchingNames } from "./aliens";
 
 /** Possible actions in Generator */
 type Actions = "draw" | "hide" | "show" | "redo" | "reset";
@@ -18,11 +14,7 @@ interface ISettings {
   preventConflicts: boolean;
 }
 
-@Component({
-  selector: "alien-generator",
-  templateUrl: "./page.component.html",
-})
-export class AlienGeneratorPageComponent implements OnInit {
+export class AlienGeneratorPageComponent {
   public reset: () => void;
   /** Reset list of possible choices and clear status */
   public change: () => void;
@@ -71,21 +63,18 @@ export class AlienGeneratorPageComponent implements OnInit {
   };
 
   /** Names of all aliens, for Exclude by name */
-  public namesAll: string[];
+  public namesAll!: string[];
 
   /** Number of draws, redos, etc */
-  public status: string;
+  public status!: string;
   /** Extra message to display */
-  public state: string;
+  public state!: string;
   /** Aliens to display */
   public aliensToShow: Alien[] = [];
   /** How many times Reset has been clicked, without Resetting */
   private NOT_RESET = 0;
 
-  public constructor(
-    private Aliens: AlienService,
-    @Inject(LOCAL_STORAGE) private Storage: StorageService,
-  ) {
+  public constructor(private aliens: Map<string, Alien>) {
     // current = currently drawn.
     let current: string[] = [];
     // given = previously given/restricted.
@@ -109,7 +98,7 @@ export class AlienGeneratorPageComponent implements OnInit {
 
       // if current choice has any restrictions, remove them from pool as well
       if (preventConflicts) {
-        const alien = Aliens.get(name);
+        const alien = aliens.get(name)!;
         if (alien.restriction) {
           for (const restriction of alien.restriction.split(",")) {
             const index = pool.indexOf(restriction);
@@ -233,7 +222,9 @@ export class AlienGeneratorPageComponent implements OnInit {
      */
     this.change = () => {
       if (this.settings) {
-        const names = this.Aliens.getMatchingNames(
+        const names = getMatchingNames(
+          Object.fromEntries(aliens.entries()),
+          this.namesAll,
           this.settings.levels,
           this.settings.games,
           this.settings.namesExcluded,
@@ -263,44 +254,12 @@ export class AlienGeneratorPageComponent implements OnInit {
     };
   }
 
-  public ngOnInit(): void {
-    this.Aliens.init$.subscribe((names) => {
-      this.namesAll = names;
-      const loaded = this.Storage.get(
-        STORAGE_PREFIX + "settings",
-      ) as Partial<ISettings>;
-      if (loaded) {
-        // Null on first load
-        if (loaded.levels) {
-          this.settings.levels = loaded.levels;
-        }
-        if (loaded.games) {
-          this.settings.games = loaded.games;
-        }
-        if (loaded.namesExcluded) {
-          this.settings.namesExcluded = loaded.namesExcluded;
-        }
-        if (loaded.setupLevel) {
-          this.settings.setupLevel = loaded.setupLevel;
-        }
-        if (loaded.numToChoose) {
-          this.settings.numToChoose = loaded.numToChoose;
-        }
-        if (loaded.preventConflicts !== undefined) {
-          this.settings.preventConflicts = loaded.preventConflicts;
-        }
-      }
-      this.change();
-    });
-  }
-
   /** Hide all aliens but don't actually change lists */
   public hide = () => this.setState([], "Choices hidden.");
 
   /** keep choose # within 1 and max. Run when resetting alien list (# might have changed) and changing # to pick */
   public restrictNumToChoose() {
     this.settings.numToChoose = this.getChooseLimit(this.settings.numToChoose);
-    this.saveSettings();
   }
 
   public onSelectGame($event: GameSelection) {
@@ -313,24 +272,15 @@ export class AlienGeneratorPageComponent implements OnInit {
   }
 
   /**
-   * Save settings to storage
-   *
-   * Called directly from controller when change should not reset Generator
-   */
-  public saveSettings() {
-    this.Storage.set(STORAGE_PREFIX + "settings", this.settings);
-  }
-
-  /**
    * Update Generator state
    *
-   * @param aliens Aliens to display
+   * @param alienNames Aliens to display
    * @param message Message to display (errors, # of draws/redos)
    * @param limit Max draw limit
    */
-  private setState(aliens: string[], message: string, limit?: number) {
+  private setState(alienNames: string[], message: string, limit?: number) {
     this.state = message;
-    this.aliensToShow = aliens.map((e) => this.Aliens.get(e));
+    this.aliensToShow = alienNames.map((e) => this.aliens.get(e)!);
     if (limit) {
       this.settings.numToChoose = limit;
     }

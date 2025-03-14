@@ -10,7 +10,6 @@ export default defineConfig({
     viteReact(),
     tsConfigPaths(),
   ],
-  assetsInclude: ["./src/icons/*", "./src/favicon.png"],
   build: {
     // https://rollupjs.org/configuration-options/
     rollupOptions: {

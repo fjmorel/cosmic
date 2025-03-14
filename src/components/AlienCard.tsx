@@ -26,7 +26,7 @@ export function AlienCard({ alien }: AlienCardProps) {
         title={alien.name}
         subheader={alien.power}
         avatar={
-          <IconButton onClick={() => setIsOpen(!isOpen)}>
+          <IconButton color={color} onClick={() => setIsOpen(!isOpen)}>
             <Icon />
           </IconButton>
         }
