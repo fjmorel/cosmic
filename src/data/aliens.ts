@@ -39,6 +39,9 @@ export function useAliens() {
 export function useFilteredAliens() {
   const { aliens: allAliens, names, isLoading } = useAliens();
 
+  const [removeSetup, setRemoveSetup] = useState<SetupLevel>(
+    SetupLevel.NoSetup,
+  );
   const [levels, setLevels] = useState<LevelValues<boolean>>([
     true,
     true,
@@ -55,15 +58,18 @@ export function useFilteredAliens() {
     setGames({ ...games, [index]: !games[index] });
   };
 
-  const filteredNames = getMatchingNames(allAliens, names, levels, games);
-  const matchingAliens = filteredNames.map((x) => allAliens[x]);
+  const getNames = () =>
+    getMatchingNames(allAliens, names, levels, games, [], removeSetup);
   return {
     levels,
     onLevelChange,
     games,
     onGameChange,
-    matchingAliens,
+    removeSetup,
+    setRemoveSetup,
+    allAliens,
     isLoading,
+    getNames,
   };
 }
 

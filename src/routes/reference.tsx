@@ -6,6 +6,8 @@ import { MainContainer } from "@/components/MainContainer";
 import { useFilteredAliens } from "@/data/aliens";
 import { groupItems } from "@/data/groupItems";
 import { getLevelColor, getLevelStars } from "@/data/levels";
+import { cardGridSize } from "@/data/styles";
+import type { Alien } from "@/data/types";
 import {
   Card,
   CardContent,
@@ -17,9 +19,9 @@ import {
   ListItem,
   Stack,
   Typography,
-  type Breakpoint,
 } from "@mui/material";
 import { createFileRoute } from "@tanstack/react-router";
+import { useEffect, useState } from "react";
 
 export const Route = createFileRoute("/reference")({
   component: ReferencePage,
@@ -32,47 +34,50 @@ function ReferencePage() {
     onGameChange,
     levels,
     onLevelChange,
-    matchingAliens,
+    getNames,
+    allAliens,
     isLoading,
   } = useFilteredAliens();
-  const groups = groupItems(matchingAliens, ["game", "level"], ["name"]);
-  const optionCardSize: Partial<Record<Breakpoint, number>> = {
-    xs: 12,
-    sm: 6,
-    md: 4,
-    lg: 3,
-  };
+
+  const [aliens, setAliens] = useState<Alien[]>([]);
+  useEffect(() => {
+    const names = getNames();
+    setAliens(names.map((x) => allAliens[x]));
+  }, [games, levels, allAliens]);
+  const groups = groupItems(aliens, ["game", "level"], ["name"]);
+
+  const topCards = [
+    <GameOptions key="games" enabled={games} onChange={onGameChange} />,
+    <LevelOptions key="levels" enabled={levels} onChange={onLevelChange} />,
+    <Card key="order">
+      <CardHeader title="Group by" />
+      <CardContent sx={{ paddingTop: 0 }}>
+        <List dense disablePadding>
+          <ListItem>1. Game</ListItem>
+          <ListItem>2. Level</ListItem>
+        </List>
+      </CardContent>
+      <Divider />
+      <CardHeader title="Sort by" />
+      <CardContent sx={{ paddingTop: 0 }}>
+        <List dense disablePadding>
+          <ListItem>1. Game</ListItem>
+          <ListItem>2. Level</ListItem>
+          <ListItem>3. Name</ListItem>
+        </List>
+      </CardContent>
+    </Card>,
+  ];
 
   return (
     <MainContainer>
       <Stack spacing={2}>
         <Grid2 container spacing={2}>
-          <Grid2 size={optionCardSize}>
-            <GameOptions enabled={games} onChange={onGameChange} />
-          </Grid2>
-          <Grid2 size={optionCardSize}>
-            <LevelOptions enabled={levels} onChange={onLevelChange} />
-          </Grid2>
-          <Grid2 size={optionCardSize}>
-            <Card>
-              <CardHeader title="Group by" />
-              <CardContent>
-                <List dense disablePadding>
-                  <ListItem>1. Game</ListItem>
-                  <ListItem>2. Level</ListItem>
-                </List>
-              </CardContent>
-              <Divider />
-              <CardHeader title="Sort by" />
-              <CardContent>
-                <List dense disablePadding>
-                  <ListItem>1. Game</ListItem>
-                  <ListItem>2. Level</ListItem>
-                  <ListItem>3. Name</ListItem>
-                </List>
-              </CardContent>
-            </Card>
-          </Grid2>
+          {topCards.map((card) => (
+            <Grid2 key={card.key} size={cardGridSize}>
+              {card}
+            </Grid2>
+          ))}
         </Grid2>
         {isLoading ? (
           <Stack spacing={2} direction="row" alignItems="center">

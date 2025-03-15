@@ -1,6 +1,7 @@
 import type { Alien } from "@/data/types";
 import { Grid2 } from "@mui/material";
 import { AlienCard } from "./AlienCard";
+import { cardGridSize } from "@/data/styles";
 
 export type AlienGridProps = {
   aliens: Alien[];
@@ -16,7 +17,7 @@ export function AlienGrid({ aliens }: AlienGridProps) {
       }}
     >
       {aliens.map((alien) => (
-        <Grid2 key={alien.name} size={{ xs: 12, sm: 6, md: 4, lg: 3 }}>
+        <Grid2 key={alien.name} size={cardGridSize}>
           <AlienCard alien={alien} />
         </Grid2>
       ))}

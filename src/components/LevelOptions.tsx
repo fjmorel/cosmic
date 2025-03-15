@@ -21,7 +21,7 @@ export function LevelOptions({ enabled, onChange }: LevelOptionsProps) {
   return (
     <Card>
       <CardHeader title="Levels to include" />
-      <CardContent>
+      <CardContent sx={{ paddingTop: 0 }}>
         <Stack>
           <FormGroup>
             {levels.map((level) => (
@@ -29,7 +29,9 @@ export function LevelOptions({ enabled, onChange }: LevelOptionsProps) {
                 key={level}
                 control={
                   <Checkbox
-                    size="small"
+                    sx={{
+                      padding: "4px 9px !important",
+                    }}
                     color={getLevelTheme(level)}
                     checked={enabled[level]}
                     onChange={() => onChange(level)}

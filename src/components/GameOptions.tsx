@@ -28,7 +28,7 @@ export function GameOptions({ enabled, onChange }: GameOptionsProps) {
   return (
     <Card>
       <CardHeader title="Games to include" />
-      <CardContent>
+      <CardContent sx={{ paddingTop: 0 }}>
         <Stack>
           <FormGroup>
             {games.map((game) => (
@@ -36,6 +36,9 @@ export function GameOptions({ enabled, onChange }: GameOptionsProps) {
                 key={game}
                 control={
                   <Checkbox
+                    sx={{
+                      padding: "4px 9px !important",
+                    }}
                     color="primary"
                     checked={enabled[game] ?? false}
                     onChange={() => onChange(game)}
