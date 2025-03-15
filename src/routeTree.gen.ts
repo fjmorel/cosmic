@@ -10,111 +10,111 @@
 
 // Import Routes
 
-import { Route as rootRoute } from "./routes/__root";
-import { Route as ReferenceImport } from "./routes/reference";
-import { Route as PrivacyImport } from "./routes/privacy";
-import { Route as GeneratorImport } from "./routes/generator";
-import { Route as IndexImport } from "./routes/index";
+import { Route as rootRoute } from './routes/__root'
+import { Route as ReferenceImport } from './routes/reference'
+import { Route as PrivacyImport } from './routes/privacy'
+import { Route as GeneratorImport } from './routes/generator'
+import { Route as IndexImport } from './routes/index'
 
 // Create/Update Routes
 
 const ReferenceRoute = ReferenceImport.update({
-  id: "/reference",
-  path: "/reference",
+  id: '/reference',
+  path: '/reference',
   getParentRoute: () => rootRoute,
-} as any);
+} as any)
 
 const PrivacyRoute = PrivacyImport.update({
-  id: "/privacy",
-  path: "/privacy",
+  id: '/privacy',
+  path: '/privacy',
   getParentRoute: () => rootRoute,
-} as any);
+} as any)
 
 const GeneratorRoute = GeneratorImport.update({
-  id: "/generator",
-  path: "/generator",
+  id: '/generator',
+  path: '/generator',
   getParentRoute: () => rootRoute,
-} as any);
+} as any)
 
 const IndexRoute = IndexImport.update({
-  id: "/",
-  path: "/",
+  id: '/',
+  path: '/',
   getParentRoute: () => rootRoute,
-} as any);
+} as any)
 
 // Populate the FileRoutesByPath interface
 
-declare module "@tanstack/react-router" {
+declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    "/": {
-      id: "/";
-      path: "/";
-      fullPath: "/";
-      preLoaderRoute: typeof IndexImport;
-      parentRoute: typeof rootRoute;
-    };
-    "/generator": {
-      id: "/generator";
-      path: "/generator";
-      fullPath: "/generator";
-      preLoaderRoute: typeof GeneratorImport;
-      parentRoute: typeof rootRoute;
-    };
-    "/privacy": {
-      id: "/privacy";
-      path: "/privacy";
-      fullPath: "/privacy";
-      preLoaderRoute: typeof PrivacyImport;
-      parentRoute: typeof rootRoute;
-    };
-    "/reference": {
-      id: "/reference";
-      path: "/reference";
-      fullPath: "/reference";
-      preLoaderRoute: typeof ReferenceImport;
-      parentRoute: typeof rootRoute;
-    };
+    '/': {
+      id: '/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof IndexImport
+      parentRoute: typeof rootRoute
+    }
+    '/generator': {
+      id: '/generator'
+      path: '/generator'
+      fullPath: '/generator'
+      preLoaderRoute: typeof GeneratorImport
+      parentRoute: typeof rootRoute
+    }
+    '/privacy': {
+      id: '/privacy'
+      path: '/privacy'
+      fullPath: '/privacy'
+      preLoaderRoute: typeof PrivacyImport
+      parentRoute: typeof rootRoute
+    }
+    '/reference': {
+      id: '/reference'
+      path: '/reference'
+      fullPath: '/reference'
+      preLoaderRoute: typeof ReferenceImport
+      parentRoute: typeof rootRoute
+    }
   }
 }
 
 // Create and export the route tree
 
 export interface FileRoutesByFullPath {
-  "/": typeof IndexRoute;
-  "/generator": typeof GeneratorRoute;
-  "/privacy": typeof PrivacyRoute;
-  "/reference": typeof ReferenceRoute;
+  '/': typeof IndexRoute
+  '/generator': typeof GeneratorRoute
+  '/privacy': typeof PrivacyRoute
+  '/reference': typeof ReferenceRoute
 }
 
 export interface FileRoutesByTo {
-  "/": typeof IndexRoute;
-  "/generator": typeof GeneratorRoute;
-  "/privacy": typeof PrivacyRoute;
-  "/reference": typeof ReferenceRoute;
+  '/': typeof IndexRoute
+  '/generator': typeof GeneratorRoute
+  '/privacy': typeof PrivacyRoute
+  '/reference': typeof ReferenceRoute
 }
 
 export interface FileRoutesById {
-  __root__: typeof rootRoute;
-  "/": typeof IndexRoute;
-  "/generator": typeof GeneratorRoute;
-  "/privacy": typeof PrivacyRoute;
-  "/reference": typeof ReferenceRoute;
+  __root__: typeof rootRoute
+  '/': typeof IndexRoute
+  '/generator': typeof GeneratorRoute
+  '/privacy': typeof PrivacyRoute
+  '/reference': typeof ReferenceRoute
 }
 
 export interface FileRouteTypes {
-  fileRoutesByFullPath: FileRoutesByFullPath;
-  fullPaths: "/" | "/generator" | "/privacy" | "/reference";
-  fileRoutesByTo: FileRoutesByTo;
-  to: "/" | "/generator" | "/privacy" | "/reference";
-  id: "__root__" | "/" | "/generator" | "/privacy" | "/reference";
-  fileRoutesById: FileRoutesById;
+  fileRoutesByFullPath: FileRoutesByFullPath
+  fullPaths: '/' | '/generator' | '/privacy' | '/reference'
+  fileRoutesByTo: FileRoutesByTo
+  to: '/' | '/generator' | '/privacy' | '/reference'
+  id: '__root__' | '/' | '/generator' | '/privacy' | '/reference'
+  fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
-  IndexRoute: typeof IndexRoute;
-  GeneratorRoute: typeof GeneratorRoute;
-  PrivacyRoute: typeof PrivacyRoute;
-  ReferenceRoute: typeof ReferenceRoute;
+  IndexRoute: typeof IndexRoute
+  GeneratorRoute: typeof GeneratorRoute
+  PrivacyRoute: typeof PrivacyRoute
+  ReferenceRoute: typeof ReferenceRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
@@ -122,11 +122,11 @@ const rootRouteChildren: RootRouteChildren = {
   GeneratorRoute: GeneratorRoute,
   PrivacyRoute: PrivacyRoute,
   ReferenceRoute: ReferenceRoute,
-};
+}
 
 export const routeTree = rootRoute
   ._addFileChildren(rootRouteChildren)
-  ._addFileTypes<FileRouteTypes>();
+  ._addFileTypes<FileRouteTypes>()
 
 /* ROUTE_MANIFEST_START
 {

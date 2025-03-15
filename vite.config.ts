@@ -15,6 +15,12 @@ export default defineConfig({
     outDir: "docs",
     // https://rollupjs.org/configuration-options/
     rollupOptions: {
+      input: {
+        main: "index.html",
+        generator: "generator/index.html",
+        reference: "reference/index.html",
+        privacy: "privacy/index.html",
+      },
       output: {
         // todo: revisit once stuff is actually built out
         manualChunks: function manualChunks(id) {

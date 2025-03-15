@@ -14,6 +14,7 @@ export const Route = createRootRoute({
       </Stack>
     );
   },
+  notFoundComponent: () => <div>404 Not Found</div>,
 });
 
 function Fallback() {
