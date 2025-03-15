@@ -16,12 +16,13 @@ export default function NavBar() {
       key="play-store"
       href="https://play.google.com/store/apps/details?id=net.fmorel.cosmicgenerator"
     >
-      <img src="../icons/playstore_badge.png" />
+      <img src="/cosmic/icons/playstore_badge.png" />
     </MenuItem>,
   ];
 
-  let currentPageName = pages.find((x) => x.props.to === location.pathname)
-    ?.props.title;
+  let currentPageName = pages.find((x) =>
+    location.pathname.endsWith(x.props.to),
+  )?.props.title;
   if (currentPageName === "Home") currentPageName = "Cosmic Companion";
 
   //todo: figure out drawer?

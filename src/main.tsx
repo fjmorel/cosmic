@@ -33,7 +33,7 @@ const theme = createTheme({
 const queryClient = new QueryClient();
 
 // Create a new router instance
-const router = createRouter({ routeTree });
+const router = createRouter({ routeTree, basepath: "/cosmic/" });
 
 // Register the router instance for type safety
 declare module "@tanstack/react-router" {

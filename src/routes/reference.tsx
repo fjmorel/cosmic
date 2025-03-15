@@ -7,7 +7,6 @@ import { useFilteredAliens } from "@/data/aliens";
 import { groupItems } from "@/data/groupItems";
 import { getLevelColor, getLevelStars } from "@/data/levels";
 import {
-  Box,
   Card,
   CardContent,
   CardHeader,

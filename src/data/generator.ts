@@ -3,6 +3,8 @@ import { getMatchingNames } from "./aliens";
 import { type GameSelection, Game } from "./games";
 import type { LevelValues } from "./levels";
 
+// todo: finish converting from Angular service to React components/hooks
+
 /** Possible actions in Generator */
 type Actions = "draw" | "hide" | "show" | "redo" | "reset";
 

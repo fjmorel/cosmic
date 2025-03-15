@@ -5,12 +5,14 @@ import { defineConfig } from "vite";
 
 // https://vite.dev/config/
 export default defineConfig({
+  base: "/cosmic/",
   plugins: [
     TanStackRouterVite({ autoCodeSplitting: false }),
     viteReact(),
     tsConfigPaths(),
   ],
   build: {
+    outDir: "docs",
     // https://rollupjs.org/configuration-options/
     rollupOptions: {
       output: {

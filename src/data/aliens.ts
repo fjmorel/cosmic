@@ -13,7 +13,9 @@ export function useAliens() {
   const { data, isFetching } = useQuery<Alien[]>({
     queryKey: ["aliens"],
     queryFn: async () => {
-      const response = await fetch("data/aliens2.json", { method: "GET" });
+      const response = await fetch("/cosmic/data/aliens2.json", {
+        method: "GET",
+      });
       const json = (await response.json()) as JsonData;
       return json.list;
     },
