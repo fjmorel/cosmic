@@ -5,7 +5,14 @@ import { MainContainer } from "@/components/MainContainer";
 import { useFilteredAliens } from "@/data/aliens";
 import { getLevelTheme } from "@/data/levels";
 import { cardGridSize } from "@/data/styles";
-import { SetupLevel, type Alien } from "@/data/types";
+import { SetupLevel } from "@/data/types";
+import { useGeneratorState } from "@/data/generator";
+import {
+  Replay,
+  Restore,
+  Visibility,
+  VisibilityOff,
+} from "@mui/icons-material";
 import {
   AppBar,
   Autocomplete,
@@ -24,40 +31,105 @@ import {
   Typography,
 } from "@mui/material";
 import { createFileRoute } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 export const Route = createFileRoute("/generator")({
   component: GeneratorPage,
 });
 
 function GeneratorPage() {
-  const [numOfChoices, setNumOfChoices] = useState(2);
+  const [cancelledResets, setCancelledResets] = useState(0);
   const {
     levels,
     onLevelChange,
     games,
     onGameChange,
     allAliens,
-    getNames,
+    matchingAliens,
     removeSetup,
     setRemoveSetup,
+    excluded,
+    setExcluded,
   } = useFilteredAliens();
 
-  const [aliens, setAliens] = useState<Alien[]>([]);
-  useEffect(() => {
-    const names = getNames();
-    setAliens(names.map((x) => allAliens[x]));
-  }, [games, levels, removeSetup, allAliens]);
+  const {
+    numChoices,
+    setNumChoices,
+    preventConflicts,
+    setPreventConflicts,
+    hidden,
+    status,
+    setStatus,
+    current,
+    setCurrent,
+    given,
+    aliensLeft,
+    aliensDrawn,
+    hide,
+    show,
+    redo,
+    draw,
+    makePickFinal,
+    reset,
+  } = useGeneratorState(matchingAliens);
+
+  const onRedo = () => {
+    if (confirm("Redo?")) {
+      redo();
+    }
+  };
+
+  const resetEverything = () => {
+    reset();
+    setCancelledResets(0);
+  };
+
+  const onReset = () => {
+    if (confirm("Reset list of aliens?")) {
+      resetEverything();
+    } else {
+      setCancelledResets((prev) => prev + 1);
+    }
+
+    if (cancelledResets > 2) {
+      makePickFinal();
+      setCurrent(given);
+      setStatus("Aliens given out so far:");
+      setCancelledResets(0);
+    }
+  };
+
+  const limitNumChoices = (newValue: number) => {
+    const min = Math.min(aliensLeft.length, newValue);
+    setNumChoices(Math.max(1, min));
+  };
 
   const topCards = [
-    <GameOptions key="games" enabled={games} onChange={onGameChange} />,
-    <LevelOptions key="levels" enabled={levels} onChange={onLevelChange} />,
+    <GameOptions
+      key="games"
+      enabled={games}
+      onChange={(game) => {
+        onGameChange(game);
+        resetEverything();
+      }}
+    />,
+    <LevelOptions
+      key="levels"
+      enabled={levels}
+      onChange={(level) => {
+        onLevelChange(level);
+        resetEverything();
+      }}
+    />,
     <Card key="exclude">
       <CardHeader title="Game Setup" />
       <CardContent>
         <RadioGroup
           value={removeSetup}
-          onChange={(event) => setRemoveSetup(event.target.value as SetupLevel)}
+          onChange={(event) => {
+            setRemoveSetup(event.target.value as SetupLevel);
+            resetEverything();
+          }}
         >
           <FormControlLabel value="" control={<Radio />} label="Remove none" />
           <FormControlLabel
@@ -77,8 +149,13 @@ function GeneratorPage() {
         <Autocomplete
           multiple
           disableCloseOnSelect
+          value={excluded}
+          onChange={(_event, value) => {
+            setExcluded(value);
+            resetEverything();
+          }}
           limitTags={3}
-          options={aliens.map((x) => x.name)}
+          options={matchingAliens.map((x) => x.name)}
           // todo: use alien color in tag chips too?
           // renderTags={(values, getTagProps, ownerState) => {
 
@@ -106,9 +183,9 @@ function GeneratorPage() {
           <TextField
             type="number"
             label="Choices per player"
-            value={numOfChoices}
+            value={numChoices}
             onChange={(event) =>
-              setNumOfChoices(parseInt(event.target.value, 10))
+              limitNumChoices(parseInt(event.target.value, 10))
             }
             slotProps={{
               htmlInput: { min: 1, step: 1 },
@@ -116,7 +193,12 @@ function GeneratorPage() {
           />
           <FormControlLabel
             label="Prevent conflicts (like Oracle vs. Magician)"
-            control={<Checkbox />}
+            control={
+              <Checkbox
+                value={preventConflicts}
+                onChange={() => setPreventConflicts(!preventConflicts)}
+              />
+            }
           />
         </Stack>
       </CardContent>
@@ -137,31 +219,58 @@ function GeneratorPage() {
       <AppBar position="static">
         <Toolbar>
           <Grid2 container spacing={4} direction="row">
-            <Button variant="contained" color="success">
+            <Button
+              variant="contained"
+              color="success"
+              disabled={aliensLeft.length < numChoices}
+              onClick={draw}
+            >
               Draw
             </Button>
             <Grid2 container spacing={1}>
-              <Button variant="contained" color="primary">
-                Hide
+              <Button
+                variant="contained"
+                color="primary"
+                startIcon={<VisibilityOff />}
+                disabled={hidden || current.length < 1}
+                onClick={hide}
+              >
+                Hide choices
               </Button>
-              <Button variant="contained" color="primary">
-                Show
+              <Button
+                variant="contained"
+                color="primary"
+                startIcon={<Visibility />}
+                disabled={!hidden || current.length < 1}
+                onClick={show}
+              >
+                Show choices
               </Button>
             </Grid2>
-            <Button variant="contained" color="warning">
+            <Button
+              variant="contained"
+              color="warning"
+              startIcon={<Restore />}
+              disabled={!hidden && current.length < 1}
+              onClick={onRedo}
+            >
               Redo
             </Button>
-            <Button variant="contained" color="error">
+            <Button
+              variant="contained"
+              color="error"
+              startIcon={<Replay />}
+              disabled={aliensDrawn < 1 && current.length < 1}
+              onClick={onReset}
+            >
               Reset
             </Button>
           </Grid2>
         </Toolbar>
       </AppBar>
       <MainContainer>
-        <Typography variant="body1">
-          x of y drawn. z redos so far. Choices:
-        </Typography>
-        <AlienGrid aliens={aliens} />
+        <Typography variant="body1">{status}</Typography>
+        {!hidden && <AlienGrid aliens={current} />}
       </MainContainer>
     </Stack>
   );
