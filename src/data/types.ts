@@ -1,14 +1,5 @@
-/** Game names */
-export const enum Game {
-  Encounter = "Encounter",
-  Alliance = "Alliance",
-  Conflict = "Conflict",
-  Dominion = "Dominion",
-  Incursion = "Incursion",
-  Storm = "Storm",
-  Eons = "Eons",
-  Odyssey = "Odyssey",
-}
+import type { Game } from "./games";
+import type { Level } from "./levels";
 
 /** What kind of setup to filter */
 export const enum SetupLevel {
@@ -40,7 +31,7 @@ type BasicAlien = Readonly<{
   name: string;
   game: Game;
   power: string;
-  level: 0 | 1 | 2;
+  level: Level;
   description: string;
   setup: SetupType;
 }>;
@@ -54,18 +45,5 @@ export type Alien = BasicAlien &
     phases?: string;
   }>;
 
-/** Whether games are selected */
-export type GameSelection = Partial<Record<Game, boolean>>;
-
-export namespace Alien {
-  /** Properties that all aliens have */
-  export type MandatoryProperties = keyof BasicAlien;
-
-  /** Properties that I've only transcribed for some aliens */
-  export type Properties = keyof Alien;
-
-  /** JSON format of alien data file */
-  export interface Data {
-    list: Alien[];
-  }
-}
+/** Properties that all aliens have */
+export type MandatoryAlienProperties = keyof BasicAlien;

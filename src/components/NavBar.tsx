@@ -1,4 +1,4 @@
-import { AppBar, Box, Button, Menu, Toolbar } from "@mui/material";
+import { AppBar, Box, Button, Menu, MenuItem, Toolbar } from "@mui/material";
 import { Menu as MenuIcon } from "@mui/icons-material";
 import { useLocation } from "@tanstack/react-router";
 import RouterButton from "./RouterButton";
@@ -12,12 +12,12 @@ export default function NavBar() {
     <RouterButton key="home" to="/" title="Home" />,
     <RouterButton key="generator" to="/generator" title="Game Generator" />,
     <RouterButton key="reference" to="/reference" title="Alien Reference" />,
-    <a
+    <MenuItem
       key="play-store"
       href="https://play.google.com/store/apps/details?id=net.fmorel.cosmicgenerator"
     >
       <img src="../icons/playstore_badge.png" />
-    </a>,
+    </MenuItem>,
   ];
 
   let currentPageName = pages.find((x) => x.props.to === location.pathname)

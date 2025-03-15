@@ -4,7 +4,7 @@ import { RouterProvider, createRouter } from "@tanstack/react-router";
 import { createTheme, CssBaseline, ThemeProvider } from "@mui/material";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { routeTree } from "./routeTree.gen";
-import { colors } from "./data/levels";
+import { getMainColor } from "./data/levels";
 import { deepOrange, deepPurple, green, grey, red } from "@mui/material/colors";
 
 // todo: localstorage of game/level options and other state
@@ -15,9 +15,9 @@ const theme = createTheme({
     primary: deepPurple,
     secondary: grey,
     // re-use these 3 themes for Alien Levels
-    success: { ...green, main: colors[0] },
-    warning: { ...deepOrange, main: colors[1] },
-    error: { ...red, main: colors[2] },
+    success: { ...green, main: getMainColor(0), contrastText: "#fff" },
+    warning: { ...deepOrange, main: getMainColor(1), contrastText: "#fff" },
+    error: { ...red, main: getMainColor(2), contrastText: "#fff" },
   },
   components: {
     // Name of the component

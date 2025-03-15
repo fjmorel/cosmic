@@ -1,4 +1,4 @@
-import type { Alien } from "./types";
+import type { Alien, MandatoryAlienProperties } from "./types";
 
 export type GroupedItems<T> = {
   value: string;
@@ -8,8 +8,8 @@ export type GroupedItems<T> = {
 /** Group objects by given array of fields */
 export function groupItems(
   list: Alien[],
-  gFields: Alien.MandatoryProperties[],
-  sFields: Alien.MandatoryProperties[],
+  gFields: MandatoryAlienProperties[],
+  sFields: MandatoryAlienProperties[],
   level: number = 0,
 ): GroupedItems<Alien>[] {
   if (gFields.length < 1) {

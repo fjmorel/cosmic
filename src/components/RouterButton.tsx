@@ -1,22 +1,28 @@
 import { MenuItem, type MenuItemProps } from "@mui/material";
-import { Link, useMatchRoute, type RegisteredRouter, type ValidateToPath } from "@tanstack/react-router";
+import {
+  Link,
+  useMatchRoute,
+  type RegisteredRouter,
+  type ValidateToPath,
+} from "@tanstack/react-router";
+import type { ReactNode } from "react";
 
 type RouterButtonProps = {
-	to: ValidateToPath<RegisteredRouter>;
-	title: string;
+  to: ValidateToPath<RegisteredRouter>;
+  title: ReactNode;
 } & MenuItemProps;
 
 export default function RouterButton({ title, to }: RouterButtonProps) {
-	const matchRoute = useMatchRoute();
-	const isActive = matchRoute({
-		to: to,
-	})
-		? true
-		: false;
+  const matchRoute = useMatchRoute();
+  const isActive = matchRoute({
+    to: to,
+  })
+    ? true
+    : false;
 
-	return (
-		<MenuItem component={Link} to={to} selected={isActive}>
-			{title}
-		</MenuItem>
-	);
+  return (
+    <MenuItem component={Link} to={to} selected={isActive}>
+      {title}
+    </MenuItem>
+  );
 }

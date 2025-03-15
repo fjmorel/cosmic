@@ -1,34 +1,45 @@
-import { getLevelTheme } from "@/data/levels";
+import { getLevelTheme, type Level, type LevelValues } from "@/data/levels";
 import {
   Card,
   CardContent,
   CardHeader,
   Checkbox,
   FormControlLabel,
-  List,
-  ListItem,
+  FormGroup,
+  Stack,
 } from "@mui/material";
 
-export function LevelOptions() {
-  // todo: proper games list
-  const levels = ["Green", "Yellow", "Red"];
+export type LevelOptionsProps = {
+  enabled: LevelValues<boolean>;
+  onChange: (level: Level) => void;
+};
+
+export function LevelOptions({ enabled, onChange }: LevelOptionsProps) {
+  const levels: LevelValues<Level> = [0, 1, 2];
+  const levelLabels: LevelValues<string> = ["Green", "Yellow", "Red"];
 
   return (
     <Card>
-      <CardHeader title="Games to include" />
+      <CardHeader title="Levels to include" />
       <CardContent>
-        <List>
-          {levels.map((level, index) => (
-            <ListItem key={index}>
+        <Stack>
+          <FormGroup>
+            {levels.map((level) => (
               <FormControlLabel
+                key={level}
                 control={
-                  <Checkbox defaultChecked color={getLevelTheme(index)} />
+                  <Checkbox
+                    size="small"
+                    color={getLevelTheme(level)}
+                    checked={enabled[level]}
+                    onChange={() => onChange(level)}
+                  />
                 }
-                label={level}
+                label={levelLabels[level]}
               />
-            </ListItem>
-          ))}
-        </List>
+            ))}
+          </FormGroup>
+        </Stack>
       </CardContent>
     </Card>
   );

@@ -1,4 +1,6 @@
+import { MainContainer } from "@/components/MainContainer";
 import {
+  AppBar,
   Button,
   Card,
   CardActions,
@@ -6,6 +8,7 @@ import {
   CardHeader,
   Grid2,
   Stack,
+  Toolbar,
   Typography,
 } from "@mui/material";
 import { createFileRoute, Link as RouterLink } from "@tanstack/react-router";
@@ -74,21 +77,39 @@ function Index() {
     },
   ];
   return (
-    <Stack>
-      <Typography variant="h3" gutterBottom>
-        Cosmic Companion
-      </Typography>
-      <Grid2 container spacing={2} id="home-cards">
-        {cards.map((card, index) => (
-          <Grid2 key={index} size={{ xs: 12, md: 6, lg: 4 }}>
-            <Card>
-              <CardHeader title={card.title} />
-              <CardContent>{card.content}</CardContent>
-              <CardActions>{card.action}</CardActions>
-            </Card>
+    <>
+      <MainContainer>
+        <Stack>
+          <Typography variant="h3" gutterBottom>
+            Cosmic Companion
+          </Typography>
+          <Grid2 container spacing={2} id="home-cards">
+            {cards.map((card, index) => (
+              <Grid2 key={index} size={{ xs: 12, md: 6, lg: 4 }}>
+                <Card>
+                  <CardHeader title={card.title} />
+                  <CardContent>{card.content}</CardContent>
+                  <CardActions>{card.action}</CardActions>
+                </Card>
+              </Grid2>
+            ))}
           </Grid2>
-        ))}
-      </Grid2>
-    </Stack>
+        </Stack>
+      </MainContainer>
+      <AppBar position="static" enableColorOnDark>
+        <Toolbar variant="dense" disableGutters>
+          <Stack direction="row">
+            <Button
+              component="a"
+              href="//www.fmorel.net"
+              color="secondary"
+              variant="text"
+            >
+              Return home
+            </Button>
+          </Stack>
+        </Toolbar>
+      </AppBar>
+    </>
   );
 }

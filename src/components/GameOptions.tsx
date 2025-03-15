@@ -1,40 +1,51 @@
-import { Game } from "@/data/types";
+import { Game, type GameSelection } from "@/data/games";
 import {
   Card,
   CardContent,
   CardHeader,
   Checkbox,
   FormControlLabel,
-  List,
-  ListItem,
+  FormGroup,
+  Stack,
 } from "@mui/material";
 
-export function GameOptions() {
-  const games = [
-    Game.Encounter,
-    Game.Alliance,
-    Game.Conflict,
-    Game.Dominion,
-    Game.Eons,
-    Game.Incursion,
-    Game.Storm,
-    Game.Odyssey,
-  ] as Game[];
+export type GameOptionsProps = {
+  enabled: GameSelection;
+  onChange: (game: Game) => void;
+};
+const games = [
+  Game.Encounter,
+  Game.Alliance,
+  Game.Conflict,
+  Game.Dominion,
+  Game.Eons,
+  Game.Incursion,
+  Game.Storm,
+  Game.Odyssey,
+] as Game[];
 
+export function GameOptions({ enabled, onChange }: GameOptionsProps) {
   return (
     <Card>
       <CardHeader title="Games to include" />
       <CardContent>
-        <List>
-          {games.map((name) => (
-            <ListItem key={name}>
+        <Stack>
+          <FormGroup>
+            {games.map((game) => (
               <FormControlLabel
-                control={<Checkbox defaultChecked color="primary" />}
-                label={name}
+                key={game}
+                control={
+                  <Checkbox
+                    color="primary"
+                    checked={enabled[game] ?? false}
+                    onChange={() => onChange(game)}
+                  />
+                }
+                label={game}
               />
-            </ListItem>
-          ))}
-        </List>
+            ))}
+          </FormGroup>
+        </Stack>
       </CardContent>
     </Card>
   );

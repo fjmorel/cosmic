@@ -1,12 +1,14 @@
-import { Game, SetupLevel, type Alien, type GameSelection } from "@/data/types";
+import { SetupLevel, type Alien } from "@/data/types";
 import { getMatchingNames } from "./aliens";
+import { type GameSelection, Game } from "./games";
+import type { LevelValues } from "./levels";
 
 /** Possible actions in Generator */
 type Actions = "draw" | "hide" | "show" | "redo" | "reset";
 
 /** Generator settings */
 interface ISettings {
-  levels: boolean[];
+  levels: LevelValues<boolean>;
   games: GameSelection;
   namesExcluded: string[];
   setupLevel: SetupLevel;
@@ -266,7 +268,7 @@ export class AlienGeneratorPageComponent {
     this.settings.games = $event;
     this.change();
   }
-  public onSelectLevel($event: boolean[]) {
+  public onSelectLevel($event: LevelValues<boolean>) {
     this.settings.levels = $event;
     this.change();
   }
