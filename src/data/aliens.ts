@@ -36,9 +36,7 @@ export function useAliens() {
   return { aliens, names, isLoading: isFetching };
 }
 
-export function useFilteredAliens() {
-  const { aliens: allAliens, names, isLoading } = useAliens();
-
+export function useAlienFilters() {
   const [removeSetup, setRemoveSetup] = useState<SetupLevel>(
     SetupLevel.NoSetup,
   );
@@ -59,14 +57,6 @@ export function useFilteredAliens() {
     setGames({ ...games, [index]: !games[index] });
   };
 
-  const matchingAliens = getMatchingNames(
-    allAliens,
-    names,
-    levels,
-    games,
-    excluded,
-    removeSetup,
-  ).map((x) => allAliens[x]);
   return {
     levels,
     onLevelChange,
@@ -76,14 +66,24 @@ export function useFilteredAliens() {
     setRemoveSetup,
     excluded,
     setExcluded,
-    allAliens,
-    isLoading,
-    matchingAliens,
   };
 }
 
+export function getMatchingAliens(
+  aliens: Record<string, Alien>,
+  names: string[],
+  levels: LevelValues<boolean>,
+  games: GameSelection,
+  exclude?: string[],
+  setup?: SetupLevel,
+): Alien[] {
+  return getMatchingNames(aliens, names, levels, games, exclude, setup).map(
+    (x) => aliens[x],
+  );
+}
+
 /** Get names that match given properties */
-function getMatchingNames(
+export function getMatchingNames(
   aliens: Record<string, Alien>,
   names: string[],
   levels: LevelValues<boolean>,

@@ -1,24 +1,16 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { AlienGrid } from "@/components/AlienGrid";
-import { GameOptions } from "@/components/GameOptions";
-import { LevelOptions } from "@/components/LevelOptions";
+import {
+  DisplayOptions,
+  GameOptions,
+  LevelOptions,
+} from "@/components/options";
 import { MainContainer } from "@/components/MainContainer";
-import { useFilteredAliens } from "@/data/aliens";
+import { getMatchingAliens, useAlienFilters, useAliens } from "@/data/aliens";
 import { groupItems } from "@/data/groupItems";
 import { getLevelColor, getLevelStars } from "@/data/levels";
 import { cardGridSize } from "@/data/styles";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CircularProgress,
-  Divider,
-  Grid2,
-  List,
-  ListItem,
-  Stack,
-  Typography,
-} from "@mui/material";
+import { CircularProgress, Grid2, Stack, Typography } from "@mui/material";
 import { createFileRoute } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/reference")({
@@ -27,38 +19,17 @@ export const Route = createFileRoute("/reference")({
 
 function ReferencePage() {
   // todo: sort and group by options
-  const {
-    games,
-    onGameChange,
-    levels,
-    onLevelChange,
-    matchingAliens,
-    isLoading,
-  } = useFilteredAliens();
+  const { isLoading, aliens, names } = useAliens();
+  const { games, onGameChange, levels, onLevelChange } = useAlienFilters();
+
+  const matchingAliens = getMatchingAliens(aliens, names, levels, games);
 
   const groups = groupItems(matchingAliens, ["game", "level"], ["name"]);
 
   const topCards = [
     <GameOptions key="games" enabled={games} onChange={onGameChange} />,
     <LevelOptions key="levels" enabled={levels} onChange={onLevelChange} />,
-    <Card key="order">
-      <CardHeader title="Group by" />
-      <CardContent sx={{ paddingTop: 0 }}>
-        <List dense disablePadding>
-          <ListItem>1. Game</ListItem>
-          <ListItem>2. Level</ListItem>
-        </List>
-      </CardContent>
-      <Divider />
-      <CardHeader title="Sort by" />
-      <CardContent sx={{ paddingTop: 0 }}>
-        <List dense disablePadding>
-          <ListItem>1. Game</ListItem>
-          <ListItem>2. Level</ListItem>
-          <ListItem>3. Name</ListItem>
-        </List>
-      </CardContent>
-    </Card>,
+    <DisplayOptions key="order" />,
   ];
 
   return (

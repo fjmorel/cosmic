@@ -7,15 +7,10 @@ export type AlienGridProps = {
   aliens: Alien[];
 };
 
+/** Display a list of aliens */
 export function AlienGrid({ aliens }: AlienGridProps) {
   return (
-    <Grid2
-      container
-      spacing={2}
-      sx={{
-        alignItems: "stretch",
-      }}
-    >
+    <Grid2 container spacing={2}>
       {aliens.map((alien) => (
         <Grid2 key={alien.name} size={cardGridSize}>
           <AlienCard alien={alien} />

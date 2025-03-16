@@ -1,6 +1,9 @@
 import type { Game } from "./games";
 import type { Level } from "./levels";
 
+export type Callback = () => void;
+export type HasCallbacks<T extends string> = Record<T, Callback>;
+
 /** What kind of setup to filter */
 export const enum SetupLevel {
   NoSetup = "",
