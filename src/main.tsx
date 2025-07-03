@@ -1,9 +1,8 @@
 import { StrictMode } from "react";
 import ReactDOM from "react-dom/client";
-import { RouterProvider, createRouter } from "@tanstack/react-router";
 import { createTheme, CssBaseline, ThemeProvider } from "@mui/material";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { routeTree } from "./router";
+import CosmicRouter from "./router";
 import { getMainColor } from "./data/levels";
 import { deepOrange, deepPurple, green, grey, red } from "@mui/material/colors";
 
@@ -32,16 +31,6 @@ const theme = createTheme({
 
 const queryClient = new QueryClient();
 
-// Create a new router instance
-const router = createRouter({ routeTree, basepath: "/cosmic/" });
-
-// Register the router instance for type safety
-declare module "@tanstack/react-router" {
-  interface Register {
-    router: typeof router;
-  }
-}
-
 // Render the app
 const container = document.getElementById("root")!;
 if (!container.innerHTML) {
@@ -51,7 +40,7 @@ if (!container.innerHTML) {
       <QueryClientProvider client={queryClient}>
         <ThemeProvider theme={theme}>
           <CssBaseline enableColorScheme />
-          <RouterProvider router={router} />
+          <CosmicRouter />
         </ThemeProvider>
       </QueryClientProvider>
     </StrictMode>,

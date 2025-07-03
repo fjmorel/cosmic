@@ -1,13 +1,18 @@
-import { createRootRoute, createRoute, Outlet } from "@tanstack/react-router";
+import {
+  createRootRoute,
+  createRoute,
+  createRouter,
+  Outlet,
+  RouterProvider,
+} from "@tanstack/react-router";
 import { Stack } from "@mui/material";
-import { ErrorBoundary } from "@/components/ErrorBoundary";
 import NavBar from "@/components/NavBar";
 import HomePage from "./pages/HomePage";
 import GeneratorPage from "./pages/GeneratorPage";
 import PrivacyPage from "./pages/PrivacyPage";
 import ReferencePage from "./pages/ReferencePage";
 import NotFoundPage from "./pages/NotFoundPage";
-import ErrorPage from "./pages/ErrorPage";
+import ErrorPage, { ErrorBoundary } from "./pages/ErrorPage";
 
 const rootRoute = createRootRoute({
   component: () => {
@@ -47,9 +52,23 @@ const referenceRoute = createRoute({
   component: ReferencePage,
 });
 
-export const routeTree = rootRoute.addChildren([
+const routeTree = rootRoute.addChildren([
   homeRoute,
   generatorRoute,
   privacyRoute,
   referenceRoute,
 ]);
+
+// Create a new router instance
+const router = createRouter({ routeTree, basepath: "/cosmic/" });
+
+// Register the router instance for type safety
+declare module "@tanstack/react-router" {
+  interface Register {
+    router: typeof router;
+  }
+}
+
+export default function CosmicRouter() {
+  return <RouterProvider router={router}></RouterProvider>;
+}
