@@ -1,5 +1,5 @@
-import { TanStackRouterVite } from "@tanstack/router-plugin/vite";
-import viteReact from "@vitejs/plugin-react";
+import { tanstackRouter } from "@tanstack/router-plugin/vite";
+import react from "@vitejs/plugin-react";
 import tsConfigPaths from "vite-tsconfig-paths";
 import { defineConfig } from "vite";
 
@@ -7,8 +7,12 @@ import { defineConfig } from "vite";
 export default defineConfig({
   base: "/cosmic/",
   plugins: [
-    TanStackRouterVite({ autoCodeSplitting: false }),
-    viteReact(),
+    tanstackRouter({
+      target: "react",
+      autoCodeSplitting: false,
+      quoteStyle: "double",
+    }),
+    react(),
     tsConfigPaths(),
   ],
   build: {

@@ -10,7 +10,7 @@ import { getMatchingAliens, useAlienFilters, useAliens } from "@/data/aliens";
 import { groupItems } from "@/data/groupItems";
 import { getLevelColor, getLevelStars } from "@/data/levels";
 import { cardGridSize } from "@/data/styles";
-import { CircularProgress, Grid2, Stack, Typography } from "@mui/material";
+import { CircularProgress, Grid, Stack, Typography } from "@mui/material";
 import { createFileRoute } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/reference")({
@@ -35,13 +35,13 @@ function ReferencePage() {
   return (
     <MainContainer>
       <Stack spacing={2}>
-        <Grid2 container spacing={2}>
+        <Grid container spacing={2}>
           {topCards.map((card) => (
-            <Grid2 key={card.key} size={cardGridSize}>
+            <Grid key={card.key} size={cardGridSize}>
               {card}
-            </Grid2>
+            </Grid>
           ))}
-        </Grid2>
+        </Grid>
         {isLoading ? (
           <Stack spacing={2} direction="row" alignItems="center">
             <CircularProgress size="32px" />

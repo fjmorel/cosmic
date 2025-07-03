@@ -8,113 +8,98 @@
 // You should NOT make any changes in this file as it will be overwritten.
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
-// Import Routes
+import { Route as rootRouteImport } from "./routes/__root"
+import { Route as ReferenceRouteImport } from "./routes/reference"
+import { Route as PrivacyRouteImport } from "./routes/privacy"
+import { Route as GeneratorRouteImport } from "./routes/generator"
+import { Route as IndexRouteImport } from "./routes/index"
 
-import { Route as rootRoute } from './routes/__root'
-import { Route as ReferenceImport } from './routes/reference'
-import { Route as PrivacyImport } from './routes/privacy'
-import { Route as GeneratorImport } from './routes/generator'
-import { Route as IndexImport } from './routes/index'
-
-// Create/Update Routes
-
-const ReferenceRoute = ReferenceImport.update({
-  id: '/reference',
-  path: '/reference',
-  getParentRoute: () => rootRoute,
+const ReferenceRoute = ReferenceRouteImport.update({
+  id: "/reference",
+  path: "/reference",
+  getParentRoute: () => rootRouteImport,
 } as any)
-
-const PrivacyRoute = PrivacyImport.update({
-  id: '/privacy',
-  path: '/privacy',
-  getParentRoute: () => rootRoute,
+const PrivacyRoute = PrivacyRouteImport.update({
+  id: "/privacy",
+  path: "/privacy",
+  getParentRoute: () => rootRouteImport,
 } as any)
-
-const GeneratorRoute = GeneratorImport.update({
-  id: '/generator',
-  path: '/generator',
-  getParentRoute: () => rootRoute,
+const GeneratorRoute = GeneratorRouteImport.update({
+  id: "/generator",
+  path: "/generator",
+  getParentRoute: () => rootRouteImport,
 } as any)
-
-const IndexRoute = IndexImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => rootRoute,
+const IndexRoute = IndexRouteImport.update({
+  id: "/",
+  path: "/",
+  getParentRoute: () => rootRouteImport,
 } as any)
-
-// Populate the FileRoutesByPath interface
-
-declare module '@tanstack/react-router' {
-  interface FileRoutesByPath {
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexImport
-      parentRoute: typeof rootRoute
-    }
-    '/generator': {
-      id: '/generator'
-      path: '/generator'
-      fullPath: '/generator'
-      preLoaderRoute: typeof GeneratorImport
-      parentRoute: typeof rootRoute
-    }
-    '/privacy': {
-      id: '/privacy'
-      path: '/privacy'
-      fullPath: '/privacy'
-      preLoaderRoute: typeof PrivacyImport
-      parentRoute: typeof rootRoute
-    }
-    '/reference': {
-      id: '/reference'
-      path: '/reference'
-      fullPath: '/reference'
-      preLoaderRoute: typeof ReferenceImport
-      parentRoute: typeof rootRoute
-    }
-  }
-}
-
-// Create and export the route tree
 
 export interface FileRoutesByFullPath {
-  '/': typeof IndexRoute
-  '/generator': typeof GeneratorRoute
-  '/privacy': typeof PrivacyRoute
-  '/reference': typeof ReferenceRoute
+  "/": typeof IndexRoute
+  "/generator": typeof GeneratorRoute
+  "/privacy": typeof PrivacyRoute
+  "/reference": typeof ReferenceRoute
 }
-
 export interface FileRoutesByTo {
-  '/': typeof IndexRoute
-  '/generator': typeof GeneratorRoute
-  '/privacy': typeof PrivacyRoute
-  '/reference': typeof ReferenceRoute
+  "/": typeof IndexRoute
+  "/generator": typeof GeneratorRoute
+  "/privacy": typeof PrivacyRoute
+  "/reference": typeof ReferenceRoute
 }
-
 export interface FileRoutesById {
-  __root__: typeof rootRoute
-  '/': typeof IndexRoute
-  '/generator': typeof GeneratorRoute
-  '/privacy': typeof PrivacyRoute
-  '/reference': typeof ReferenceRoute
+  __root__: typeof rootRouteImport
+  "/": typeof IndexRoute
+  "/generator": typeof GeneratorRoute
+  "/privacy": typeof PrivacyRoute
+  "/reference": typeof ReferenceRoute
 }
-
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/generator' | '/privacy' | '/reference'
+  fullPaths: "/" | "/generator" | "/privacy" | "/reference"
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/generator' | '/privacy' | '/reference'
-  id: '__root__' | '/' | '/generator' | '/privacy' | '/reference'
+  to: "/" | "/generator" | "/privacy" | "/reference"
+  id: "__root__" | "/" | "/generator" | "/privacy" | "/reference"
   fileRoutesById: FileRoutesById
 }
-
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   GeneratorRoute: typeof GeneratorRoute
   PrivacyRoute: typeof PrivacyRoute
   ReferenceRoute: typeof ReferenceRoute
+}
+
+declare module "@tanstack/react-router" {
+  interface FileRoutesByPath {
+    "/reference": {
+      id: "/reference"
+      path: "/reference"
+      fullPath: "/reference"
+      preLoaderRoute: typeof ReferenceRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    "/privacy": {
+      id: "/privacy"
+      path: "/privacy"
+      fullPath: "/privacy"
+      preLoaderRoute: typeof PrivacyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    "/generator": {
+      id: "/generator"
+      path: "/generator"
+      fullPath: "/generator"
+      preLoaderRoute: typeof GeneratorRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    "/": {
+      id: "/"
+      path: "/"
+      fullPath: "/"
+      preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+  }
 }
 
 const rootRouteChildren: RootRouteChildren = {
@@ -123,35 +108,6 @@ const rootRouteChildren: RootRouteChildren = {
   PrivacyRoute: PrivacyRoute,
   ReferenceRoute: ReferenceRoute,
 }
-
-export const routeTree = rootRoute
+export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-/* ROUTE_MANIFEST_START
-{
-  "routes": {
-    "__root__": {
-      "filePath": "__root.tsx",
-      "children": [
-        "/",
-        "/generator",
-        "/privacy",
-        "/reference"
-      ]
-    },
-    "/": {
-      "filePath": "index.tsx"
-    },
-    "/generator": {
-      "filePath": "generator.tsx"
-    },
-    "/privacy": {
-      "filePath": "privacy.tsx"
-    },
-    "/reference": {
-      "filePath": "reference.tsx"
-    }
-  }
-}
-ROUTE_MANIFEST_END */

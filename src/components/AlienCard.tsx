@@ -7,7 +7,7 @@ import {
   CardContent,
   CardHeader,
   Divider,
-  Grid2,
+  Grid,
   IconButton,
   Stack,
   Typography,
@@ -57,23 +57,23 @@ export function AlienCard({ alien }: AlienCardProps) {
       />
       <AppBar position="static" enableColorOnDark color={color}>
         <CardContent sx={barContentStyle}>
-          <Grid2
+          <Grid
             container
             direction="row"
             sx={{
               justifyContent: "space-between",
             }}
           >
-            <Grid2>
+            <Grid>
               <Typography variant="caption">{alien.game}</Typography>
-            </Grid2>
+            </Grid>
             {alien.setup || alien.restriction ? (
-              <Grid2>
+              <Grid>
                 <Warning fontSize="small" />
-              </Grid2>
+              </Grid>
             ) : null}
-            <Grid2>{getLevelStars(alien.level)}</Grid2>
-          </Grid2>
+            <Grid>{getLevelStars(alien.level)}</Grid>
+          </Grid>
         </CardContent>
       </AppBar>
       {isOpen ? (

@@ -9,7 +9,7 @@ import { MainContainer } from "@/components/MainContainer";
 import { getMatchingAliens, useAlienFilters, useAliens } from "@/data/aliens";
 import { cardGridSize } from "@/data/styles";
 import { useGeneratorState } from "@/data/generator";
-import { Grid2, Stack, Typography } from "@mui/material";
+import { Grid, Stack, Typography } from "@mui/material";
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { GeneratorActions, type Actions } from "@/components/GeneratorActions";
@@ -142,13 +142,13 @@ function GeneratorPage() {
   return (
     <Stack spacing={2}>
       <MainContainer>
-        <Grid2 container spacing={2}>
+        <Grid container spacing={2}>
           {optionCards.map((card) => (
-            <Grid2 key={card.key} size={cardGridSize}>
+            <Grid key={card.key} size={cardGridSize}>
               {card}
-            </Grid2>
+            </Grid>
           ))}
-        </Grid2>
+        </Grid>
       </MainContainer>
       <GeneratorActions
         disabled={disabledButtons}

@@ -6,7 +6,7 @@ import {
   CardActions,
   CardContent,
   CardHeader,
-  Grid2,
+  Grid,
   Stack,
   Toolbar,
   Typography,
@@ -83,17 +83,17 @@ function Index() {
           <Typography variant="h3" gutterBottom>
             Cosmic Companion
           </Typography>
-          <Grid2 container spacing={2} id="home-cards">
+          <Grid container spacing={2} id="home-cards">
             {cards.map((card, index) => (
-              <Grid2 key={index} size={{ xs: 12, md: 6, lg: 4 }}>
+              <Grid key={index} size={{ xs: 12, md: 6, lg: 4 }}>
                 <Card>
                   <CardHeader title={card.title} />
                   <CardContent>{card.content}</CardContent>
                   <CardActions>{card.action}</CardActions>
                 </Card>
-              </Grid2>
+              </Grid>
             ))}
-          </Grid2>
+          </Grid>
         </Stack>
       </MainContainer>
       <AppBar position="static" enableColorOnDark>

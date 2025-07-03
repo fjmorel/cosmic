@@ -5,7 +5,7 @@ import {
   Visibility,
   VisibilityOff,
 } from "@mui/icons-material";
-import { AppBar, Button, Grid2, Toolbar } from "@mui/material";
+import { AppBar, Button, Grid, Toolbar } from "@mui/material";
 
 export type Actions = "draw" | "hide" | "show" | "redo" | "reset";
 
@@ -24,7 +24,7 @@ export function GeneratorActions({
   return (
     <AppBar position="static">
       <Toolbar>
-        <Grid2 container spacing={4} direction="row">
+        <Grid container spacing={4} direction="row">
           <Button
             variant="contained"
             color="success"
@@ -33,7 +33,7 @@ export function GeneratorActions({
           >
             Draw
           </Button>
-          <Grid2 container spacing={1}>
+          <Grid container spacing={1}>
             <Button
               variant="contained"
               color="primary"
@@ -52,7 +52,7 @@ export function GeneratorActions({
             >
               Show choices
             </Button>
-          </Grid2>
+          </Grid>
           <Button
             variant="contained"
             color="warning"
@@ -71,7 +71,7 @@ export function GeneratorActions({
           >
             Reset
           </Button>
-        </Grid2>
+        </Grid>
       </Toolbar>
     </AppBar>
   );

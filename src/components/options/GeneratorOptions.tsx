@@ -3,7 +3,7 @@ import { LevelOptions } from "@/components/options/LevelOptions";
 import { MainContainer } from "@/components/MainContainer";
 import { getMatchingAliens, useAlienFilters, useAliens } from "@/data/aliens";
 import { cardGridSize } from "@/data/styles";
-import { Grid2 } from "@mui/material";
+import { Grid } from "@mui/material";
 import { ExclusionOptions } from "@/components/options/ExclusionOptions";
 import { PickingOptions } from "@/components/options/PickingOptions";
 import type { Alien } from "@/data/types";
@@ -85,13 +85,13 @@ export function GeneratorOptions({ onFilterChange }: GeneratorOptionsProps) {
 
   return (
     <MainContainer>
-      <Grid2 container spacing={2}>
+      <Grid container spacing={2}>
         {topCards.map((card) => (
-          <Grid2 key={card.key} size={cardGridSize}>
+          <Grid key={card.key} size={cardGridSize}>
             {card}
-          </Grid2>
+          </Grid>
         ))}
-      </Grid2>
+      </Grid>
     </MainContainer>
   );
 }
