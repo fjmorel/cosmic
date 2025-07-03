@@ -8,7 +8,7 @@ const themes = ["success", "warning", "error"] as const;
 const colors = ["#189247", "#c39c07", "#c31b09"] as const;
 
 /** Turns 0/1/2 into Green/Yellow/Red */
-export function getLevelColor(level: Level) {
+export function getLevelColor(level: Level): string {
   return names[level];
 }
 

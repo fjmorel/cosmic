@@ -6,3 +6,11 @@ export const cardGridSize: Partial<Record<Breakpoint, number>> = {
   md: 4,
   lg: 3,
 };
+
+export type Color =
+  | "primary"
+  | "secondary"
+  | "success"
+  | "error"
+  | "info"
+  | "warning";

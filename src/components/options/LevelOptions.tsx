@@ -1,13 +1,17 @@
-import { getLevelTheme, type Level, type LevelValues } from "@/data/levels";
 import {
+  getLevelColor,
+  getLevelTheme,
+  type Level,
+  type LevelValues,
+} from "@/data/levels";
+import {
+  Button,
   Card,
   CardContent,
   CardHeader,
-  Checkbox,
-  FormControlLabel,
   FormGroup,
-  Stack,
 } from "@mui/material";
+import SlimCheckbox from "../SlimCheckbox";
 
 export type LevelOptionsProps = {
   enabled: LevelValues<boolean>;
@@ -15,33 +19,25 @@ export type LevelOptionsProps = {
 };
 
 export function LevelOptions({ enabled, onChange }: LevelOptionsProps) {
-  const levels: LevelValues<Level> = [0, 1, 2];
-  const levelLabels: LevelValues<string> = ["Green", "Yellow", "Red"];
+  const levels: Level[] = [0, 1, 2];
 
   return (
     <Card>
+      <Button color="primary" />
       <CardHeader title="Levels to include" />
       <CardContent sx={{ paddingTop: 0 }}>
-        <Stack>
-          <FormGroup>
-            {levels.map((level) => (
-              <FormControlLabel
-                key={level}
-                control={
-                  <Checkbox
-                    sx={{
-                      padding: "4px 9px !important",
-                    }}
-                    color={getLevelTheme(level)}
-                    checked={enabled[level]}
-                    onChange={() => onChange(level)}
-                  />
-                }
-                label={levelLabels[level]}
-              />
-            ))}
-          </FormGroup>
-        </Stack>
+        <FormGroup>
+          {levels.map((level) => (
+            <SlimCheckbox
+              value={level}
+              label={getLevelColor(level)}
+              key={level}
+              color={getLevelTheme(level)}
+              checked={enabled[level] ?? false}
+              onChange={onChange}
+            />
+          ))}
+        </FormGroup>
       </CardContent>
     </Card>
   );

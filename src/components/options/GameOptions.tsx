@@ -1,13 +1,6 @@
 import { Game, type GameSelection } from "@/data/games";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  Checkbox,
-  FormControlLabel,
-  FormGroup,
-  Stack,
-} from "@mui/material";
+import { Card, CardContent, CardHeader, FormGroup, Stack } from "@mui/material";
+import SlimCheckbox from "../SlimCheckbox";
 
 export type GameOptionsProps = {
   enabled: GameSelection;
@@ -32,19 +25,12 @@ export function GameOptions({ enabled, onChange }: GameOptionsProps) {
         <Stack>
           <FormGroup>
             {games.map((game) => (
-              <FormControlLabel
-                key={game}
-                control={
-                  <Checkbox
-                    sx={{
-                      padding: "4px 9px !important",
-                    }}
-                    color="primary"
-                    checked={enabled[game] ?? false}
-                    onChange={() => onChange(game)}
-                  />
-                }
+              <SlimCheckbox
+                value={game}
                 label={game}
+                key={game}
+                checked={enabled[game] ?? false}
+                onChange={onChange}
               />
             ))}
           </FormGroup>
