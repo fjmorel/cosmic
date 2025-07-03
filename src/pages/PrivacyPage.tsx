@@ -1,13 +1,8 @@
 import { MainContainer } from "@/components/MainContainer";
 import { Stack, Typography } from "@mui/material";
-import { createFileRoute } from "@tanstack/react-router";
-
-export const Route = createFileRoute("/privacy")({
-  component: PrivacyPage,
-});
 
 /** Basic page for privacy policy in Play Store */
-function PrivacyPage() {
+export default function PrivacyPage() {
   return (
     <MainContainer>
       <Stack spacing={2}>

@@ -11,6 +11,7 @@ export default defineConfig({
       target: "react",
       autoCodeSplitting: false,
       quoteStyle: "double",
+      enableRouteGeneration: false,
     }),
     react(),
     tsConfigPaths(),

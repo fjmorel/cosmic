@@ -11,13 +11,8 @@ import { groupItems } from "@/data/groupItems";
 import { getLevelColor, getLevelStars } from "@/data/levels";
 import { cardGridSize } from "@/data/styles";
 import { CircularProgress, Grid, Stack, Typography } from "@mui/material";
-import { createFileRoute } from "@tanstack/react-router";
 
-export const Route = createFileRoute("/reference")({
-  component: ReferencePage,
-});
-
-function ReferencePage() {
+export default function ReferencePage() {
   // todo: sort and group by options
   const { isLoading, aliens, names } = useAliens();
   const { games, onGameChange, levels, onLevelChange } = useAlienFilters();

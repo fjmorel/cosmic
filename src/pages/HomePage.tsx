@@ -11,13 +11,9 @@ import {
   Toolbar,
   Typography,
 } from "@mui/material";
-import { createFileRoute, Link as RouterLink } from "@tanstack/react-router";
+import { Link as RouterLink } from "@tanstack/react-router";
 
-export const Route = createFileRoute("/")({
-  component: Index,
-});
-
-function Index() {
+export default function HomePage() {
   const cards = [
     {
       title: "Alien Generator",

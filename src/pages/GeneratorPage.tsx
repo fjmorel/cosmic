@@ -10,15 +10,10 @@ import { getMatchingAliens, useAlienFilters, useAliens } from "@/data/aliens";
 import { cardGridSize } from "@/data/styles";
 import { useGeneratorState } from "@/data/generator";
 import { Grid, Stack, Typography } from "@mui/material";
-import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { GeneratorActions, type Actions } from "@/components/GeneratorActions";
 
-export const Route = createFileRoute("/generator")({
-  component: GeneratorPage,
-});
-
-function GeneratorPage() {
+export default function GeneratorPage() {
   const [cancelledResets, setCancelledResets] = useState(0);
   const { aliens, names } = useAliens();
   const {
