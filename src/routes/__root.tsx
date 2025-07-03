@@ -6,7 +6,7 @@ import NavBar from "@/components/NavBar";
 export const Route = createRootRoute({
   component: () => {
     return (
-      <Stack spacing={2}>
+      <Stack spacing={3}>
         <NavBar />
         <ErrorBoundary fallback={<Fallback />}>
           <Outlet />
